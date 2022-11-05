@@ -11,12 +11,12 @@ export default function MyAccount(){
     const [ accDetails, setAccDetails ] = useState(null);
     const [ adding, setAdding ] = useState(false);
     const [ newCompany, setNewCompany ] = useState({
-        name: '',
-        street: '',
-        city: '',
-        state: '',
-        zip: '',
-        phone: '',
+        company_name: '',
+        company_street: '',
+        company_city: '',
+        company_state: '',
+        company_zip: '',
+        company_phone: '',
     });
 
     const { user } = useContext(UserContext);
