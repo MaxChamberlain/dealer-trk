@@ -3,7 +3,7 @@ export const proper = (string) => {
 }
 
 export const parsePhone = (phone) => {
-    return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+    return phone.toString().replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 }
 
 export const properNumber = (number) => {

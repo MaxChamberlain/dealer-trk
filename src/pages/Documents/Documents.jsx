@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tabs, Tab, Box, Backdrop, CircularProgress, LinearProgress, OutlinedInput, TextField, Autocomplete, Fab } from '@mui/material';
+import { Button, ButtonGroup, Tabs, Tab, Box, Backdrop, CircularProgress, LinearProgress, OutlinedInput, TextField, Autocomplete, Fab, Select, MenuItem } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'
 import { getCompanyDetails, getDocumentTypes, getDocumentsByCompanyIds } from '../../utils/api';
@@ -18,7 +18,7 @@ export default function Documents(){
     const [ companyDetails, setCompanyDetails ] = useState(null);
     const [ documentTypes, setDocumentTypes ] = useState(null);
     const [ documents, setDocuments ] = useState(null);
-    const [ filter, setFilter ] = useState('')
+    const [ filter, setFilter ] = useState('All Companies')
     const [ startDate, setStartDate ] = useState(//first day of this week
         new Date(new Date().setDate(new Date().getDate() - new Date().getDay()))
     );
@@ -26,7 +26,6 @@ export default function Documents(){
     const [ createdBy, setCreatedBy ] = useState('Any');
     const [ search, setSearch ] = useState('');
     const [ addDocument, setAddDocument ] = useState(false);
-    console.log(companyDetails)
 
     useEffect(() => {
         getCompanyDetails(setLoading, setError).then((res) => {
@@ -54,8 +53,8 @@ export default function Documents(){
             <Backdrop open={loading} style={{ zIndex: 9999, backgroundColor: 'transparent' }}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <Box sx={{ width: '100%', bgcolor: '#fff' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ width: '100%', bgcolor: '#fff'}}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between' }}>
                     <Tabs value={tab} onChange={(e, x) => setTab(x)} aria-label="basic tabs example">
                     {loading ? <Box sx={{width: '96%', height: '100%', paddingTop: 2.8, paddingLeft: '2%'}}><LinearProgress /></Box> : 
                         documentTypes && [ { document_type_name: 'All Documents' }, ...documentTypes].map((x, i) => {
@@ -63,30 +62,30 @@ export default function Documents(){
                         })
                     }
                     </Tabs>
+                    <Select style={{
+                        margin: '5px',
+                        backgroundColor: '#fff',
+                        width: '50%',
+                        height: 40
+                    }} value={filter}
+                    onChange={(e) => setFilter(e.target.value)}>
+                        {loading && <Box sx={{width: '100%', height: '100%', paddingTop: 1.2}}><LinearProgress /></Box>}
+                        <MenuItem
+                            value='All Companies'
+                        >All Companies</MenuItem>
+                        {companyDetails && companyDetails.map((company) => {
+                            return(
+                                <MenuItem 
+                                    key={company.company_id}
+                                    value={company.company_name}
+                                >
+                                    {company.company_name}
+                                </MenuItem>
+                            )
+                        })}
+                    </Select>
                 </Box>
             </Box>
-            <ButtonGroup fullWidth={true} style={{
-                margin: '16px 0',
-                padding: '0 16px',
-                backgroundColor: '#fff',
-            }}>
-                {loading && <Box sx={{width: '100%', height: '100%', paddingTop: 1.2}}><LinearProgress /></Box>}
-                <Button
-                    variant={filter === '' ? 'contained' : 'outlined'}
-                    onClick={() => setFilter('')}
-                >All</Button>
-                {companyDetails && companyDetails.map((company) => {
-                    return(
-                        <Button 
-                            key={company.company_id}
-                            variant={filter === company.company_name ? 'contained' : 'outlined'}
-                            onClick={() => setFilter(company.company_name)}
-                        >
-                            {company.company_name}
-                        </Button>
-                    )
-                })}
-            </ButtonGroup>
             <div className='w-full p-6 flex align-center z=[9999]' id='filter-bar-docs'>
                 <div className='w-full bg-white justify-start p-4 rounded drop-shadow flex items-center'>
                     <div className='flex w-1/2'>
@@ -168,7 +167,7 @@ export default function Documents(){
             <div id='document-container-scrollable' className='p-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
                 {addDocument && <AddDocument companyDetails={companyDetails} />}
                 {documents && documents
-                    .filter(e => filter === '' ? e : e.company_name.toLowerCase() === filter.toLowerCase())
+                    .filter(e => filter === 'All Companies' ? e : e.company_name.toLowerCase() === filter.toLowerCase())
                     .filter(e => search === '' ? e : `${e.v_make}${e.v_model}${e.v_vin_no}${e.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
                     .filter(e => new Date(e.date_created) >= new Date(startDate).setHours(0,0,0,0) && new Date(e.date_created) <= new Date(endDate).setHours(23,59,59,999))
                     .filter(e => createdBy === 'Any' ? e : e.created_by_user_id === createdBy)

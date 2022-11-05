@@ -151,11 +151,21 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
 
 export const addCompany = async (newCompany, setLoading, setError) => {
     setLoading(true);
+    const toSend={
+        company_name: newCompany.company_name.toLowerCase().trim(),
+        company_street: newCompany.company_street.toLowerCase().trim(),
+        company_city: newCompany.company_city.toLowerCase().trim(),
+        company_state: newCompany.company_state.toLowerCase().trim(),
+        company_zip: newCompany.company_zip.replace(/[^0-9]/g, '').trim(),
+        company_phone: newCompany.company_phone.replace(/[^0-9]/g, '').trim(),
+        user_id: document.cookie.split('user_id=')[1].split(';')[0]
+    }
+    console.log(toSend)
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/company/add', 
             {
-                ...newCompany
+                ...toSend
             },
             { withCredentials: true }
         )
