@@ -56,9 +56,9 @@ export default function MyAccount(){
                                         Company Name
                                     </div>
                                     <input type="text" placeholder='The Car Place' 
-                                        value={newCompany.name}
+                                        value={newCompany.company_name}
                                         onChange={(e) => setNewCompany(was => {
-                                            return { ...was, name: e.target.value }
+                                            return { ...was, company_name: e.target.value }
                                         })}
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
@@ -67,9 +67,9 @@ export default function MyAccount(){
                                         Company Phone
                                     </div>
                                     <input type="text" placeholder='1234567890' 
-                                        value={newCompany.phone}
+                                        value={newCompany.company_phone}
                                         onChange={(e) => setNewCompany(was => {
-                                            return { ...was, phone: parsePhone(e.target.value) }
+                                            return { ...was, company_phone: parsePhone(e.target.value) }
                                         })}
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
@@ -80,9 +80,9 @@ export default function MyAccount(){
                                         Company Street
                                     </div>
                                     <input type="text" placeholder='1234 Oak St' 
-                                        value={newCompany.street}
+                                        value={newCompany.company_street}
                                         onChange={(e) => setNewCompany(was => {
-                                            return { ...was, street: e.target.value }
+                                            return { ...was, company_street: e.target.value }
                                         })}
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
@@ -91,9 +91,9 @@ export default function MyAccount(){
                                         Company City
                                     </div>
                                     <input type="text" placeholder='Los Angeles' 
-                                        value={newCompany.city}
+                                        value={newCompany.company_city}
                                         onChange={(e) => setNewCompany(was => {
-                                            return { ...was, city: e.target.value }
+                                            return { ...was, company_city: e.target.value }
                                         })}
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
@@ -102,9 +102,9 @@ export default function MyAccount(){
                                         Company State
                                     </div>
                                     <input type="text" placeholder='CA' 
-                                        value={newCompany.state}
+                                        value={newCompany.company_state}
                                         onChange={(e) => setNewCompany(was => {
-                                            return { ...was, state: e.target.value }
+                                            return { ...was, company_state: e.target.value }
                                         })}
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
@@ -113,9 +113,9 @@ export default function MyAccount(){
                                         Company Zip
                                     </div>
                                     <input type="text" placeholder='12321' 
-                                        value={newCompany.zip}
+                                        value={newCompany.company_zip}
                                         onChange={(e) => setNewCompany(was => {
-                                            return { ...was, zip: e.target.value }
+                                            return { ...was, company_zip: e.target.value }
                                         })}
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
