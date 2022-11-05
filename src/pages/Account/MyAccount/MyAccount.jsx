@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../../contexts/UserContext';
 import { proper, parsePhone } from '../../../utils/textDisplay';
-import { getCompanyDetails } from '../../../utils/api';
+import { getCompanyDetails, addCompany } from '../../../utils/api';
 import { Divider, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Fab, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -126,6 +126,9 @@ export default function MyAccount(){
                             disabled={Object.values(newCompany).some(val => val === '')}
                             variant="contained"
                             style={{ marginTop: 20 }}
+                            onClick={() => {
+                                addCompany(newCompany, setLoading, setError)
+                            }}
                         >
                             Create Company
                         </Button>
