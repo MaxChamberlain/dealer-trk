@@ -26,6 +26,7 @@ export default function Documents(){
     const [ createdBy, setCreatedBy ] = useState('Any');
     const [ search, setSearch ] = useState('');
     const [ addDocument, setAddDocument ] = useState(false);
+    console.log(companyDetails)
 
     useEffect(() => {
         getCompanyDetails(setLoading, setError).then((res) => {
@@ -150,14 +151,26 @@ export default function Documents(){
                         defaultValue='Any'
                         disableClearable={true}
                     />
+                    <Button
+                        color="primary"
+                        aria-label="add"
+                        variant='contained' style={{
+                            marginLeft: '10px',
+                            width: '10%',
+                            height: '100%',
+                        }}
+                        onClick={() => setAddDocument(was => !was)}
+                    >
+                        <AddIcon /> Add Document
+                    </Button>
                 </div>
             </div>
             <div id='document-container-scrollable' className='p-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
                 {addDocument && <AddDocument companyDetails={companyDetails} />}
                 {documents && documents
                     .filter(e => filter === '' ? e : e.company_name.toLowerCase() === filter.toLowerCase())
-                    .filter(e => search === '' ? e : `${e.document_vehicle_make}${e.document_vehicle_model}${e.document_vehicle_vin}${e.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
-                    .filter(e => new Date(e.document_date_created) >= new Date(startDate).setHours(0,0,0,0) && new Date(e.document_date_created) <= new Date(endDate).setHours(23,59,59,999))
+                    .filter(e => search === '' ? e : `${e.v_make}${e.v_model}${e.v_vin_no}${e.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
+                    .filter(e => new Date(e.date_created) >= new Date(startDate).setHours(0,0,0,0) && new Date(e.date_created) <= new Date(endDate).setHours(23,59,59,999))
                     .filter(e => createdBy === 'Any' ? e : e.created_by_user_id === createdBy)
                     .map((x, i) => {
                     return <DocumentItem
@@ -166,19 +179,6 @@ export default function Documents(){
                     />
                 })}
             </div>
-            <Fab
-                color="primary"
-                aria-label="add"
-                style={{
-                    position: 'fixed',
-                    bottom: 30,
-                    right: 30,
-                    zIndex: 9999
-                }}
-                onClick={() => setAddDocument(was => !was)}
-            >
-                <AddIcon />
-            </Fab>
         </motion.div>
     )
 }

@@ -14,7 +14,6 @@ export const authUserLogin = async ( setLoading, setError, user_email, user_pass
         )
         document.cookie = 'user_id=' + data.user_id + '; max-age=3600000';
         setLoading(false);
-        window.location.reload();
     }catch(e){
         setLoading(false);
         console.log(e);
@@ -129,8 +128,8 @@ export const getDocumentsByCompanyIds = async (company_ids, setLoading, setError
 export const insertDocument = async (paramsinput, document_type_id, setLoading, setError) => {
     const params = {...paramsinput}
     setLoading(true);
-    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
+        const user_id = document.cookie.split('user_id=')[1].split(';')[0];
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/insert', 
             {

@@ -10,3 +10,7 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    transition-duration: opacity 0.2s;
+}
