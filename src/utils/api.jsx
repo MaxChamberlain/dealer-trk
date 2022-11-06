@@ -185,7 +185,7 @@ export const addCompanyPermission = async (company_id, user_email) => {
             import.meta.env.VITE_API_URL + '/company/addpermission', 
             {
                 company_id,
-                user_email,
+                user_email: user_email.toLowerCase().trim(),
                 user_id
             },
             { withCredentials: true }
