@@ -150,7 +150,7 @@ export default function MyAccount(){
             }
             <div className='flex p-4 md:p-0 md:pl-4 flex-col w-full md:w-3/4'>
                 {accDetails && accDetails.companyData &&
-                    accDetails.companyData.map(company => {
+                    accDetails.companyData.map((company, i) => {
                         return(
                             <div className='border bg-white drop-shadow-sm border-stone-300 rounded flex flex-col p-4 mb-4'>
                                 <div className='font-bold text-xl mb-2'>
@@ -247,7 +247,7 @@ export default function MyAccount(){
                                         <TextField 
                                             fullWidth
                                             label='Add New User'
-                                            id='newEmail'
+                                            id={'newEmail' + i}
                                         ></TextField>
                                         <FormHelperText>
                                             Enter the email of the new user
@@ -255,7 +255,7 @@ export default function MyAccount(){
                                     </div>
                                     <Button variant='contained' color='primary' style={{ height: 55 }}
                                         onClick={() => {
-                                            addCompanyPermission(company.company_id, document.getElementById('newEmail').value)
+                                            addCompanyPermission(company.company_id, document.getElementById('newEmail' + i).value)
                                         }}
                                     >
                                         Add User
