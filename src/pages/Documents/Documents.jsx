@@ -165,7 +165,7 @@ export default function Documents(){
                 </div>
             </div>
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
-                {addDocument && <AddDocument companyDetails={companyDetails} />}
+                {addDocument && <AddDocument companyDetails={companyDetails} setAdding={setAdding} />}
                 <Table className='shadow-lg'>
                     <TableHead className='bg-stone-200'>
                         <TableRow>

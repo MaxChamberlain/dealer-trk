@@ -13,7 +13,7 @@ import Step3 from './Steps/Step3';
 
 const steps = ['Basic Vehicle Information', 'Pricing Information', 'Trade Information'];
 
-export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails }) {
+export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, setAdding }) {
     const [skipped, setSkipped] = React.useState(new Set());
 
   const isStepOptional = (step) => {
@@ -26,16 +26,20 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
 
   const handleNext = () => {
     if(activeStep === steps.length - 1){
+        setAdding(false);
         insertDocument(
             {
                 head: company,
                 body: newVehicle
             },
             1,
-            () => {setNewVehicle({
-              v_is_certified: false,
-              v_is_trade: false,
-            })},
+            () => {
+
+              setNewVehicle({
+                v_is_certified: false,
+                v_is_trade: false,
+              })
+            },
             () => {}
         )
     }

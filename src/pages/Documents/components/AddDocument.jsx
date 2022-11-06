@@ -4,7 +4,7 @@ import Steps from './Steps';
 import { searchGurusByVin } from "../../../utils/search"
 import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress } from "@mui/material"
 
-export default function DocumentItem({ companyDetails }){
+export default function DocumentItem({ companyDetails, setAdding }){
     const [ newVehicle, setNewVehicle ] = useState({
         v_is_certified: false,
         v_is_trade: false,
@@ -82,7 +82,7 @@ export default function DocumentItem({ companyDetails }){
         </div>
         <div>
             {hasScraped  &&
-                <Steps activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} />
+                <Steps setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} />
             }
         </div>
         </div>
