@@ -177,3 +177,21 @@ export const addCompany = async (newCompany, setLoading, setError) => {
         console.log(e);
     }
 }
+
+export const addCompanyPermission = async (company_id, user_email) => {
+    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/company/addpermission', 
+            {
+                company_id,
+                user_email,
+                user_id
+            },
+            { withCredentials: true }
+        )
+        window.location.reload()
+    }catch(e){
+        console.log(e);
+    }
+}

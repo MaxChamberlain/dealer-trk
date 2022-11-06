@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../../contexts/UserContext';
 import { proper, parsePhone } from '../../../utils/textDisplay';
-import { getCompanyDetails, addCompany } from '../../../utils/api';
-import { Divider, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Fab, Box, Button } from '@mui/material';
+import { getCompanyDetails, addCompany, addCompanyPermission } from '../../../utils/api';
+import { Divider, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Fab, Box, Button, OutlinedInput, TextField, FormHelperText } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function MyAccount(){
@@ -209,7 +209,7 @@ export default function MyAccount(){
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
-                                <div className='flex items-around w-full bg-stone-100 mt-2 p-2 shadow-inner'>
+                                {/* <div className='flex items-around w-full bg-stone-100 mt-2 p-2 shadow-inner'>
                                     <div className='mr-2 border-r-2 border-stone-300 w-1/4'>
                                         Your Roles:
                                     </div>
@@ -240,6 +240,26 @@ export default function MyAccount(){
                                             company.permission_level.toString().split('')[2] === '7' ? 'All' : 'N/A'
                                         }</span>
                                     </div>
+                                </div> */}
+                                <br />
+                                <div className='flex justify-around'>
+                                    <div className='w-full'>
+                                        <TextField 
+                                            fullWidth
+                                            label='Add New User'
+                                            id='newEmail'
+                                        ></TextField>
+                                        <FormHelperText>
+                                            Enter the email of the new user
+                                        </FormHelperText>
+                                    </div>
+                                    <Button variant='contained' color='primary' style={{ height: 55 }}
+                                        onClick={() => {
+                                            addCompanyPermission(company.company_id, document.getElementById('newEmail').value)
+                                        }}
+                                    >
+                                        Add User
+                                    </Button>
                                 </div>
                             </div>
                         )
