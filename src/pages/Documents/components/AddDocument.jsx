@@ -2,7 +2,7 @@ import { proper, properNumber } from '../../../utils/textDisplay';
 import { useState } from 'react';
 import Steps from './Steps';
 import { searchGurusByVin } from "../../../utils/search"
-import { FormControl, OutlinedInput, InputLabel, Select, MenuItem, Button, Menu, CircularProgress } from "@mui/material"
+import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress } from "@mui/material"
 
 export default function DocumentItem({ companyDetails }){
     const [ newVehicle, setNewVehicle ] = useState({
@@ -28,9 +28,16 @@ export default function DocumentItem({ companyDetails }){
         {loading.cg_high ? <div className='w-full flex justify-center'><CircularProgress /></div> : hasScraped ? null :<>
             <div className='text-2xl font-bold text-center mb-4 text-stone-600'>Let's see what we can find online</div>
             <div className='w-full flex flex-col justify-center items-center gap-4'>
-                <OutlinedInput id='zip' placeholder='ZIP' style={{
+                <Autocomplete 
+                    id="zip"
+                    options={companyDetails.filter(e => e.company_zip)}
+                    getOptionLabel={(option) => `${option.company_zip} (${option.company_name})`}
+                    style={{ width: '25rem' }}
+                    renderInput={(params) => <TextField {...params} label="ZIP Code" variant="outlined" />}
+                />
+                {/* <OutlinedInput id='zip' placeholder='ZIP' style={{
                     width: '25rem',
-                }} />
+                }} /> */}
                 <OutlinedInput
                     id='VIN' 
                     value={newVehicle.v_vin_no} 
@@ -51,7 +58,7 @@ export default function DocumentItem({ companyDetails }){
                     onClick={() => {
                         searchGurusByVin(
                             newVehicle.v_vin_no, 
-                            document.getElementById('zip').value,
+                            document.getElementById('zip').value?.split(' ')[0]?.trim() || '',
                             0, 
                             (e) => setLoading(was => {return {...was, cg_high: e}}), 
                             () => {}, 

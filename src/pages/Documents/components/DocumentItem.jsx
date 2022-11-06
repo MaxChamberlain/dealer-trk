@@ -71,7 +71,7 @@ export default function DocumentItem({ doc }){
                                 Market %
                             </TableCell>
                             <TableCell>
-                                Was A Trade?
+                                Took A Trade?
                             </TableCell>
                             <TableCell>
                                 Trade Vehicle

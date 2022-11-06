@@ -6,7 +6,7 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
         <>
             <div className="my-4 flex justify-around">
                 <div className='p-2'>
-                    <InputLabel htmlFor="trade">Was This A Trade?</InputLabel>
+                    <InputLabel htmlFor="trade">Did You Take A Trade?</InputLabel>
                     <Checkbox
                         id="trade"
                         checked={newVehicle.v_is_trade}
