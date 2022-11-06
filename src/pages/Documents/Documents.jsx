@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tabs, Tab, Box, Backdrop, CircularProgress, LinearProgress, OutlinedInput, TextField, Autocomplete, Fab, Select, MenuItem } from '@mui/material';
+import { Button, ButtonGroup, Tabs, Tab, Box, Backdrop, CircularProgress, LinearProgress, OutlinedInput, TextField, Autocomplete, TableBody, Select, MenuItem, Table, TableHead, TableRow, TableCell } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'
 import { getCompanyDetails, getDocumentTypes, getDocumentsByCompanyIds } from '../../utils/api';
@@ -164,19 +164,79 @@ export default function Documents(){
                     </Button>
                 </div>
             </div>
-            <div id='document-container-scrollable' className='p-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
+            <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
                 {addDocument && <AddDocument companyDetails={companyDetails} />}
-                {documents && documents
-                    .filter(e => filter === 'All Companies' ? e : e.company_name.toLowerCase() === filter.toLowerCase())
-                    .filter(e => search === '' ? e : `${e.v_make}${e.v_model}${e.v_vin_no}${e.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
-                    .filter(e => new Date(e.date_created) >= new Date(startDate).setHours(0,0,0,0) && new Date(e.date_created) <= new Date(endDate).setHours(23,59,59,999))
-                    .filter(e => createdBy === 'Any' ? e : e.created_by_user_id === createdBy)
-                    .map((x, i) => {
-                    return <DocumentItem
-                        key={i}
-                        doc={x}
-                    />
-                })}
+                <Table className='shadow-lg'>
+                    <TableHead className='bg-stone-200'>
+                        <TableRow>
+                            <TableCell>
+                                Stock No.
+                            </TableCell>
+                            <TableCell>
+                                Vehicle
+                            </TableCell>
+                            <TableCell>
+                                VIN No.
+                            </TableCell>
+                            <TableCell>
+                                Margin
+                            </TableCell>
+                            <TableCell>
+                                Days In Stock
+                            </TableCell>
+                            <TableCell> 
+                                Source
+                            </TableCell>
+                            <TableCell>
+                                Initial MMR
+                            </TableCell>
+                            <TableCell>
+                                Initial CarGurus High
+                            </TableCell>
+                            <TableCell>
+                                Final MMR
+                            </TableCell>
+                            <TableCell>
+                                Final CarGurus High
+                            </TableCell>
+                            <TableCell>
+                                Certified? 
+                            </TableCell>
+                            <TableCell>
+                                Start Price
+                            </TableCell>
+                            <TableCell>
+                                Sell Price
+                            </TableCell>
+                            <TableCell>
+                                Market %
+                            </TableCell>
+                            <TableCell>
+                                Took A Trade?
+                            </TableCell>
+                            <TableCell>
+                                Trade Vehicle
+                            </TableCell>
+                            <TableCell>
+                                Store
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {documents && documents
+                            .filter(e => filter === 'All Companies' ? e : e.company_name.toLowerCase() === filter.toLowerCase())
+                            .filter(e => search === '' ? e : `${e.v_make}${e.v_model}${e.v_vin_no}${e.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
+                            .filter(e => new Date(e.date_created) >= new Date(startDate).setHours(0,0,0,0) && new Date(e.date_created) <= new Date(endDate).setHours(23,59,59,999))
+                            .filter(e => createdBy === 'Any' ? e : e.created_by_user_id === createdBy)
+                            .map((x, i) => {
+                            return <DocumentItem
+                                index={i}
+                                key={i}
+                                doc={x}
+                            />
+                        })}
+                    </TableBody>
+                </Table>
             </div>
         </motion.div>
     )

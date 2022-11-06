@@ -27,17 +27,6 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                     />
                 </div>
                 <div className='p-2'>
-                    <InputLabel htmlFor="source">Source</InputLabel>
-                    <Autocomplete  
-                        id="source"
-                        value={newVehicle.v_source ? newVehicle.v_source.toUpperCase() : ''}
-                        onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_source: newValue.toUpperCase() })}
-                        options={sourceOptions}
-                        renderInput={(params) => <TextField {...params} />}
-                        freeSolo
-                    />
-                </div>
-                <div className='p-2'>
                     <InputLabel htmlFor="daysstock">Days In Stock</InputLabel>
                     <OutlinedInput
                         id="daysstock"
@@ -46,47 +35,18 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                         onChange={(e) => setNewVehicle({ ...newVehicle, v_days: e.target.value })}
                     />
                 </div>
-                <div className='p-2'>   
-                    <InputLabel htmlFor="sprice">Start Price</InputLabel>
-                    <OutlinedInput
-                        id="sprice"
-                        value={newVehicle.v_start_price}
-                        type='number'
-                        onChange={(e) => setNewVehicle({ ...newVehicle, v_start_price: e.target.value })}
-                        startAdornment={
-                            <InputAdornment position="start">
-                                $
-                            </InputAdornment>
-                        }
-                    />
-                </div>
                 <div className='p-2'>
-                    <InputLabel htmlFor="sellprice">Sell Price</InputLabel>
-                    <OutlinedInput
-                        id="sellprice"
-                        value={newVehicle.v_sell_price}
-                        type='number'
-                        onChange={(e) => setNewVehicle({ ...newVehicle, v_sell_price: e.target.value })}
-                        startAdornment={
-                            <InputAdornment position="start">
-                                $
-                            </InputAdornment>
-                        }
-                    />
-                </div>
-                <div className='p-2'>
-                    <InputLabel htmlFor="mperce">Market %</InputLabel>
-                    <OutlinedInput
-                        id="mperce"
-                        value={newVehicle.v_market_percent}
-                        type='number'
-                        onChange={(e) => setNewVehicle({ ...newVehicle, v_market_percent: e.target.value })}
-                        startAdornment={
-                            <InputAdornment position="end">
-                                %
-                            </InputAdornment>
-                        }
-
+                    <InputLabel htmlFor="source">Source</InputLabel>
+                    <Autocomplete  
+                        id="source"
+                        value={newVehicle.v_source ? newVehicle.v_source.toUpperCase() : ''}
+                        onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_source: newValue.toUpperCase() })}
+                        options={sourceOptions}
+                        renderInput={(params) => <TextField {...params} />}
+                        freeSolo
+                        style={{
+                            maxWidth: 210
+                        }}
                     />
                 </div>
                 <div className='p-2'>
@@ -146,6 +106,49 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                             }
                         />
                     </div>
+                </div>
+                <div className='p-2'>   
+                    <InputLabel htmlFor="sprice">Start Price</InputLabel>
+                    <OutlinedInput
+                        id="sprice"
+                        value={newVehicle.v_start_price}
+                        type='number'
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_start_price: e.target.value })}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                $
+                            </InputAdornment>
+                        }
+                    />
+                </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="sellprice">Sell Price</InputLabel>
+                    <OutlinedInput
+                        id="sellprice"
+                        value={newVehicle.v_sell_price}
+                        type='number'
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_sell_price: e.target.value })}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                $
+                            </InputAdornment>
+                        }
+                    />
+                </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="mperce">Market %</InputLabel>
+                    <OutlinedInput
+                        id="mperce"
+                        value={newVehicle.v_market_percent}
+                        type='number'
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_market_percent: e.target.value })}
+                        startAdornment={
+                            <InputAdornment position="end">
+                                %
+                            </InputAdornment>
+                        }
+
+                    />
                 </div>
             </div>
         </>
