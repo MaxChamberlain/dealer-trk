@@ -153,11 +153,11 @@ export const addCompany = async (newCompany, setLoading, setError) => {
     setLoading(true);
     const toSend={
         company_name: newCompany.company_name.toLowerCase().trim(),
-        company_street: newCompany.company_street.toLowerCase().trim(),
-        company_city: newCompany.company_city.toLowerCase().trim(),
-        company_state: newCompany.company_state.toLowerCase().trim(),
-        company_zip: newCompany.company_zip.replace(/[^0-9]/g, '').trim(),
-        company_phone: newCompany.company_phone.replace(/[^0-9]/g, '').trim(),
+        company_street: newCompany.company_street ? newCompany.company_street.toLowerCase().trim() : null,
+        company_city: newCompany.company_city ? newCompany.company_city.toLowerCase().trim() : null,
+        company_state: newCompany.company_state ? newCompany.company_state.toLowerCase().trim() : null,
+        company_zip: newCompany.company_zip ? newCompany.company_zip.replace(/[^0-9]/g, '').trim() : null,
+        company_phone: newCompany.company_phone ? newCompany.company_phone.replace(/[^0-9]/g, '').trim() : null,
         user_id: document.cookie.split('user_id=')[1].split(';')[0]
     }
     console.log(toSend)
