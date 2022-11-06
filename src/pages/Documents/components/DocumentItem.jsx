@@ -103,7 +103,7 @@ export default function DocumentItem({ doc }){
                                     <span className='italic text-stone-500'>N/A</span>}
                             </TableCell>
                             <TableCell>
-                                {doc.v_initial_cargurus ? '$' + properNumber(doc.v_initial_cargurus) :
+                                {doc.v_initial_cargurus_h ? '$' + properNumber(doc.v_initial_cargurus) :
                                     <span className='italic text-stone-500'>N/A</span>}
                             </TableCell>
                             <TableCell>
@@ -111,7 +111,7 @@ export default function DocumentItem({ doc }){
                                     <span className='italic text-stone-500'>N/A</span>}
                             </TableCell>
                             <TableCell>
-                                {doc.v_final_cargurus ? '$' + properNumber(doc.v_final_cargurus) :
+                                {doc.v_final_cargurus_h ? '$' + properNumber(doc.v_final_cargurus) :
                                     <span className='italic text-stone-500'>N/A</span>}
                             </TableCell>
                             <TableCell>
