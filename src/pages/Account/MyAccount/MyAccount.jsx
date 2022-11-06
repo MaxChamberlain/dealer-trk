@@ -123,7 +123,7 @@ export default function MyAccount(){
                         </div>
                         <Button
                             fullWidth
-                            disabled={Object.values(newCompany).some(val => val === '')}
+                            disabled={!newCompany.company_name}
                             variant="contained"
                             style={{ marginTop: 20 }}
                             onClick={() => {
