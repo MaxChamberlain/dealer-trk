@@ -34,6 +34,7 @@ export default function DocumentItem({ companyDetails }){
                     getOptionLabel={(option) => `${option.company_zip} (${option.company_name})`}
                     style={{ width: '25rem' }}
                     renderInput={(params) => <TextField {...params} label="ZIP Code" variant="outlined" />}
+                    freeSolo
                 />
                 {/* <OutlinedInput id='zip' placeholder='ZIP' style={{
                     width: '25rem',
