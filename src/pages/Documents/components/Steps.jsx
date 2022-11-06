@@ -5,8 +5,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import VehicleDetailsAddition from './VehicleDetailsAddition';
-import { TransitionGroup } from "react-transition-group"
 import DocumentItem from './DocumentItem';
 import { insertDocument } from '../../../utils/api';
 import Step1 from './Steps/Step1';
