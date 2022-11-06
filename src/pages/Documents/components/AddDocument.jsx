@@ -4,7 +4,7 @@ import Steps from './Steps';
 import { searchGurusByVin } from "../../../utils/search"
 import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress } from "@mui/material"
 
-export default function DocumentItem({ companyDetails, setAdding }){
+export default function DocumentItem({ companyDetails, setAdding, docs }){
     const [ newVehicle, setNewVehicle ] = useState({
         v_is_certified: false,
         v_is_trade: false,
@@ -39,7 +39,7 @@ export default function DocumentItem({ companyDetails, setAdding }){
                 {/* <OutlinedInput id='zip' placeholder='ZIP' style={{
                     width: '25rem',
                 }} /> */}
-                <OutlinedInput
+                <TextField
                     id='VIN' 
                     value={newVehicle.v_vin_no} 
                     onChange={(e) => setNewVehicle({ ...newVehicle, v_vin_no: e.target.value })}
@@ -48,6 +48,8 @@ export default function DocumentItem({ companyDetails, setAdding }){
                         width: '25rem',
                         minWidth: '20rem',
                     }}
+                    error={newVehicle.v_vin_no ? docs.map(e => e.v_vin_no).includes(newVehicle.v_vin_no) : false }
+                    helperText={newVehicle.v_vin_no ? docs.map(e => e.v_vin_no).includes(newVehicle.v_vin_no) ? 'This VIN is already in your documents!!' : null : null}
                 />
                 <Button 
                     color="primary"
@@ -57,6 +59,7 @@ export default function DocumentItem({ companyDetails, setAdding }){
                         marginBottom: '2rem',
                     }}
                     onClick={() => {
+                        setHasScraped(true)
                         searchGurusByVin(
                             newVehicle.v_vin_no, 
                             document.getElementById('zip').value?.split(' ')[0]?.trim() || '',
@@ -66,12 +69,11 @@ export default function DocumentItem({ companyDetails, setAdding }){
                             (e) => {setNewVehicle({ 
                                 ...newVehicle, 
                                 v_final_carg_h: e.highPrice.replace(/[^0-9.]/g, ''),
-                                v_make: e.vehicle_name?.split(' ')[1],
-                                v_model: e.vehicle_name?.split(' ')[2],
-                                v_year: e.vehicle_name?.split(' ')[0],
-                                v_package: e.vehicle_name?.split(' ')[3] || '',
-                            }); 
-                            setHasScraped(true)}
+                                v_make: e.vehicleDetails.make,
+                                v_model: e.vehicleDetails.model,
+                                v_year: e.vehicleDetails.year,
+                                v_package: e.vehicleDetails.trim_level,
+                            }); }
                         )
                     }}
                 >

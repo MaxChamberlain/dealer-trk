@@ -142,7 +142,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                         value={newVehicle.v_market_percent}
                         type='number'
                         onChange={(e) => setNewVehicle({ ...newVehicle, v_market_percent: e.target.value })}
-                        startAdornment={
+                        endAdornment={
                             <InputAdornment position="end">
                                 %
                             </InputAdornment>
