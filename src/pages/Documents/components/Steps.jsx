@@ -9,6 +9,9 @@ import VehicleDetailsAddition from './VehicleDetailsAddition';
 import { TransitionGroup } from "react-transition-group"
 import DocumentItem from './DocumentItem';
 import { insertDocument } from '../../../utils/api';
+import Step1 from './Steps/Step1';
+import Step2 from './Steps/Step2';
+import Step3 from './Steps/Step3';
 
 const steps = ['Basic Vehicle Information', 'Pricing Information', 'Trade Information'];
 
@@ -31,7 +34,10 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
                 body: newVehicle
             },
             1,
-            () => {},
+            () => {setNewVehicle({
+              v_is_certified: false,
+              v_is_trade: false,
+            })},
             () => {}
         )
     }
@@ -89,10 +95,10 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
           );
         })}
       </Stepper>
-      <TransitionGroup component='div'>
-          <VehicleDetailsAddition step={activeStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />
-      </TransitionGroup>
-      {activeStep === steps.length ? (
+        {activeStep === 0 && <Step1 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />}
+        {activeStep === 1 && <Step2 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />}
+        {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />}
+        {activeStep === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
             All steps completed - you&apos;re finished
@@ -117,14 +123,22 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
               Back
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
-
-            <Button onClick={handleNext} variant='contained'>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+          {console.log(company)}
+            <Button 
+              onClick={handleNext} 
+              variant='contained'
+              disabled={(
+                activeStep === 0 && newVehicle.v_stock_no && newVehicle.v_make && newVehicle.v_model && newVehicle.v_package && newVehicle.v_vin_no) ?
+                false : 
+                (activeStep === 1 && newVehicle.v_margin && newVehicle.v_source && newVehicle.v_days && newVehicle.v_start_price && newVehicle.v_sell_price && newVehicle.v_market_percent && newVehicle.v_initial_mmr && newVehicle.v_initial_carg_h && newVehicle.v_final_mmr && newVehicle.v_final_carg_h) ?
+                false :
+                (activeStep === 2  && company !== 'Select A Company') ?
+                false :
+                true
+              }
+            >
+              {activeStep === steps.length - 1 ? 'Finish' :
+              'Next'}
             </Button>
           </Box>
         </React.Fragment>
