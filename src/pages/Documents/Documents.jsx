@@ -166,7 +166,7 @@ export default function Documents(){
             </div>
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
                 {addDocument && <AddDocument companyDetails={companyDetails} setAdding={setAddDocument} docs={documents} />}
-                <Table className='shadow-lg'>
+                <Table className='shadow-lg' size='small' padding='small'>
                     <TableHead className='bg-stone-200'>
                         <TableRow>
                             <TableCell>
@@ -188,16 +188,31 @@ export default function Documents(){
                                 Source
                             </TableCell>
                             <TableCell>
-                                Initial MMR
+                                <div>
+                                    Initial MMR
+                                </div>
+                                <div className='w-full h-px bg-stone-500'></div>
+                                <div>
+                                    Initial CarGurus
+                                </div>
                             </TableCell>
                             <TableCell>
-                                Initial CarGurus High
+                                <div>
+                                    Final MMR
+                                </div>
+                                <div className='w-full h-px bg-stone-500'></div>
+                                <div>
+                                    Final CarGurus
+                                </div>
                             </TableCell>
                             <TableCell>
-                                Final MMR
-                            </TableCell>
-                            <TableCell>
-                                Final CarGurus High
+                                <div>
+                                    MMR Diff
+                                </div>
+                                <div className='w-full h-px bg-stone-500'></div>
+                                <div>
+                                    CarGurus Diff
+                                </div>
                             </TableCell>
                             <TableCell>
                                 Certified? 

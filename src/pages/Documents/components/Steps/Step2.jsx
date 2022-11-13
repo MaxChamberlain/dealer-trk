@@ -168,6 +168,21 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
 
                     />
                 </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="imv">IMV</InputLabel>
+                    <OutlinedInput
+                        id="imv"
+                        value={newVehicle.v_imv}
+                        type='number'
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_imv: e.target.value })}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                $
+                            </InputAdornment>
+                        }
+
+                    />
+                </div>
             </div>
         </>
     )

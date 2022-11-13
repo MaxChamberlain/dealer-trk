@@ -32,15 +32,6 @@ export default function MyAccount(){
 
     return(
         <div className='flex w-full justify-around md:items-start md:flex-row flex-col p-4'>
-            <Box sx={{ '& > :not(style)': { m: 1 } }} style={{
-                position: 'fixed',
-                bottom: 20,
-                right: 20,
-            }}>
-                <Fab color="primary" aria-label="add" onClick={() => setAdding(was => !was)}>
-                    <AddIcon />
-                </Fab>
-            </Box>
             {adding && 
                 <div className='fixed top-0 left-0 right-0 bottom-0 z-[9998] flex justify-center align-start pt-16'>
                     <div className='fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-30' onClick={() => setAdding(false)}></div>  
@@ -135,19 +126,24 @@ export default function MyAccount(){
                     </div>
                 </div>
             }
-            {accDetails && accDetails.user && 
-                <div className='border bg-white drop-shadow-sm border-stone-300 p-4 rounded flex flex-col items-center w-full md:w-1/4'>
-                    <div className='font-bold text-2xl'>
-                        {proper(accDetails.user.user_fname)} {proper(accDetails.user.user_initial)} {proper(accDetails.user.user_lname)}
+            <div className='flex flex-col w-full md:w-1/4'>
+                {accDetails && accDetails.user && 
+                    <div className='border bg-white drop-shadow-sm border-stone-300 p-4 rounded flex flex-col items-center w-full'>
+                        <div className='font-bold text-2xl'>
+                            {proper(accDetails.user.user_fname)} {proper(accDetails.user.user_initial)} {proper(accDetails.user.user_lname)}
+                        </div>
+                        <div className='font-bold text-xl'>
+                            {accDetails.user.user_email}
+                        </div>
+                        <div className='font-bold text-xl'>
+                            {parsePhone(accDetails.user.user_phone)}
+                        </div>
                     </div>
-                    <div className='font-bold text-xl'>
-                        {accDetails.user.user_email}
-                    </div>
-                    <div className='font-bold text-xl'>
-                        {parsePhone(accDetails.user.user_phone)}
-                    </div>
-                </div>
-            }
+                } 
+                <Button variant='contained' style={{ marginTop: 20 }} aria-label="add" onClick={() => setAdding(was => !was)}>
+                    Add a company
+                </Button>
+            </div>
             <div className='flex p-4 md:p-0 md:pl-4 flex-col w-full md:w-3/4'>
                 {accDetails && accDetails.companyData &&
                     accDetails.companyData.map((company, i) => {

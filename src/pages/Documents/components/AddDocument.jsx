@@ -89,17 +89,18 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
                             () => {}, 
                             (e) => {setNewVehicle(was => { console.log(e); return { 
                                 ...was,
-                                v_final_carg_h: e.highPrice.replace(/[^0-9.]/g, ''),
-                                v_make: e.vehicleDetails.make.toUpperCase(),
-                                v_model: e.vehicleDetails.model.toUpperCase(),
-                                v_year: e.vehicleDetails.year,
-                                v_package: e.vehicleDetails.trim_level.toUpperCase(),
+                                v_final_carg_h: e.highPrice?.replace(/[^0-9.]/g, '') || '',
+                                v_imv: e.IMV?.replace(/[^0-9.]/g, '') || '',
+                                v_make: e.vehicleDetails?.make?.toUpperCase() || '',
+                                v_model: e.vehicleDetails?.model?.toUpperCase() || '',
+                                v_year: e.vehicleDetails?.year || '',
+                                v_package: e.vehicleDetails?.trim_level?.toUpperCase() || '',
                                 v_final_carg_h_options: {
-                                    greatPrice: e.greatPrice.replace(/[^0-9.]/g, ''),
-                                    goodPrice: e.goodPrice.replace(/[^0-9.]/g, ''),
-                                    fairPrice: e.fairPrice.replace(/[^0-9.]/g, ''),
-                                    highPrice: e.highPrice.replace(/[^0-9.]/g, ''),
-                                    overPrice: e.overPrice.replace(/[^0-9.]/g, ''),
+                                    greatPrice: e.greatPrice?.replace(/[^0-9.]/g, '') || '',
+                                    goodPrice: e.goodPrice?.replace(/[^0-9.]/g, '') || '',
+                                    fairPrice: e.fairPrice?.replace(/[^0-9.]/g, '') || '',
+                                    highPrice: e.highPrice?.replace(/[^0-9.]/g, '') || '',
+                                    overPrice: e.overPrice?.replace(/[^0-9.]/g, '') || '',
                                 }
                             }}); }
                         )
