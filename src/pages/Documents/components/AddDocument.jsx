@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Steps from './Steps';
 import { searchGurusByVin } from "../../../utils/search"
 import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress } from "@mui/material"
+import { useEffect } from 'react';
 
 export default function DocumentItem({ companyDetails, setAdding, docs }){
     const [ newVehicle, setNewVehicle ] = useState({
@@ -15,7 +16,27 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
     const [ loading, setLoading ] = useState({
         cg_high: false
     })
-    
+    const [ autoCompleteOptions, setAutoCompleteOptions ] = useState({
+        makes : [...new Set(docs.map(doc => doc.v_make ? doc.v_make.toUpperCase() : ''))].sort((a, b) => a.localeCompare(b)),
+        models: [...new Set(docs.map(doc => doc.v_model ? doc.v_model.toUpperCase() : ''))].sort((a, b) => a.localeCompare(b)),
+        packages: [...new Set(docs.map(doc => doc.v_package ? doc.v_package.toUpperCase() : ''))].sort((a, b) => a.localeCompare(b)),
+    });
+
+    useEffect(() => {
+        if(newVehicle.v_make){
+            setAutoCompleteOptions({
+                ...autoCompleteOptions,
+                models: [...new Set(docs.filter(e => e.v_make.toUpperCase() === newVehicle.v_make).map(doc => doc.v_model ? doc.v_model.toUpperCase() : ''))]
+            })
+        }
+        if(newVehicle.v_model){
+            setAutoCompleteOptions({
+                ...autoCompleteOptions,
+                packages: [...new Set(docs.filter(e => e.v_make.toUpperCase() === newVehicle.v_make && e.v_model.toUpperCase() === newVehicle.v_model).map(doc => doc.v_package ? doc.v_package.toUpperCase() : ''))]
+            })
+        }
+    }, [newVehicle, docs])
+
     return(
         <div id='document-list-item' className={`z-[9990] w-full bg-white drop-shadow p-4 mb-4`}>
         <div className="flex justify-end items-center">
@@ -66,14 +87,21 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
                             0, 
                             (e) => setLoading(was => {return {...was, cg_high: e}}), 
                             () => {}, 
-                            (e) => {setNewVehicle({ 
-                                ...newVehicle, 
+                            (e) => {setNewVehicle(was => { console.log(e); return { 
+                                ...was,
                                 v_final_carg_h: e.highPrice.replace(/[^0-9.]/g, ''),
-                                v_make: e.vehicleDetails.make,
-                                v_model: e.vehicleDetails.model,
+                                v_make: e.vehicleDetails.make.toUpperCase(),
+                                v_model: e.vehicleDetails.model.toUpperCase(),
                                 v_year: e.vehicleDetails.year,
-                                v_package: e.vehicleDetails.trim_level,
-                            }); }
+                                v_package: e.vehicleDetails.trim_level.toUpperCase(),
+                                v_final_carg_h_options: {
+                                    greatPrice: e.greatPrice.replace(/[^0-9.]/g, ''),
+                                    goodPrice: e.goodPrice.replace(/[^0-9.]/g, ''),
+                                    fairPrice: e.fairPrice.replace(/[^0-9.]/g, ''),
+                                    highPrice: e.highPrice.replace(/[^0-9.]/g, ''),
+                                    overPrice: e.overPrice.replace(/[^0-9.]/g, ''),
+                                }
+                            }}); }
                         )
                     }}
                 >
@@ -83,8 +111,8 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
         </> }
         </div>
         <div>
-            {hasScraped  &&
-                <Steps setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} />
+            {hasScraped && !loading.cg_high  &&
+                <Steps setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} />
             }
         </div>
         </div>

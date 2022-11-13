@@ -13,7 +13,7 @@ import Step3 from './Steps/Step3';
 
 const steps = ['Basic Vehicle Information', 'Pricing Information', 'Trade Information'];
 
-export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, setAdding }) {
+export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, autoCompleteOptions }) {
     const [skipped, setSkipped] = React.useState(new Set());
     const [loading, setLoading] = React.useState(false);
 
@@ -99,9 +99,9 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
             );
           })}
         </Stepper>
-          {activeStep === 0 && <Step1 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />}
-          {activeStep === 1 && <Step2 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />}
-          {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} />}
+          {activeStep === 0 && <Step1 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
+          {activeStep === 1 && <Step2 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
+          {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === steps.length ? (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
@@ -127,14 +127,13 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-            {console.log(company)}
               <Button 
                 onClick={handleNext} 
                 variant='contained'
-                disabled={(
-                  activeStep === 0 && newVehicle.v_stock_no && newVehicle.v_make && newVehicle.v_model && newVehicle.v_vin_no) ?
+                disabled={
+                  (activeStep === 0 && newVehicle.v_stock_no && newVehicle.v_make && newVehicle.v_model && newVehicle.v_vin_no) ?
                   false : 
-                  (activeStep === 1 && newVehicle.v_margin && newVehicle.v_source && newVehicle.v_days && newVehicle.v_start_price && newVehicle.v_sell_price && newVehicle.v_market_percent && newVehicle.v_initial_mmr && newVehicle.v_initial_carg_h && newVehicle.v_final_mmr && newVehicle.v_final_carg_h) ?
+                  (activeStep === 1) ?
                   false :
                   (activeStep === 2  && company !== 'Select A Company') ?
                   false :

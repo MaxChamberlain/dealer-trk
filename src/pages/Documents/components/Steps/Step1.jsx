@@ -1,7 +1,7 @@
-import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material"
+import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText, Autocomplete, TextField } from "@mui/material"
 import Checkbox from '@mui/material/Checkbox'
 
-export default function Step1({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails }){
+export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions }){
 
     const years = []
     for(let i = new Date().getFullYear(); i >= new Date().getFullYear() - 20; i--){
@@ -9,7 +9,7 @@ export default function Step1({ step, newVehicle, setNewVehicle, company, setCom
     }
 
     return(
-    <div className='my-4 flex justify-between w-full'>
+    <div className='my-4 grid grid-cols-7 justify-center w-full'>
         <div className='p-2 w-fit'>
             <InputLabel htmlFor="stock-no">Stock No.</InputLabel>
             <OutlinedInput
@@ -21,6 +21,7 @@ export default function Step1({ step, newVehicle, setNewVehicle, company, setCom
         <div className='p-2'>
             <InputLabel htmlFor="Year">Vehicle Year</InputLabel>
             <Select
+                fullWidth
                 id="Year"
                 value={newVehicle.v_year || new Date().getFullYear()}
                 onChange={(e) => setNewVehicle({ ...newVehicle, v_year: e.target.value })}
@@ -31,28 +32,44 @@ export default function Step1({ step, newVehicle, setNewVehicle, company, setCom
         </div>
         <div className='p-2'>
             <InputLabel htmlFor="Make">Vehicle Make</InputLabel>
-            <OutlinedInput
-                id="Make"wV
+            <Autocomplete
+                fullWidth
+                id="Make"
+                options={autoCompleteOptions.makes}
+                defaultValue={newVehicle.v_make}
                 value={newVehicle.v_make}
-                onChange={(e) => setNewVehicle({ ...newVehicle, v_make: e.target.value })}
+                onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_make: newValue })}
+                renderInput={(params) => <TextField {...params} label="Make" variant="outlined" onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_make: newValue })} />}
+                freeSolo
+                autoSelect
             />
             <FormHelperText>e.g. Toyota</FormHelperText>
         </div>
         <div className='p-2'>   
             <InputLabel htmlFor="Model">Vehicle Model</InputLabel>
-            <OutlinedInput
+            <Autocomplete
+                fullWidth
                 id="Model"
+                options={autoCompleteOptions.models}
+                defaultValue={newVehicle.v_model}
                 value={newVehicle.v_model}
-                onChange={(e) => setNewVehicle({ ...newVehicle, v_model: e.target.value })}
+                onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_model: newValue })}
+                renderInput={(params) => <TextField {...params} label="Model" variant="outlined" />}
+                freeSolo
             />
             <FormHelperText>e.g. Camry</FormHelperText>
         </div>
         <div className='p-2'>
             <InputLabel htmlFor="pkg">Vehicle Package</InputLabel>
-            <OutlinedInput
+            <Autocomplete
+                fullWidth
                 id="pkg"
+                options={autoCompleteOptions.packages}
+                defaultValue={newVehicle.v_package}
                 value={newVehicle.v_package}
-                onChange={(e) => setNewVehicle({ ...newVehicle, v_package: e.target.value })}
+                onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_package: newValue })}
+                renderInput={(params) => <TextField {...params} label="Package" variant="outlined" />}
+                freeSolo
             />
             <FormHelperText>e.g. SE</FormHelperText>
         </div>

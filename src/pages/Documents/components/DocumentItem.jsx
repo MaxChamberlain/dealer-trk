@@ -4,7 +4,6 @@ import { Divider, Button, Table, TableRow, TableCell, TableHead, TableBody } fro
 
 export default function DocumentItem({ doc, index }){
     const [ isOpen, setIsOpen ] = useState(false);
-    console.log(index)
     return(
         // <div id='document-list-item' className={`z-[9990] w-full bg-white drop-shadow p-4 ${isOpen ? 'my-16' : 'mb-4'}`}>
         //     <div className="flex justify-between items-center">

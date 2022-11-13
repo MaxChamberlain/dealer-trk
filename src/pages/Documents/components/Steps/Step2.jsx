@@ -1,4 +1,4 @@
-import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField } from "@mui/material"
+import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField, MenuItem, Select } from "@mui/material"
 
 export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails }){
     const sourceOptions = [
@@ -94,6 +94,24 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                 <div className='p-2'>
                     <InputLabel htmlFor="fincarg">Final CarGurus High</InputLabel>
                     <div className='flex'>
+                        {newVehicle.v_final_carg_h_options.greatPrice ? <Select
+                            fullWidth
+                            id="fincarg"
+                            value={newVehicle.v_final_carg_h}
+                            type='number'
+                            onChange={(e) => setNewVehicle({ ...newVehicle, v_final_carg_h: e.target.value })}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    $
+                                </InputAdornment>
+                            }
+                        >
+                            <MenuItem value={newVehicle.v_final_carg_h_options.greatPrice}>{newVehicle.v_final_carg_h_options.greatPrice} - Great Price</MenuItem>
+                            <MenuItem value={newVehicle.v_final_carg_h_options.goodPrice}>{newVehicle.v_final_carg_h_options.goodPrice} - Good Price</MenuItem>
+                            <MenuItem value={newVehicle.v_final_carg_h_options.fairPrice}>{newVehicle.v_final_carg_h_options.fairPrice} - Fair Price</MenuItem>
+                            <MenuItem value={newVehicle.v_final_carg_h_options.highPrice}>{newVehicle.v_final_carg_h_options.highPrice} - High Price</MenuItem>
+                            <MenuItem value={newVehicle.v_final_carg_h_options.overPrice}>{newVehicle.v_final_carg_h_options.overPrice} - Over Price</MenuItem>
+                        </Select> :
                         <OutlinedInput
                             id="fincarg"
                             value={newVehicle.v_final_carg_h}
@@ -104,7 +122,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                                     $
                                 </InputAdornment>
                             }
-                        />
+                        />}  
                     </div>
                 </div>
                 <div className='p-2'>   
