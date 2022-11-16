@@ -266,7 +266,7 @@ export default function Documents(){
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {documents && documents.data
+                        {documents && documents.data && documents.data
                             .filter(e => filter === 'All Companies' ? e : e.company_id === filter)
                             .filter(e => search === '' ? e : `${e.data.vehicle.v_make}${e.data.vehicle.v_model}${e.data.vehicle.v_vin_no}${e.data.vehicle.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
                             .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
