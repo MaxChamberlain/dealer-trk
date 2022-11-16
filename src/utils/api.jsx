@@ -91,33 +91,28 @@ export const getCompanyDetails = async (setLoading, setError) => {
 }
 
 export const getDocumentTypes = async (setLoading, setError) => {
-    setLoading(true);
-    try{
-        const { data } = await axios.get(
-            import.meta.env.VITE_API_URL + '/document/types', 
-            { withCredentials: true }
-        )
-        setLoading(false);
-        return data
-    }catch(e){
-        setLoading(false);
-        setError(e.response.data);
-        console.log(e);
-    }
+    return [
+        {
+            document_type_name: 'Trip Pad'
+        }
+    ]
 }
 
-export const getDocumentsByCompanyIds = async (company_ids, setLoading, setError) => {
+export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, endDate) => {
     setLoading(true);
     const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/getbycompanyids', 
             {
-                user_id
+                user_id,
+                startDate,
+                endDate,
             },
             { withCredentials: true }
         )
         setLoading(false);
+        console.log('data', data)
         return data
     }catch(e){
         setLoading(false);
@@ -127,21 +122,58 @@ export const getDocumentsByCompanyIds = async (company_ids, setLoading, setError
 }
 
 export const insertDocument = async (paramsinput, document_type_id, setLoading, setError) => {
-    const params = {...paramsinput}
     setLoading(true);
     try{
-        const user_id = document.cookie.split('user_id=')[1].split(';')[0];
-        const { data } = await axios.post(
+        const params = {
+            metadata: {
+                created_by_user_id: document.cookie.split('user_id=')[1].split(';')[0],
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            },
+            data: {
+                vehicle:{
+                    v_days: paramsinput.body?.v_days,
+                    v_final_carg_h: paramsinput.body?.v_final_carg_h,
+                    v_final_mmr: paramsinput.body?.v_final_mmr,
+                    v_imv: paramsinput.body?.v_imv,
+                    v_initial_carg_h: paramsinput.body?.v_initial_carg_h,
+                    v_initial_mmr: paramsinput.body?.v_initial_mmr,
+                    v_is_certified: paramsinput.body?.v_is_certified || false,
+                    v_make: paramsinput.body?.v_make,
+                    v_margin: paramsinput.body?.v_margin,
+                    v_market_percent: paramsinput.body?.v_market_percent,
+                    v_model: paramsinput.body?.v_model,
+                    v_package: paramsinput.body?.v_package,
+                    v_sell_price: paramsinput.body?.v_sell_price,
+                    v_start_price: paramsinput.body?.v_start_price,
+                    v_stock_no: paramsinput.body?.v_stock_no,
+                    v_vin_no: paramsinput.body?.v_vin_no,
+                    v_year: paramsinput.body?.v_year,
+                    v_is_trade : paramsinput.body?.v_is_trade || false,
+                    v_source: paramsinput.body?.v_source,
+                },
+                trade: {
+                    v_trade_acv: paramsinput.body?.v_trade_acv,
+                    v_trade_end_acv: paramsinput.body?.v_trade_end_acv,
+                    v_trade_make: paramsinput.body?.v_trade_make,
+                    v_trade_miles: paramsinput.body?.v_trade_miles,
+                    v_trade_model: paramsinput.body?.v_trade_model,
+                    v_trade_pkg: paramsinput.body?.v_trade_pkg,
+                    v_trade_year: paramsinput.body?.v_trade_year,
+                },
+            },
+            company_id: paramsinput.head.company_id,
+            document_type: 'Trip Pad',  
+        }
+        await axios.post(
             import.meta.env.VITE_API_URL + '/document/insert', 
             {
-                user_id,
                 params,
-                document_type_id
             },
             { withCredentials: true }
         )
         setLoading(false);
-        window.location.reload()
+        return true;
     }catch(e){
         setLoading(false);
         setError(e.response.data);

@@ -10,6 +10,7 @@ import './style.css'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { proper } from '../../utils/textDisplay';
+import { useNavigate } from 'react-router-dom';
 
 export default function Documents(){
     const [ loading, setLoading ] = useState(true);
@@ -19,21 +20,48 @@ export default function Documents(){
     const [ documentTypes, setDocumentTypes ] = useState(null);
     const [ documents, setDocuments ] = useState(null);
     const [ filter, setFilter ] = useState('All Companies')
-    const [ startDate, setStartDate ] = useState(//first day of this week
-        new Date(new Date().setDate(new Date().getDate() - new Date().getDay()))
-    );
-    const [ endDate, setEndDate ] = useState(new Date().toLocaleString('en-US'));
     const [ createdBy, setCreatedBy ] = useState('Any');
     const [ search, setSearch ] = useState('');
     const [ addDocument, setAddDocument ] = useState(false);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const startDate = urlParams.get('startDate');
+    const endDate = urlParams.get('endDate');
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      //get url params
+      if(!startDate || !endDate){
+        urlParams.set('startDate', new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 1)).toISOString().split('T')[0]);
+        urlParams.set('endDate', new Date(new Date(new Date()).setDate(new Date().getDate() + 1)).toISOString().split('T')[0]);
+        navigate(`?${urlParams.toString()}`, { replace: true });
+      }
+      //if endDate is before startDate, set endDate to startDate
+      if(new Date(startDate) > new Date(endDate)){
+        urlParams.set('endDate', startDate);
+        navigate(`?${urlParams.toString()}`, { replace: true });
+      }
+    }, [])
+
+    const handleDateChange = (date, type) => {
+        if(type === 'start'){
+            urlParams.set('startDate', new Date(date).toISOString().split('T')[0]);
+        }else{
+            urlParams.set('endDate', new Date(date).toISOString().split('T')[0]);
+        }
+        window.location.search = urlParams.toString();
+    }
+
     useEffect(() => {
         getCompanyDetails(setLoading, setError).then((res) => {
             setCompanyDetails(res);
-            getDocumentsByCompanyIds(setLoading, setError).then((e) => {
-                console.log(e)
+            getDocumentsByCompanyIds(setLoading, setError, startDate, endDate).then((e) => {
                 setDocuments(e);
             })
+        })
+        getDocumentsByCompanyIds(setLoading, setError, startDate, endDate).then((e) => {
+            setDocuments(e);
         })
         getDocumentTypes(setLoading, setError).then((res) => {
             setDocumentTypes(res);
@@ -77,7 +105,7 @@ export default function Documents(){
                             return(
                                 <MenuItem 
                                     key={company.company_id}
-                                    value={company.company_name}
+                                    value={company.company_id}
                                 >
                                     {company.company_name}
                                 </MenuItem>
@@ -116,10 +144,8 @@ export default function Documents(){
                                 
                                 label="Start Date"
                                 maxDate={endDate}
-                                value={startDate}
-                                onChange={(newValue) => {
-                                setStartDate(newValue);
-                                }}
+                                value={new Date(startDate)}
+                                onChange={(newValue) => handleDateChange(newValue, 'start')}
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
@@ -130,10 +156,8 @@ export default function Documents(){
                                 
                                 label="End Date"
                                 minDate={startDate}
-                                value={endDate}
-                                onChange={(newValue) => {
-                                setEndDate(newValue);
-                                }}
+                                value={new Date(endDate)}
+                                onChange={(newValue) => handleDateChange(newValue, 'end')}
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
@@ -141,14 +165,18 @@ export default function Documents(){
                     <Autocomplete
                         fullWidth={true}
                         id="combo-box-demo"
-                        options={documents ? ['Any', ...new Set(documents.map((x) => 
-                                `${proper(x.user_fname)} ${proper(x.user_lname)}`
+                        options={documents ? ['Any', ...new Set(documents.users.map((x) => 
+                                x.user_id
                         ))] : []}
                         sx={{ width: 300, zIndex: 9999 }}
                         renderInput={(params) => <TextField style={{zIndex: 9999}} {...params} label="Created By" />}
                         onChange={(e, x) => setCreatedBy(x)}
                         defaultValue='Any'
                         disableClearable={true}
+                        getOptionLabel={(x) => {
+                            let item = documents?.users?.find(e => e.user_id === x)
+                            return `${proper(item?.user_fname || x)} ${proper(item?.user_lname || '')}`
+                        }}
                     />
                     <Button
                         color="primary"
@@ -165,7 +193,7 @@ export default function Documents(){
                 </div>
             </div>
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
-                {addDocument && <AddDocument companyDetails={companyDetails} setAdding={setAddDocument} docs={documents} />}
+                {addDocument && <AddDocument setDocuments={setDocuments} companyDetails={companyDetails} setAdding={setAddDocument} docs={documents?.data} />}
                 <Table className='shadow-lg' size='small' padding='small'>
                     <TableHead className='bg-stone-200'>
                         <TableRow>
@@ -238,16 +266,16 @@ export default function Documents(){
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {documents && documents
-                            .filter(e => filter === 'All Companies' ? e : e.company_name.toLowerCase() === filter.toLowerCase())
-                            .filter(e => search === '' ? e : `${e.v_make}${e.v_model}${e.v_vin_no}${e.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
-                            .filter(e => new Date(e.date_created) >= new Date(startDate).setHours(0,0,0,0) && new Date(e.date_created) <= new Date(endDate).setHours(23,59,59,999))
-                            .filter(e => createdBy === 'Any' ? e : e.created_by_user_id === createdBy)
+                        {documents && documents.data
+                            .filter(e => filter === 'All Companies' ? e : e.company_id === filter)
+                            .filter(e => search === '' ? e : `${e.data.vehicle.v_make}${e.data.vehicle.v_model}${e.data.vehicle.v_vin_no}${e.data.vehicle.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
+                            .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
                             .map((x, i) => {
                             return <DocumentItem
                                 index={i}
                                 key={i}
-                                doc={x}
+                                doc={x.data}
+                                company={companyDetails.find(e => e.company_id === x.company_id).company_name}
                             />
                         })}
                     </TableBody>

@@ -1,7 +1,7 @@
-import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText, Autocomplete, TextField } from "@mui/material"
+import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText, Autocomplete, TextField, CircularProgress } from "@mui/material"
 import Checkbox from '@mui/material/Checkbox'
 
-export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions }){
+export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions, loading }){
 
     const years = []
     for(let i = new Date().getFullYear(); i >= new Date().getFullYear() - 20; i--){
@@ -32,8 +32,14 @@ export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions }
         </div>
         <div className='p-2'>
             <InputLabel htmlFor="Make">Vehicle Make</InputLabel>
+            {loading ? 
+                <div className='border border-stone-400 rounded p-1'>
+                    <CircularProgress />
+                </div>
+            :
             <Autocomplete
                 fullWidth
+                disabled={loading}
                 id="Make"
                 options={autoCompleteOptions.makes}
                 defaultValue={newVehicle.v_make}
@@ -42,13 +48,19 @@ export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions }
                 renderInput={(params) => <TextField {...params} label="Make" variant="outlined" onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_make: newValue })} />}
                 freeSolo
                 autoSelect
-            />
+            />}
             <FormHelperText>e.g. Toyota</FormHelperText>
         </div>
         <div className='p-2'>   
             <InputLabel htmlFor="Model">Vehicle Model</InputLabel>
+            {loading ? 
+                <div className='border border-stone-400 rounded p-1'>
+                    <CircularProgress />
+                </div>
+            :
             <Autocomplete
                 fullWidth
+                disabled={loading}
                 id="Model"
                 options={autoCompleteOptions.models}
                 defaultValue={newVehicle.v_model}
@@ -56,13 +68,19 @@ export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions }
                 onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_model: newValue })}
                 renderInput={(params) => <TextField {...params} label="Model" variant="outlined" />}
                 freeSolo
-            />
+            />}
             <FormHelperText>e.g. Camry</FormHelperText>
         </div>
         <div className='p-2'>
             <InputLabel htmlFor="pkg">Vehicle Package</InputLabel>
+            {loading ? 
+                <div className='border border-stone-400 rounded p-1'>
+                    <CircularProgress />
+                </div>
+            :
             <Autocomplete
                 fullWidth
+                disabled={loading}
                 id="pkg"
                 options={autoCompleteOptions.packages}
                 defaultValue={newVehicle.v_package}
@@ -70,7 +88,7 @@ export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions }
                 onChange={(e, newValue) => setNewVehicle({ ...newVehicle, v_package: newValue })}
                 renderInput={(params) => <TextField {...params} label="Package" variant="outlined" />}
                 freeSolo
-            />
+            />}
             <FormHelperText>e.g. SE</FormHelperText>
         </div>
         <div className='p-2'>

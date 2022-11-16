@@ -5,7 +5,7 @@ import { searchGurusByVin } from "../../../utils/search"
 import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress } from "@mui/material"
 import { useEffect } from 'react';
 
-export default function DocumentItem({ companyDetails, setAdding, docs }){
+export default function DocumentItem({ companyDetails, setAdding, docs, setDocuments }){
     const [ newVehicle, setNewVehicle ] = useState({
         v_is_certified: false,
         v_is_trade: false,
@@ -17,22 +17,22 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
         cg_high: false
     })
     const [ autoCompleteOptions, setAutoCompleteOptions ] = useState({
-        makes : [...new Set(docs.map(doc => doc.v_make ? doc.v_make.toUpperCase() : ''))].sort((a, b) => a.localeCompare(b)),
-        models: [...new Set(docs.map(doc => doc.v_model ? doc.v_model.toUpperCase() : ''))].sort((a, b) => a.localeCompare(b)),
-        packages: [...new Set(docs.map(doc => doc.v_package ? doc.v_package.toUpperCase() : ''))].sort((a, b) => a.localeCompare(b)),
+        makes : [],
+        models: [],
+        packages: []
     });
 
     useEffect(() => {
         if(newVehicle.v_make){
             setAutoCompleteOptions({
                 ...autoCompleteOptions,
-                models: [...new Set(docs.filter(e => e.v_make.toUpperCase() === newVehicle.v_make).map(doc => doc.v_model ? doc.v_model.toUpperCase() : ''))]
+                models: [...new Set(docs?.filter(e => e.v_make?.toUpperCase() === newVehicle.v_make).map(doc => doc.v_model ? doc.v_model.toUpperCase() : ''))]
             })
         }
         if(newVehicle.v_model){
             setAutoCompleteOptions({
                 ...autoCompleteOptions,
-                packages: [...new Set(docs.filter(e => e.v_make.toUpperCase() === newVehicle.v_make && e.v_model.toUpperCase() === newVehicle.v_model).map(doc => doc.v_package ? doc.v_package.toUpperCase() : ''))]
+                packages: [...new Set(docs?.filter(e => e.v_make?.toUpperCase() === newVehicle.v_make && e.v_model.toUpperCase() === newVehicle.v_model).map(doc => doc.v_package ? doc.v_package.toUpperCase() : ''))]
             })
         }
     }, [newVehicle, docs])
@@ -46,20 +46,27 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
             </div>
         </div>
         <div className="w-full justify-center">
-        {loading.cg_high ? <div className='w-full flex justify-center'><CircularProgress /></div> : hasScraped ? null :<>
+        {loading.cg_high ? null: hasScraped ? null :<>
             <div className='text-2xl font-bold text-center mb-4 text-stone-600'>Let's see what we can find online</div>
             <div className='w-full flex flex-col justify-center items-center gap-4'>
+                <TextField
+                    id='StockNo' 
+                    value={newVehicle.v_stock_no} 
+                    onChange={(e) => setNewVehicle({ ...newVehicle, v_stock_no: e.target.value })}
+                    placeholder='Stock Number'
+                    style={{
+                        width: '25rem',
+                        minWidth: '20rem',
+                    }}
+                />
                 <Autocomplete 
                     id="zip"
-                    options={companyDetails.filter(e => e.company_zip)}
+                    options={companyDetails?.filter(e => e.company_zip)}
                     getOptionLabel={(option) => `${option.company_zip} (${option.company_name})`}
                     style={{ width: '25rem' }}
                     renderInput={(params) => <TextField {...params} label="ZIP Code" variant="outlined" />}
                     freeSolo
                 />
-                {/* <OutlinedInput id='zip' placeholder='ZIP' style={{
-                    width: '25rem',
-                }} /> */}
                 <TextField
                     id='VIN' 
                     value={newVehicle.v_vin_no} 
@@ -69,8 +76,8 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
                         width: '25rem',
                         minWidth: '20rem',
                     }}
-                    error={newVehicle.v_vin_no ? docs.map(e => e.v_vin_no).includes(newVehicle.v_vin_no) : false }
-                    helperText={newVehicle.v_vin_no ? docs.map(e => e.v_vin_no).includes(newVehicle.v_vin_no) ? 'This VIN is already in your documents!!' : null : null}
+                    error={newVehicle.v_vin_no ? docs?.map(e => e.data.vehicle.v_vin_no).includes(newVehicle.v_vin_no) : false }
+                    helperText={newVehicle.v_vin_no ? docs?.map(e => e.data.vehicle.v_vin_no).includes(newVehicle.v_vin_no) ? 'This VIN is already in your documents!!' : null : null}
                 />
                 <Button 
                     color="primary"
@@ -112,8 +119,8 @@ export default function DocumentItem({ companyDetails, setAdding, docs }){
         </> }
         </div>
         <div>
-            {hasScraped && !loading.cg_high  &&
-                <Steps setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} />
+            {hasScraped &&
+                <Steps setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} loadingIn={loading.cg_high} />
             }
         </div>
         </div>

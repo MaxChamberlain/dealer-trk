@@ -6,16 +6,21 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DocumentItem from './DocumentItem';
-import { insertDocument } from '../../../utils/api';
+import { insertDocument, getDocumentsByCompanyIds } from '../../../utils/api';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
 import Step3 from './Steps/Step3';
+import { CircularProgress } from '@mui/material';
 
 const steps = ['Basic Vehicle Information', 'Pricing Information', 'Trade Information'];
 
-export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, autoCompleteOptions }) {
+export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, autoCompleteOptions, setDocuments, loadingIn, setAdding }) {
     const [skipped, setSkipped] = React.useState(new Set());
     const [loading, setLoading] = React.useState(false);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const startDate = urlParams.get('startDate');
+    const endDate = urlParams.get('endDate');
 
   const isStepOptional = (step) => {
     return false;
@@ -27,15 +32,16 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
 
   const handleNext = () => {
     if(activeStep === steps.length - 1){
+      const insert = async () => {
         setLoading(true);
-        insertDocument(
+        await insertDocument(
             {
                 head: company,
                 body: newVehicle
             },
             1,
             () => {
-
+  
               setNewVehicle({
                 v_is_certified: false,
                 v_is_trade: false,
@@ -43,6 +49,10 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
             },
             () => {}
         )
+        const data = await getDocumentsByCompanyIds(() => {}, () => {setLoading(false)}, startDate, endDate)
+        setDocuments(data)
+      }
+      insert()
     }
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -79,7 +89,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
 
   return (
     <Box sx={{ width: '100%' }}>
-      { loading ? <CircularProgress /> : <>
+      { loading ? <></> : <>
         <Stepper activeStep={activeStep}>
           {steps.map((label, index) => {
             const stepProps = {};
@@ -99,7 +109,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
             );
           })}
         </Stepper>
-          {activeStep === 0 && <Step1 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
+          {activeStep === 0 && <Step1 loading={loadingIn} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === 1 && <Step2 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === steps.length ? (

@@ -17,7 +17,7 @@ function App() {
 
   const user = useContext(UserContext);
 
-  if(user.loading){
+  if(user?.loading){
     return(
       <div className='w-screen h-screen flex items-center justify-center'>
         <CircularProgress />

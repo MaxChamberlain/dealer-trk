@@ -94,7 +94,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                 <div className='p-2'>
                     <InputLabel htmlFor="fincarg">Final CarGurus High</InputLabel>
                     <div className='flex'>
-                        {newVehicle.v_final_carg_h_options.greatPrice ? <Select
+                        {newVehicle?.v_final_carg_h_options?.greatPrice ? <Select
                             fullWidth
                             id="fincarg"
                             value={newVehicle.v_final_carg_h}
