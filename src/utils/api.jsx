@@ -191,9 +191,9 @@ export const addCompany = async (newCompany, setLoading, setError) => {
         company_state: newCompany.company_state ? newCompany.company_state.toLowerCase().trim() : null,
         company_zip: newCompany.company_zip ? newCompany.company_zip.replace(/[^0-9]/g, '').trim() : null,
         company_phone: newCompany.company_phone ? newCompany.company_phone.replace(/[^0-9]/g, '').trim() : null,
-        user_id: document.cookie.split('user_id=')[1].split(';')[0]
+        user_id: document.cookie.split('user_id=')[1].split(';')[0],
+        company_carg_preference: newCompany.company_carg_preference,
     }
-    console.log(toSend)
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/company/add', 
@@ -225,6 +225,7 @@ export const addCompanyPermission = async (company_id, user_email) => {
         )
         window.location.reload()
     }catch(e){
+        alert(e.response.status + ' ' + e.response.statusText + ' ' + JSON.stringify(e.response.data));
         console.log(e);
     }
 }
@@ -243,6 +244,50 @@ export const addDocumentNotes = async (document_id, notes) => {
         return data
     }catch(e){
 
+        console.log(e);
+    }
+}
+
+export const updateCompany = async (newCompany, setLoading, setError) => {
+    setLoading(true);
+    const toSend={
+        company_name: newCompany.company_name.toLowerCase().trim(),
+        company_street: newCompany.company_street ? newCompany.company_street.toLowerCase().trim() : null,
+        company_city: newCompany.company_city ? newCompany.company_city.toLowerCase().trim() : null,
+        company_state: newCompany.company_state ? newCompany.company_state.toLowerCase().trim() : null,
+        company_zip: newCompany.company_zip ? newCompany.company_zip.replace(/[^0-9]/g, '').trim() : null,
+        company_phone: newCompany.company_phone ? newCompany.company_phone.replace(/[^0-9]/g, '').trim() : null,
+        company_carg_preference: newCompany.company_carg_preference,
+    }
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/company/update', 
+            {
+                ...toSend,
+                company_id: newCompany.company_id
+            },
+            { withCredentials: true }
+        )
+        setLoading(false);
+        window.location.reload()
+    }catch(e){
+        setLoading(false);
+        setError(e.response.data);
+        console.log(e);
+    }
+}
+
+export const getUsersInCompany = async(company_id) => {
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/company/getusers', 
+            {
+                company_id
+            },
+            { withCredentials: true }
+        )
+        return data
+    }catch(e){
         console.log(e);
     }
 }
