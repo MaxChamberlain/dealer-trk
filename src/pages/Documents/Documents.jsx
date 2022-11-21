@@ -23,6 +23,7 @@ export default function Documents(){
     const [ createdBy, setCreatedBy ] = useState('Any');
     const [ search, setSearch ] = useState('');
     const [ addDocument, setAddDocument ] = useState(false);
+    const [ hovering, setHovering ] = useState(false);
 
     const urlParams = new URLSearchParams(window.location.search);
     const startDate = urlParams.get('startDate');
@@ -272,11 +273,13 @@ export default function Documents(){
                             .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
                             .map((x, i) => {
                             return <DocumentItem
-                                index={i}
-                                key={i}
-                                doc={x.data}
-                                company={companyDetails.find(e => e.company_id === x.company_id).company_name}
-                            />
+                                    index={i}
+                                    key={i}
+                                    doc={x.data}
+                                    doc_id={x.document_id}
+                                    docNotes={x.notes}
+                                    company={companyDetails.find(e => e.company_id === x.company_id).company_name}
+                                />
                         })}
                     </TableBody>
                 </Table>

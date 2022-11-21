@@ -2,8 +2,8 @@ import { proper, properNumber } from '../../../utils/textDisplay';
 import { useState } from 'react';
 import Steps from './Steps';
 import { searchGurusByVin } from "../../../utils/search"
-import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress } from "@mui/material"
-import { useEffect } from 'react';
+import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress, Snackbar } from "@mui/material"
+import React, { useEffect } from 'react';
 
 export default function DocumentItem({ companyDetails, setAdding, docs, setDocuments }){
     const [ newVehicle, setNewVehicle ] = useState({
@@ -13,6 +13,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
     const [ company, setCompany ] = useState('Select A Company');
     const [ activeStep, setActiveStep ] = useState(0);
     const [ hasScraped, setHasScraped ] = useState(false);
+    const [error, setError] = useState('');
     const [ loading, setLoading ] = useState({
         cg_high: false
     })
@@ -45,6 +46,19 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                 <i>Modified (Calculated Field) </i>
             </div>
         </div>
+        <Snackbar
+            open={error.length > 0}
+            autoHideDuration={6000}
+            onClose={() => setError('')}
+            message={error}
+            action={
+                <React.Fragment>
+                    <Button color="primary" size="small" onClick={() => setError('')}>
+                        Close
+                    </Button>
+                </React.Fragment>
+            }
+        />
         <div className="w-full justify-center">
         {loading.cg_high ? null: hasScraped ? null :<>
             <div className='text-2xl font-bold text-center mb-4 text-stone-600'>Let's see what we can find online</div>
@@ -93,7 +107,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                             document.getElementById('zip').value?.split(' ')[0]?.trim() || '',
                             0, 
                             (e) => setLoading(was => {return {...was, cg_high: e}}), 
-                            () => {}, 
+                            (e) => {setError(e)}, 
                             (e) => {setNewVehicle(was => { console.log(e); return { 
                                 ...was,
                                 v_final_carg_h: e.highPrice?.replace(/[^0-9.]/g, '') || '',

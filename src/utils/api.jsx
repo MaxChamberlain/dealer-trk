@@ -151,6 +151,7 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
                     v_year: paramsinput.body?.v_year,
                     v_is_trade : paramsinput.body?.v_is_trade || false,
                     v_source: paramsinput.body?.v_source,
+                    v_final_carg_h_options: paramsinput.body?.v_final_carg_h_options,
                 },
                 trade: {
                     v_trade_acv: paramsinput.body?.v_trade_acv,
@@ -224,6 +225,24 @@ export const addCompanyPermission = async (company_id, user_email) => {
         )
         window.location.reload()
     }catch(e){
+        console.log(e);
+    }
+}
+
+export const addDocumentNotes = async (document_id, notes) => {
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/document/addnotes', 
+            {
+                document_id,
+                notes
+            },
+            { withCredentials: true }
+        )
+        alert('Notes added successfully')
+        return data
+    }catch(e){
+
         console.log(e);
     }
 }
