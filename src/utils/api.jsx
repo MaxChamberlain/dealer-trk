@@ -112,7 +112,29 @@ export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, 
             { withCredentials: true }
         )
         setLoading(false);
-        console.log('data', data)
+        return data
+    }catch(e){
+        setLoading(false);
+        setError(e.response.data);
+        console.log(e);
+    }
+}
+
+export const getDocumentsByCompanyId = async (setLoading, setError, company_id, startDate, endDate ) => {
+    setLoading(true);
+    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/document/getbycompanyid', 
+            {
+                user_id,
+                startDate,
+                endDate,
+                company_id
+            },
+            { withCredentials: true }
+        )
+        setLoading(false);
         return data
     }catch(e){
         setLoading(false);

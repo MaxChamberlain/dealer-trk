@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Home from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
-import SearchIcon from '@mui/icons-material/Search';
+import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 
 export default function Header(){
     const [ anchorEl, setAnchorEl ] = useState(null);
@@ -70,10 +70,10 @@ export default function Header(){
                         marginLeft: 8,
                         padding: '4px 6px'
                     }}
-                    onClick={() => navigate('/searchbyvin')}
+                    onClick={() => navigate('/summary')}
                 >
-                    <SearchIcon style={{ color: 'white', width: 20, height: 20 }} />
-                    <span style={{ marginLeft: 5 }}>Search By VIN</span>
+                    <AlignVerticalBottomIcon style={{ color: 'white', width: 20, height: 20 }} />
+                    <span style={{ marginLeft: 5 }}>Summary</span>
                 </Button>
             </div>
 

@@ -4,7 +4,9 @@ import Home from "./pages/Home/Home";
 import Header from "./components/Header/Header";
 import MyAccount from "./pages/Account/MyAccount/MyAccount";
 import Documents from "./pages/Documents/Documents";
-import SearchByVin from "./pages/SearchByVin/SearchByVin";
+import Summary from "./pages/Summary/Summary";
+import PickSummaryType from "./pages/Summary/:id/PickSummaryType";
+import Overview from "./pages/Summary/:id/Overview";
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
@@ -37,7 +39,9 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/myaccount" element={<MyAccount />} />
           <Route path="/documents" element={<Documents />} />
-          <Route path="/searchbyvin" element={<SearchByVin />} />
+          <Route path="/summary" element={<Summary />} />
+          <Route path="/summary/:id" element={<PickSummaryType />} />
+          <Route path="/summary/:id/overview" element={<Overview />} />
         </Routes>
       </AnimatePresence>
     </div>
