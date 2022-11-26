@@ -3,7 +3,7 @@ import { Divider, Button, Table, TableRow, TableCell, TableHead, TableBody, Text
 import { useState } from 'react';
 import { addDocumentNotes } from '../../../utils/api';
 
-export default function DocumentItem({ doc, index, doc_id, docNotes}){
+export default function DocumentItem({ doc, index, doc_id, docNotes, setHovering, setMousePos }){
     const [ open, setOpen ] = useState(false);
     const [ notes, setNotes ] = useState(docNotes);
 
@@ -11,6 +11,10 @@ export default function DocumentItem({ doc, index, doc_id, docNotes}){
         <>
             <TableRow className={`
                 ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
+                onClick={(e) => {
+                    setHovering(was => was?.doc_id === doc_id ? null : {...doc, doc_id, notes});
+                    setMousePos({ x: e.clientX, y: e.clientY });
+                }}
             >
                 <TableCell>
                     {doc.vehicle?.v_stock_no ? doc.vehicle.v_stock_no : 'N/A'}
@@ -101,7 +105,8 @@ export default function DocumentItem({ doc, index, doc_id, docNotes}){
                 <TableRow className={`
                     ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
                 >
-                    <TableCell colSpan={14}>
+                    <TableCell></TableCell>
+                    <TableCell colSpan={13}>
                          <TextField
                             label='Notes'
                             variant='outlined'
@@ -128,7 +133,8 @@ export default function DocumentItem({ doc, index, doc_id, docNotes}){
                 <TableRow className={`
                     ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
                 >
-                    <TableCell colSpan={16}>
+                    <TableCell></TableCell>
+                    <TableCell colSpan={15}>
                         {doc?.vehicle?.v_final_carg_h_options ? <>
                             <div className='flex flex-col w-full p-4'>
                                 <div className='flex flex-row w-full justify-between text-md font-bold text-center'>
@@ -138,7 +144,7 @@ export default function DocumentItem({ doc, index, doc_id, docNotes}){
                                     <span>High <br /> {doc.vehicle.v_final_carg_h_options?.highPrice}</span>
                                     <span>Over <br /> {doc.vehicle.v_final_carg_h_options?.overPrice}</span>
                                 </div>
-                                <div className='w-full h-6 mt-6 relative' style={{
+                                <div className='w-full h-3 mt-6 relative' style={{
                                     background: 'linear-gradient(90deg, rgba(0,163,50,1) 0%, rgba(255,160,0,1) 71%, rgba(255,0,0,1) 100%)',
                                 }}>
                                     <div className='absolute top-0 left-0 h-full'
@@ -152,14 +158,14 @@ export default function DocumentItem({ doc, index, doc_id, docNotes}){
                                         }}
                                     >
                                         <div className='relative'>
-                                            <div className='absolute -bottom-2 right-0 w-6 h-6'>
+                                            <div className='absolute -bottom-3 right-0 w-6 h-6'>
                                                 <svg>
-                                                    <path d="M 0 0 L 15 15 L 30 0 Z" fill="#1776D1" />
+                                                    <path d="M 0 0 L 10 10 L 18 0 Z" fill="#1776D1" />
                                                 </svg>
                                             </div>
-                                            <div className='absolute top-6 right-0 w-6 h-6'>
+                                            <div className='absolute top-3 right-0 w-6 h-6'>
                                                 <svg>
-                                                    <path d="M 0 15L30 15L15 0Z" fill="#1776D1" />
+                                                    <path d="M 0 10L18 10L10 0Z" fill="#1776D1" />
                                                 </svg>
                                             </div>
                                         </div>

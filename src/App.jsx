@@ -6,7 +6,9 @@ import MyAccount from "./pages/Account/MyAccount/MyAccount";
 import Documents from "./pages/Documents/Documents";
 import Summary from "./pages/Summary/Summary";
 import PickSummaryType from "./pages/Summary/:id/PickSummaryType";
-import Overview from "./pages/Summary/:id/Overview";
+import Overview from "./pages/Summary/:id/overview/Overview";
+import Protected from "./components/Protected";
+import UnprotectedStrict from "./components/UnprotectedStrict";
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
@@ -34,14 +36,14 @@ function App() {
       {location.pathname !== '/login' && location.pathname !== '/register' && <Header />}
       <AnimatePresence exitBeforeEnter>
         <Routes key={location.pathname} location={location} navigate={navigate}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/myaccount" element={<MyAccount />} />
-          <Route path="/documents" element={<Documents />} />
-          <Route path="/summary" element={<Summary />} />
-          <Route path="/summary/:id" element={<PickSummaryType />} />
-          <Route path="/summary/:id/overview" element={<Overview />} />
+          <Route path="/login" element={<UnprotectedStrict redirect={<Login />} />} />
+          <Route path="/register" element={<UnprotectedStrict redirect={<Register />} />} />
+          <Route path="/home" element={<Protected redirect={<Home />} />} />
+          <Route path="/myaccount" element={<Protected redirect={<MyAccount />} />} />
+          <Route path="/documents" element={<Protected redirect={<Documents />} />} />
+          <Route path="/summary" element={<Protected redirect={<Summary />} />} />
+          <Route path="/summary/:id" element={<Protected redirect={<PickSummaryType />} />} />
+          <Route path="/summary/:id/overview" element={<Protected redirect={<Overview />} />} />
         </Routes>
       </AnimatePresence>
     </div>

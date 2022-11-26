@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Home from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
+import { logout } from '../../utils/api';
 
 export default function Header(){
     const [ anchorEl, setAnchorEl ] = useState(null);
@@ -16,9 +17,7 @@ export default function Header(){
     };
     const handleClose = (e) => {
         if(e.target.getAttribute('item-functionality') === 'logout'){
-            document.cookie = 'user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            document.cookie = 'dash-auth-tokenjwtgrab=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            window.location.reload();
+            logout()
         }else if(e.target.getAttribute('item-functionality') === 'myaccount'){
             navigate('/myaccount')
         }

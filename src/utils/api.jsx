@@ -12,7 +12,6 @@ export const authUserLogin = async ( setLoading, setError, user_email, user_pass
                 withCredentials: true
             }
         )
-        document.cookie = 'user_id=' + data.user_id + '; max-age=3600000';
         window.location.reload()
         setLoading(false);
     }catch(e){
@@ -38,7 +37,6 @@ export const authUserRegister = async (user_email, user_password, user_fname, us
                 withCredentials: true
             }
         )
-        document.cookie = 'user_id=' + data.user_id + '; max-age=3600000';
         setLoading('Success!');
         window.location.reload()
     }catch(e){
@@ -50,15 +48,11 @@ export const authUserRegister = async (user_email, user_password, user_fname, us
 
 export const getUserDetails = async (setLoading, setError) => {
     console.log('Function loaded')
-    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
         setLoading(true)
         console.log('Contacting server...');
-        const { data } = await axios.post(
+        const { data } = await axios.get(
             import.meta.env.VITE_API_URL + '/auth/user', 
-            {
-                user_id
-            },
             { withCredentials: true }
         )
         setLoading(false);
@@ -72,13 +66,9 @@ export const getUserDetails = async (setLoading, setError) => {
 
 export const getCompanyDetails = async (setLoading, setError) => {
     setLoading(true);
-    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
-        const { data } = await axios.post(
+        const { data } = await axios.get(
             import.meta.env.VITE_API_URL + '/company/getone', 
-            {
-                user_id
-            },
             { withCredentials: true }
         )
         setLoading(false);
@@ -100,17 +90,16 @@ export const getDocumentTypes = async (setLoading, setError) => {
 
 export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, endDate) => {
     setLoading(true);
-    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/getbycompanyids', 
             {
-                user_id,
                 startDate,
                 endDate,
             },
             { withCredentials: true }
         )
+        console.log(data.data.map(e => e.notes))
         setLoading(false);
         return data
     }catch(e){
@@ -122,12 +111,10 @@ export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, 
 
 export const getDocumentsByCompanyId = async (setLoading, setError, company_id, startDate, endDate ) => {
     setLoading(true);
-    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/getbycompanyid', 
             {
-                user_id,
                 startDate,
                 endDate,
                 company_id
@@ -148,7 +135,6 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
     try{
         const params = {
             metadata: {
-                created_by_user_id: document.cookie.split('user_id=')[1].split(';')[0],
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             },
@@ -213,7 +199,6 @@ export const addCompany = async (newCompany, setLoading, setError) => {
         company_state: newCompany.company_state ? newCompany.company_state.toLowerCase().trim() : null,
         company_zip: newCompany.company_zip ? newCompany.company_zip.replace(/[^0-9]/g, '').trim() : null,
         company_phone: newCompany.company_phone ? newCompany.company_phone.replace(/[^0-9]/g, '').trim() : null,
-        user_id: document.cookie.split('user_id=')[1].split(';')[0],
         company_carg_preference: newCompany.company_carg_preference,
     }
     try{
@@ -234,14 +219,12 @@ export const addCompany = async (newCompany, setLoading, setError) => {
 }
 
 export const addCompanyPermission = async (company_id, user_email) => {
-    const user_id = document.cookie.split('user_id=')[1].split(';')[0];
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/company/addpermission', 
             {
                 company_id,
                 user_email: user_email.toLowerCase().trim(),
-                user_id
             },
             { withCredentials: true }
         )
@@ -309,6 +292,19 @@ export const getUsersInCompany = async(company_id) => {
             { withCredentials: true }
         )
         return data
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const logout = async () => {
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/auth/logout', 
+            {},
+            { withCredentials: true }
+        )
+        window.location.reload()
     }catch(e){
         console.log(e);
     }

@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tabs, Tab, Box, Backdrop, CircularProgress, LinearProgress, OutlinedInput, TextField, Autocomplete, TableBody, Select, MenuItem, Table, TableHead, TableRow, TableCell } from '@mui/material';
+import { Button, ButtonGroup, Tabs, Tab, Box, Backdrop, CircularProgress, LinearProgress, OutlinedInput, TextField, Autocomplete, TableBody, Select, MenuItem, Table, TableHead, TableRow, TableCell, Card } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'
 import { getCompanyDetails, getDocumentTypes, getDocumentsByCompanyIds } from '../../utils/api';
@@ -24,6 +24,7 @@ export default function Documents(){
     const [ search, setSearch ] = useState('');
     const [ addDocument, setAddDocument ] = useState(false);
     const [ hovering, setHovering ] = useState(false);
+    const [ mousePos, setMousePos ] = useState({ x: 0, y: 0 });
 
     const urlParams = new URLSearchParams(window.location.search);
     const startDate = urlParams.get('startDate');
@@ -55,12 +56,17 @@ export default function Documents(){
     }
 
     useEffect(() => {
-        getCompanyDetails(setLoading, setError).then((res) => {
-            setCompanyDetails(res);
-            getDocumentsByCompanyIds(setLoading, setError, startDate, endDate).then((e) => {
-                setDocuments(e);
-            })
-        })
+        const init = async () => {
+            setTimeout(() => {
+                getCompanyDetails(setLoading, setError).then((res) => {
+                    setCompanyDetails(res);
+                    getDocumentsByCompanyIds(setLoading, setError, urlParams.get('startDate'), urlParams.get('endDate')).then((e) => {
+                        setDocuments(e);
+                    })
+                })
+            }, 100)
+        }
+        init()
         getDocumentsByCompanyIds(setLoading, setError, startDate, endDate).then((e) => {
             setDocuments(e);
         })
@@ -271,17 +277,57 @@ export default function Documents(){
                             .filter(e => filter === 'All Companies' ? e : e.company_id === filter)
                             .filter(e => search === '' ? e : `${e.data.vehicle.v_make}${e.data.vehicle.v_model}${e.data.vehicle.v_vin_no}${e.data.vehicle.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
                             .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
+                            .sort((a, b) => {
+                                if (a.metadata.created_at < b.metadata.created_at) {
+                                    return 1;
+                                }
+                                if (a.metadata.created_at > b.metadata.created_at) {
+                                    return -1;
+                                }
+                                return 0;
+                            })
                             .map((x, i) => {
                             return <DocumentItem
                                     index={i}
-                                    key={i}
+                                    key={x.document_id}
                                     doc={x.data}
                                     doc_id={x.document_id}
                                     docNotes={x.notes}
                                     company={companyDetails.find(e => e.company_id === x.company_id).company_name}
+                                    setHovering={setHovering}
+                                    setMousePos={setMousePos}
                                 />
                         })}
                     </TableBody>
+                    {hovering && 
+                        <Card
+                            sx={{
+                                position: 'absolute',
+                                top: mousePos.y,
+                                left: mousePos.x,
+                                zIndex: 9999,
+                                width: '300px',
+                                height: 'auto',
+                                padding: '10px',
+                                backgroundColor: 'white',
+                                boxShadow: '0 0 10px 0 rgba(0,0,0,0.5)',
+                            }}
+                        >
+                            <div className='flex flex-row justify-between'>
+                                <div className='flex flex-col'>
+                                    <div className='text-base font-bold'>
+                                        {hovering?.vehicle?.v_make} {hovering?.vehicle?.v_model}
+                                    </div>
+                                    <div className='text-base font-bold'>
+                                        Notes:
+                                    </div>
+                                    <div className='text-sm'>
+                                        {hovering?.notes || 'No notes'}
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    }
                 </Table>
             </div>
         </motion.div>

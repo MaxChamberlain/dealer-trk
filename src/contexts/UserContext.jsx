@@ -13,24 +13,9 @@ export default function UserContextProvider({ children }){
 
     useEffect(() => {
         const checkUser = async () => {
-            if(!document.cookie.includes('user_id')) {
-                setLoading(false);
-                if(location.pathname !== '/login' && location.pathname !== '/register'){
-                    navigate('/login')
-                }
-            }
             try{
                 const data = await getUserDetails(setLoading);
-                if(data){
-                    setUser(data);
-                    if(location.pathname === '/login' || location.pathname === '/register'){
-                        navigate('/home')
-                    }
-                }else{
-                    if(location.pathname !== '/login' && location.pathname !== '/register'){
-                        navigate('/login')
-                    }
-                }
+                setUser(data);
             }catch(e){
                 setUser(null);
             }
