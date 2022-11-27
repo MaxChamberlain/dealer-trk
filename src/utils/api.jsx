@@ -99,7 +99,6 @@ export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, 
             },
             { withCredentials: true }
         )
-        console.log(data.data.map(e => e.notes))
         setLoading(false);
         return data
     }catch(e){

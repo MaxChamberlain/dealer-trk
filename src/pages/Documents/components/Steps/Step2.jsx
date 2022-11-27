@@ -1,14 +1,26 @@
-import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField, MenuItem, Select } from "@mui/material"
+import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField, MenuItem, Select, CircularProgress } from "@mui/material"
 
-export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails }){
+export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, loading }){
+    console.log(loading)
     const sourceOptions = [
-     'TRADE', 
-     'CAROFFER', 
-     'BID2BUY', 
-     'MANHEIM', 
-     'SUBARU', 
-     'AVONDALE'
-    ]
+        'APPRAISAL',
+        'AUCTION',
+        'AUTO TRADER',
+        'BID2BUY', 
+        'CAROFFER', 
+        'COMMERCIAL APPRAISAL',
+        'KBB ICO REVIEW',
+        'LEASE BUYOUT',
+        'LEASE RETURN',
+        'MANHEIM', 
+        'NEW CAR APPRAISAL',
+        'ORDER UNIT',
+        'RETIRED LOANER',
+        'SUBARU', 
+        'TRADE', 
+        'USED CAR APPRAISAL',
+        ...companyDetails.map(e => e.company_name.toUpperCase())
+    ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
     return(
         <>
             <div className="my-4 grid grid-cols-5 gap-y-5 justify-center items-center">
@@ -64,7 +76,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                     />
                 </div>
                 <div className='p-2'>
-                    <InputLabel htmlFor="incarg">Initial CarGurus High</InputLabel>
+                    <InputLabel htmlFor="incarg">Static CarGurus</InputLabel>
                     <OutlinedInput
                         id="incarg"
                         value={newVehicle.v_initial_carg_h}
@@ -92,38 +104,44 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                     />
                 </div>  
                 <div className='p-2'>
-                    <InputLabel htmlFor="fincarg">Final CarGurus High</InputLabel>
-                    <div className='flex'>
-                        {newVehicle?.v_final_carg_h_options?.greatPrice ? <Select
-                            fullWidth
-                            id="fincarg"
-                            value={newVehicle.v_final_carg_h}
-                            type='number'
-                            onChange={(e) => setNewVehicle({ ...newVehicle, v_final_carg_h: e.target.value })}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    $
-                                </InputAdornment>
-                            }
-                        >
-                            <MenuItem value={newVehicle.v_final_carg_h_options.greatPrice}>{newVehicle.v_final_carg_h_options.greatPrice} - Great Price</MenuItem>
-                            <MenuItem value={newVehicle.v_final_carg_h_options.goodPrice}>{newVehicle.v_final_carg_h_options.goodPrice} - Good Price</MenuItem>
-                            <MenuItem value={newVehicle.v_final_carg_h_options.fairPrice}>{newVehicle.v_final_carg_h_options.fairPrice} - Fair Price</MenuItem>
-                            <MenuItem value={newVehicle.v_final_carg_h_options.highPrice}>{newVehicle.v_final_carg_h_options.highPrice} - High Price</MenuItem>
-                            <MenuItem value={newVehicle.v_final_carg_h_options.overPrice}>{newVehicle.v_final_carg_h_options.overPrice} - Over Price</MenuItem>
-                        </Select> :
-                        <OutlinedInput
-                            id="fincarg"
-                            value={newVehicle.v_final_carg_h}
-                            type='number'
-                            onChange={(e) => setNewVehicle({ ...newVehicle, v_final_carg_h: e.target.value })}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    $
-                                </InputAdornment>
-                            }
-                        />}  
-                    </div>
+                    <InputLabel htmlFor="fincarg">Dynamic CarGurus</InputLabel>
+                    {loading ? 
+                        <div className='border border-stone-400 rounded p-1'>
+                            <CircularProgress />
+                        </div>
+                    :
+                        <div className='flex'>
+                            {newVehicle?.v_final_carg_h_options?.greatPrice ? <Select
+                                fullWidth
+                                id="fincarg"
+                                value={newVehicle.v_final_carg_h}
+                                type='number'
+                                onChange={(e) => setNewVehicle({ ...newVehicle, v_final_carg_h: e.target.value })}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        $
+                                    </InputAdornment>
+                                }
+                            >
+                                <MenuItem value={newVehicle.v_final_carg_h_options.greatPrice}>{newVehicle.v_final_carg_h_options.greatPrice} - Great Price</MenuItem>
+                                <MenuItem value={newVehicle.v_final_carg_h_options.goodPrice}>{newVehicle.v_final_carg_h_options.goodPrice} - Good Price</MenuItem>
+                                <MenuItem value={newVehicle.v_final_carg_h_options.fairPrice}>{newVehicle.v_final_carg_h_options.fairPrice} - Fair Price</MenuItem>
+                                <MenuItem value={newVehicle.v_final_carg_h_options.highPrice}>{newVehicle.v_final_carg_h_options.highPrice} - High Price</MenuItem>
+                                <MenuItem value={newVehicle.v_final_carg_h_options.overPrice}>{newVehicle.v_final_carg_h_options.overPrice} - Over Price</MenuItem>
+                            </Select> :
+                            <OutlinedInput
+                                id="fincarg"
+                                value={newVehicle.v_final_carg_h}
+                                type='number'
+                                onChange={(e) => setNewVehicle({ ...newVehicle, v_final_carg_h: e.target.value })}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        $
+                                    </InputAdornment>
+                                }
+                            />}  
+                        </div>
+                    }
                 </div>
                 <div className='p-2'>   
                     <InputLabel htmlFor="sprice">Start Price</InputLabel>
@@ -170,18 +188,23 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                 </div>
                 <div className='p-2'>
                     <InputLabel htmlFor="imv">IMV</InputLabel>
-                    <OutlinedInput
-                        id="imv"
-                        value={newVehicle.v_imv}
-                        type='number'
-                        onChange={(e) => setNewVehicle({ ...newVehicle, v_imv: e.target.value })}
-                        startAdornment={
-                            <InputAdornment position="start">
-                                $
-                            </InputAdornment>
-                        }
-
-                    />
+                    {loading ? 
+                        <div className='border border-stone-400 rounded p-1'>
+                            <CircularProgress />
+                        </div>
+                    :
+                        <OutlinedInput
+                            id="imv"
+                            value={newVehicle.v_imv}
+                            type='number'
+                            onChange={(e) => setNewVehicle({ ...newVehicle, v_imv: e.target.value })}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    $
+                                </InputAdornment>
+                            }
+                        />
+                    }
                 </div>
             </div>
         </>

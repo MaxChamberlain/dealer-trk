@@ -19,7 +19,7 @@ export default function Overview(){
 
     useEffect(() => {
         getDocumentsByCompanyId(() => {}, () => {}, companyId, start, end).then((res) => {
-            console.log(res)
+            console.log(res.map(e => e.data.vehicle?.v_margin))
             setDocs(res);
             setAvailSources([...new Set(res.map(doc => doc.data.vehicle.v_source))])
         })
@@ -73,14 +73,14 @@ export default function Overview(){
                                 </div>
                                 <Stats docs={sources.length > 0 ? docs.filter(e => e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) : docs} />
                             </div>
-                    {[...new Set(docs?.map((doc) => doc.data.vehicle.v_source))].filter(e => sources.length > 0 ? (e ? sources.includes(e) : sources.includes('Other')) : true).sort((a, b) => a.localeCompare(b)).map((type) => {
+                    {[...new Set(docs?.map((doc) => doc.data.vehicle.v_source))].filter(e => sources.length > 0 ? (e ? sources.includes(e) : sources.includes('Other')) : true).sort((a, b) => a.localeCompare(b)).map((type, i) => {
                         return(
                             <div className='p-3 rounded-lg mt-6'>
                                 <div className="rounded-t-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between" style={{
-                                    background: '#4992DB',
+                                    background: `rgb(${100 - (i * 20)},150,${250 - (i * 10)})`,
                                 }}>
                                     <div className='text-2xl'>{proper(type || 'OTHER')}</div>
-                                    <div className='text-2xl'>{docs.filter(e => e ? sources.includes(e) : sources.includes('Other')).length} Total Sales</div>
+                                    <div className='text-2xl'>{docs.filter((doc) => doc.data.vehicle.v_source === type).length} Total Sales</div>
                                 </div>
                                 <Stats docs={docs.filter((doc) => doc.data.vehicle.v_source === type)} />
                                 

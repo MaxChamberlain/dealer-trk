@@ -3,18 +3,17 @@ import { Divider, Button, Table, TableRow, TableCell, TableHead, TableBody, Text
 import { useState } from 'react';
 import { addDocumentNotes } from '../../../utils/api';
 
-export default function DocumentItem({ doc, index, doc_id, docNotes, setHovering, setMousePos }){
-    const [ open, setOpen ] = useState(false);
+export default function DocumentItem({ doc, index, doc_id, docNotes, setMousePos, open, setOpen, docDates }){
     const [ notes, setNotes ] = useState(docNotes);
+    const [ hovering, setHovering ] = useState({
+        notes: null,
+        trade: null,
+    });
 
     return(
         <>
             <TableRow className={`
                 ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
-                onClick={(e) => {
-                    setHovering(was => was?.doc_id === doc_id ? null : {...doc, doc_id, notes});
-                    setMousePos({ x: e.clientX, y: e.clientY });
-                }}
             >
                 <TableCell>
                     {doc.vehicle?.v_stock_no ? doc.vehicle.v_stock_no : 'N/A'}
@@ -82,26 +81,94 @@ export default function DocumentItem({ doc, index, doc_id, docNotes, setHovering
                     {doc.vehicle?.v_market_percent ? properNumber(doc.vehicle.v_market_percent) + '%' :
                         <span className='italic text-stone-500'>N/A</span>}
                 </TableCell>
-                <TableCell>
-                    {doc.vehicle?.v_was_trade ? 'Yes' : 'No'}
+                <TableCell className='relative'
+                    onMouseEnter={() => doc.vehicle?.v_is_trade ? setHovering({...hovering, trade: true}) : null}
+                    onMouseLeave={() => doc.vehicle?.v_is_trade ? setHovering({...hovering, trade: false}) : null}
+                >
+                    {doc.vehicle?.v_is_trade ? 
+                        <Button
+                            variant='outlined'
+                            size='small'
+                            style={{
+                                color: 'black',
+                                borderColor: 'black'
+                            }}
+                        >
+                            Yes
+                        </Button>
+                        :
+                        <span>No</span>
+                    }
+                    {hovering.trade &&
+                        <div className='absolute right-2/3 top-0 z-50 bg-white border border-gray-300 rounded-md shadow-xl text-2xl p-2 whitespace-nowrap'>
+                            <div className='text-base font-bold'>
+                                {doc?.trade?.v_trade_year} {doc?.trade?.v_trade_make?.toUpperCase() || ''} {doc?.trade?.v_trade_model?.toUpperCase() || ''} {doc?.trade?.v_trade_package?.toUpperCase() || ''} {doc?.trade?.v_trade_pkg?.toUpperCase() || ''}
+                            </div>
+                            <div className='text-sm'>
+                                {doc?.trade?.v_trade_vin_no}
+                            </div>
+                            <div className='text-sm'>
+                                {properNumber(doc?.trade?.v_trade_miles || '')} Miles
+                            </div>
+                            <div className='text-sm'>
+                                ${properNumber(doc?.trade?.v_trade_acv || '')} Trade Value
+                            </div>
+                        </div>
+                    }
                 </TableCell>
-                <TableCell>
-                    {doc.trade?.v_trade_vehicle ? proper(doc.vehicle.v_trade_vehicle) :
-                        <span className='italic'>N/A</span>}
+                <TableCell className='relative'
+                    onMouseEnter={() => notes ? setHovering({...hovering, notes: true}) : null}
+                    onMouseLeave={() => notes ? setHovering({...hovering, notes: false}) : null}
+                >
+                    {notes ? 
+                        <Button
+                            variant='outlined'
+                            size='small'
+                            style={{
+                                color: 'black',
+                                borderColor: 'black'
+                            }}
+                        >
+                            View
+                        </Button>
+                        :
+                        <span>N/A</span>
+                    }
+                    {hovering.notes &&
+                        <div className='absolute right-2/3 top-0 z-50 bg-white border border-gray-300 rounded-md shadow-xl text-2xl p-2 whitespace-nowrap font-bold'>
+                            <div className='text-sm'>
+                                {notes}
+                            </div>
+                        </div>
+                    }
                 </TableCell>
                 <TableCell>
                     <Button
                         variant='contained'
                         color='primary'
                         size='small'
-                        onClick={() => setOpen(was => !was)}
+                        onClick={() => setOpen(was => was.includes(doc_id) ? was.filter(id => id !== doc_id) : [...was, doc_id])}
                     >
-                        {open ? 'Close' : 'Open'}
+                        {open.includes(doc_id) ? 'Close' : 'Open'}
                     </Button>
                 </TableCell>
             </TableRow>
-            {open &&
+            {open.includes(doc_id) &&
             <>
+                <TableRow className={`
+                    ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} h-16`}
+                >
+                    <TableCell></TableCell>
+                    <TableCell colSpan={1}>
+                        Created {docDates.created_at ? new Date(docDates.created_at).toLocaleDateString() : 'N/A'} <br /> {docDates.created_at ? new Date(docDates.created_at).toLocaleTimeString() : 'N/A'}
+                    </TableCell>
+                    <TableCell colSpan={1}>
+                        Updated {docDates.updated_at ? new Date(docDates.updated_at).toLocaleDateString() : 'N/A'} <br /> {docDates.updated_at ? new Date(docDates.updated_at).toLocaleTimeString() : 'N/A'}
+                    </TableCell>
+                    <TableCell colSpan={14}>
+
+                    </TableCell>
+                </TableRow>
                 <TableRow className={`
                     ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
                 >

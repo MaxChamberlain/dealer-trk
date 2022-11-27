@@ -23,8 +23,7 @@ export default function Documents(){
     const [ createdBy, setCreatedBy ] = useState('Any');
     const [ search, setSearch ] = useState('');
     const [ addDocument, setAddDocument ] = useState(false);
-    const [ hovering, setHovering ] = useState(false);
-    const [ mousePos, setMousePos ] = useState({ x: 0, y: 0 });
+    const [ open, setOpen ] = useState([]);
 
     const urlParams = new URLSearchParams(window.location.search);
     const startDate = urlParams.get('startDate');
@@ -201,6 +200,16 @@ export default function Documents(){
             </div>
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
                 {addDocument && <AddDocument setDocuments={setDocuments} companyDetails={companyDetails} setAdding={setAddDocument} docs={documents?.data} />}
+                <div className='w-full p-2 bg-white'>
+                    <Button
+                        color="primary"
+                        aria-label="add"
+                        variant='contained'
+                        onClick={() => setOpen(was => documents && (documents.data.map(e => e.document_id).every(e => was.includes(e)) ? [] : documents.data.map(e => e.document_id)))}
+                    >
+                        {documents && (documents.data.map(e => e.document_id).every(e => open.includes(e)) ? documents.data.map(e => e.document_id) && 'Close All' : 'Open All')}
+                    </Button>
+                </div>
                 <Table className='shadow-lg' size='small' padding='small'>
                     <TableHead className='bg-stone-200'>
                         <TableRow>
@@ -262,10 +271,10 @@ export default function Documents(){
                                 Market %
                             </TableCell>
                             <TableCell>
-                                Took A Trade?
+                                Trade
                             </TableCell>
                             <TableCell>
-                                Trade Vehicle
+                                Notes
                             </TableCell>
                             <TableCell>
                                 Store
@@ -288,46 +297,18 @@ export default function Documents(){
                             })
                             .map((x, i) => {
                             return <DocumentItem
+                                    open={open}
+                                    setOpen={setOpen}
                                     index={i}
                                     key={x.document_id}
                                     doc={x.data}
                                     doc_id={x.document_id}
                                     docNotes={x.notes}
-                                    company={companyDetails.find(e => e.company_id === x.company_id).company_name}
-                                    setHovering={setHovering}
-                                    setMousePos={setMousePos}
+                                    company={companyDetails ? companyDetails.find(e => e.company_id === x.company_id).company_name : {}}
+                                    docDates={x.metadata}
                                 />
                         })}
                     </TableBody>
-                    {hovering && 
-                        <Card
-                            sx={{
-                                position: 'absolute',
-                                top: mousePos.y,
-                                left: mousePos.x,
-                                zIndex: 9999,
-                                width: '300px',
-                                height: 'auto',
-                                padding: '10px',
-                                backgroundColor: 'white',
-                                boxShadow: '0 0 10px 0 rgba(0,0,0,0.5)',
-                            }}
-                        >
-                            <div className='flex flex-row justify-between'>
-                                <div className='flex flex-col'>
-                                    <div className='text-base font-bold'>
-                                        {hovering?.vehicle?.v_make} {hovering?.vehicle?.v_model}
-                                    </div>
-                                    <div className='text-base font-bold'>
-                                        Notes:
-                                    </div>
-                                    <div className='text-sm'>
-                                        {hovering?.notes || 'No notes'}
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-                    }
                 </Table>
             </div>
         </motion.div>
