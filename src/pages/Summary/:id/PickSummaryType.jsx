@@ -104,7 +104,7 @@ export default function PickSummaryType(){
 
                 <div className="mt-6 text-white text-4xl grid grid-cols-4">
                     <div className="w-full rounded-lg p-6 bg-[#ff8000] shadow-lg cursor-pointer hover:brightness-110"
-                        onClick={() => navigate(location.pathname + '/overview?start=' + date.start.toLocaleDateString('en-US') + '&end=' + date.end.toLocaleDateString('en-US'))}
+                        onClick={() => navigate(location.pathname + '/overview?start=' + new Date(date.start).toLocaleDateString('en-US') + '&end=' + new Date(date.end).toLocaleDateString('en-US'))}
                     >
                         <div className='flex items-center justify-between'>
                             <span>Overview</span>

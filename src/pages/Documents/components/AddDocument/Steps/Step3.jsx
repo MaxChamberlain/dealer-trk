@@ -15,6 +15,20 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                 </div>
                 {newVehicle.v_is_trade && <>
                     <div className='p-2'>
+                        <InputLabel htmlFor="trdyear">Trade Vehicle Year</InputLabel>
+                        <OutlinedInput
+                            id="trdyear"
+                            value={newVehicle.v_trade_year}
+                            disabled={!newVehicle.v_is_trade}
+                            type='number'
+                            style={{
+                                backgroundColor: newVehicle.v_is_trade ? 'white' : '#e0e0e0'
+                            }}
+                            onChange={(e) => setNewVehicle({ ...newVehicle, v_trade_year: e.target.value })}
+                        />
+                        <FormHelperText>e.g. 2014</FormHelperText>
+                    </div>
+                    <div className='p-2'>
                         <InputLabel htmlFor="trdmake">Trade Vehicle Make</InputLabel>   
                         <OutlinedInput
                             id="trdmake"    
@@ -39,20 +53,6 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                             onChange={(e) => setNewVehicle({ ...newVehicle, v_trade_model: e.target.value })}
                         />
                         <FormHelperText>e.g. Civic</FormHelperText>
-                    </div>
-                    <div className='p-2'>
-                        <InputLabel htmlFor="trdyear">Trade Vehicle Year</InputLabel>
-                        <OutlinedInput
-                            id="trdyear"
-                            value={newVehicle.v_trade_year}
-                            disabled={!newVehicle.v_is_trade}
-                            type='number'
-                            style={{
-                                backgroundColor: newVehicle.v_is_trade ? 'white' : '#e0e0e0'
-                            }}
-                            onChange={(e) => setNewVehicle({ ...newVehicle, v_trade_year: e.target.value })}
-                        />
-                        <FormHelperText>e.g. 2014</FormHelperText>
                     </div>
                     <div className='p-2'>
                         <InputLabel htmlFor="trdmls">Trade Vehicle Package</InputLabel>   
