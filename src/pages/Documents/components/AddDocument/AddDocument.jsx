@@ -1,7 +1,7 @@
-import { proper, properNumber } from '../../../utils/textDisplay';
+import { proper, properNumber } from '../../../../utils/textDisplay';
 import { useState } from 'react';
 import Steps from './Steps';
-import { searchGurusByVin } from "../../../utils/search"
+import { searchGurusByVin } from "../../../../utils/search"
 import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress, Snackbar } from "@mui/material"
 import React, { useEffect } from 'react';
 

@@ -108,6 +108,15 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                 </>}
             </div>
             <div className='p-2'>
+                <InputLabel htmlFor="notes">Notes</InputLabel>
+                <OutlinedInput
+                    fullWidth
+                    id="notes"
+                    value={newVehicle.v_notes}
+                    onChange={(e) => setNewVehicle({ ...newVehicle, v_notes: e.target.value })}
+                />
+            </div>
+            <div className='p-2'>
                 <InputLabel htmlFor="cmpn" required>Which company is this for?</InputLabel>
                 <Select    
                     fullWidth

@@ -172,6 +172,7 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
             },
             company_id: paramsinput.head.company_id,
             document_type: 'Trip Pad',  
+            notes: paramsinput.body?.v_notes,
         }
         await axios.post(
             import.meta.env.VITE_API_URL + '/document/insert', 

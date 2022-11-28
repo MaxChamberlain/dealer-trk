@@ -7,6 +7,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Box, TextField } from '@mui/material';
 import { motion } from 'framer-motion';
+import PickSetRange from './components/PickSetRange';
 
 export default function PickSummaryType(){
     const [ company, setCompany ] = useState(null);
@@ -16,7 +17,18 @@ export default function PickSummaryType(){
         end: new Date()
     });
 
+    const location = useLocation();
+
     useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        if(urlParams.get('start') && urlParams.get('end')){
+            console.log('start and end', urlParams.get('start'), urlParams.get('end'))
+            setDate({
+                start: new Date(urlParams.get('start')).setDate(new Date(urlParams.get('start')).getDate() + 1),
+                end: new Date(urlParams.get('end')).setDate(new Date(urlParams.get('end')).getDate() + 1)
+            })
+        }
+
         const companyId = window.location.pathname.split('/')[2];
         getCompanyDetails(() => {}, () => {}).then((res) => {
             const comp = res.find((company) => company.company_id === companyId)
@@ -30,7 +42,6 @@ export default function PickSummaryType(){
 
 
     const navigate = useNavigate();
-    const location = useLocation();
 
     const handleDateChange = (newDate, partition) => {
         setDate(was => {
@@ -54,35 +65,40 @@ export default function PickSummaryType(){
                     View Your Summary {company ? 'for ' + proper(company?.company_name || 'No Company Name') : ''}
                 </motion.div>
 
-                <div className='w-full flex justify-end mt-6 align-center z=[9999]' id='filter-bar-docs'>
-                    <div className='w-fit bg-white justify-start p-4 rounded drop-shadow flex items-center'>
-                        <Box sx={{ width: 350 }}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns} >
-                                <DatePicker
-                                    label="Start Date"
-                                    maxDate={date.end}
-                                    value={date.start}
-                                    onChange={(newValue) => handleDateChange(newValue, 'start')}
-                                    renderInput={(params) => <TextField {...params} style={{
-                                        width: '100%',
-                                    }} />}
-                                />
-                            </LocalizationProvider>
-                        </Box>
-                        <Box sx={{ width: 350 }}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns} >
-                                <DatePicker
-                                    
-                                    label="End Date"
-                                    minDate={date.start}
-                                    value={date.end}
-                                    onChange={(newValue) => handleDateChange(newValue, 'end')}
-                                    renderInput={(params) => <TextField {...params} style={{
-                                        width: '100%',
-                                    }} />}
-                                />
-                            </LocalizationProvider>
-                        </Box>
+                <div className='w-full flex flex-col justify-end mt-6 z=[9999] items-end relative' id='filter-bar-docs'>
+                    <div className='w-fit flex-col bg-white justify-start p-4 rounded drop-shadow flex mb-6'>
+                        <div className='flex'>
+                            <Box sx={{ width: 350 }}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns} >
+                                    <DatePicker
+                                        label="Start Date"
+                                        maxDate={date.end}
+                                        value={date.start}
+                                        onChange={(newValue) => handleDateChange(newValue, 'start')}
+                                        renderInput={(params) => <TextField {...params} style={{
+                                            width: '100%',
+                                        }} />}
+                                    />
+                                </LocalizationProvider>
+                            </Box>
+                            <Box sx={{ width: 350 }}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns} >
+                                    <DatePicker
+                                        
+                                        label="End Date"
+                                        minDate={date.start}
+                                        value={date.end}
+                                        onChange={(newValue) => handleDateChange(newValue, 'end')}
+                                        renderInput={(params) => <TextField {...params} style={{
+                                            width: '100%',
+                                        }} />}
+                                    />
+                                </LocalizationProvider>
+                            </Box>
+                        </div>
+                    </div>
+                    <div className='flex flex-col bg-white p-2 gap-y-2 absolute top-full'>
+                        <PickSetRange />
                     </div>
                 </div>
 

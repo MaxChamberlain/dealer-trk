@@ -5,8 +5,8 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import DocumentItem from './DocumentItem';
-import { insertDocument, getDocumentsByCompanyIds } from '../../../utils/api';
+import DocumentItem from '../DocumentItem/DocumentItem';
+import { insertDocument, getDocumentsByCompanyIds } from '../../../../utils/api';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
 import Step3 from './Steps/Step3';
@@ -113,7 +113,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
           {activeStep === 1 && <Step2 loading={loadingIn.cargurus} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === steps.length ? (
-          <React.Fragment>
+          <>
             <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
             </Typography>
@@ -122,7 +122,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
               <Box sx={{ flex: '1 1 auto' }} />
               <Button onClick={handleReset}>Reset</Button>
             </Box>
-          </React.Fragment>
+          </>
         ) : (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
