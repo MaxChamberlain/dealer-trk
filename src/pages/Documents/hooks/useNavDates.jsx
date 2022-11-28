@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useNavDates = () => {
+
+    const navigate = useNavigate();
 
     const urlParams = new URLSearchParams(window.location.search);
     const startDate = urlParams.get('startDate');
