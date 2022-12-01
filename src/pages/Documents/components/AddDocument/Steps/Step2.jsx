@@ -206,6 +206,24 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                         />
                     }
                 </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="strtacv">ACV</InputLabel>   
+                    <OutlinedInput
+                        id="strtacv"    
+                        value={newVehicle.v_acv}
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_acv: e.target.value })}
+                        startAdornment="$"
+                    /> 
+                </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="endacv">Final ACV</InputLabel>   
+                    <OutlinedInput
+                        id="endacv"    
+                        value={newVehicle.v_final_acv}
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_final_acv: e.target.value })}
+                        startAdornment="$"
+                    /> 
+                </div>
             </div>
         </>
     )

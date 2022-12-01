@@ -77,7 +77,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                 <Autocomplete 
                     id="zip"
                     options={companyDetails?.filter(e => e.company_zip)}
-                    getOptionLabel={(option) => `${option.company_zip} (${option.company_name})`}
+                    getOptionLabel={(option) => `${option.company_zip} (${proper(option?.company_name || '')})`}
                     style={{ width: '25rem' }}
                     renderInput={(params) => <TextField {...params} label="ZIP Code" variant="outlined" />}
                     freeSolo

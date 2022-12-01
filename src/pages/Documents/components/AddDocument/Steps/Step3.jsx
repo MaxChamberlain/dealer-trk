@@ -92,19 +92,6 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                             startAdornment="$"
                         /> 
                     </div>
-                    <div className='p-2'>
-                        <InputLabel htmlFor="strtacv">Trade Vehicle End ACV</InputLabel>   
-                        <OutlinedInput
-                            id="strtacv"    
-                            value={newVehicle.v_trade_end_acv}
-                            disabled={!newVehicle.v_is_trade}
-                            style={{
-                                backgroundColor: newVehicle.v_is_trade ? 'white' : '#e0e0e0'
-                            }}
-                            onChange={(e) => setNewVehicle({ ...newVehicle, v_trade_end_acv: e.target.value })}
-                            startAdornment="$"
-                        /> 
-                    </div>
                 </>}
             </div>
             <div className='p-2'>

@@ -159,6 +159,8 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
                     v_is_trade : paramsinput.body?.v_is_trade || false,
                     v_source: paramsinput.body?.v_source,
                     v_final_carg_h_options: paramsinput.body?.v_final_carg_h_options,
+                    v_acv: paramsinput.body?.v_acv,
+                    v_final_acv: paramsinput.body?.v_final_acv,
                 },
                 trade: {
                     v_trade_acv: paramsinput.body?.v_trade_acv,
@@ -228,7 +230,7 @@ export const addCompanyPermission = async (company_id, user_email) => {
             },
             { withCredentials: true }
         )
-        window.location.reload()
+        alert('Permission added for ' + user_email)
     }catch(e){
         alert(e.response.status + ' ' + e.response.statusText + ' ' + JSON.stringify(e.response.data));
         console.log(e);
