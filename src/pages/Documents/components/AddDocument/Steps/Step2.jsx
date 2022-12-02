@@ -26,6 +26,8 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
         'IMPORT TRUCK',
         'LUXURY CAR',
         'LUXURY TRUCK',
+        'G Unit',
+        'Employee / House',
         ...companyDetails.map(e => e.company_name.toUpperCase())
     ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
     return(

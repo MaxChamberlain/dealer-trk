@@ -55,18 +55,6 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                         <FormHelperText>e.g. Civic</FormHelperText>
                     </div>
                     <div className='p-2'>
-                        <InputLabel htmlFor="trdmls">Trade Vehicle Package</InputLabel>   
-                        <OutlinedInput
-                            id="trdmls"    
-                            value={newVehicle.v_trade_pkg}
-                            disabled={!newVehicle.v_is_trade}
-                            style={{
-                                backgroundColor: newVehicle.v_is_trade ? 'white' : '#e0e0e0'
-                            }}
-                            onChange={(e) => setNewVehicle({ ...newVehicle, v_trade_pkg: e.target.value })}
-                        /> 
-                    </div>
-                    <div className='p-2'>
                         <InputLabel htmlFor="trdmls">Trade Vehicle Miles</InputLabel>   
                         <OutlinedInput
                             id="trdmls"    
