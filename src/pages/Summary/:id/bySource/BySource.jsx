@@ -6,7 +6,7 @@ import { proper, properNumber } from '../../../../utils/textDisplay';
 import Stats from './Stats';
 import { Button, ButtonGroup } from '@mui/material';
 
-export default function Overview(){
+export default function BySource(){
     const [ docs, setDocs ] = useState(null);
     const [ company, setCompany ] = useState(null);
     const [ sources, setSources ] = useState([]);
@@ -37,10 +37,13 @@ export default function Overview(){
                     animate={{ width: '100%', x: 0 }}
                     exit={{ width: '0%', x: -100 }}
                 >
-                    <span>Summary Overview {company ? 'for ' + proper(company?.company_name || 'No Company Name') : ''}</span>
+                    <span>Summary By Source {company ? 'for ' + proper(company?.company_name || 'No Company Name') : ''}</span>
                     <span>{start === end ? start : start + ' - ' + end}</span>
                 </motion.div>
-                <div className='w-full bg-white mt-4'>
+                <div className='w-full bg-white mt-4 p-4 shadow-md'>
+                    <div className='w-full font-bold text-xl p-2 text-center'>
+                        Show/Hide Sources
+                    </div>
                     <ButtonGroup fullWidth>
                         <Button variant={(sources.length === 0 || availSources.every(e => e ? sources.includes(e) : sources.includes('Other'))) ? 'contained' : 'outlined'} onClick={() => {
                             if(sources.length !== 0){

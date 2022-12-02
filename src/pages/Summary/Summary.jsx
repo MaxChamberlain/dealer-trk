@@ -24,7 +24,7 @@ export default function Summary(){
                 animate={{ width: '100%', x: 0 }}
                 exit={{ width: '0%', x: -100 }}
             >
-                View Your Summary
+                View Your Summary: Pick a Company
             </motion.div>
             <motion.div className='mt-6 text-black'
                 initial={{ opacity: 0 }}
@@ -34,15 +34,12 @@ export default function Summary(){
             >
                 {companies && companies.map((company) => {
                     return(
-                        <div className="w-full rounded-lg p-6 text-2xl bg-white shadow-lg grid grid-cols-6 cursor-pointer hover:bg-stone-200"
+                        <div className="w-full rounded-lg p-6 text-2xl bg-white shadow-lg grid grid-cols-3 cursor-pointer hover:bg-stone-200 mb-8"
                             onClick={() => navigate(`/summary/${company.company_id}`)}
                         >
                             <span>{proper(company?.company_name || 'No Company Name')}</span>
-                            <span>{proper(company?.company_zpi || 'No Company ZIP')}</span>
+                            <span>{proper(company?.company_zip || 'No Company ZIP')}</span>
                             <span>{proper(company?.company_carg_preference || 'No CarGurus Preference')}</span>
-                            <div></div>
-                            <div></div>
-                            <div>GO</div>
                         </div>
                     )
                 })}

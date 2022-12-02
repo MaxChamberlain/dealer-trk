@@ -103,15 +103,15 @@ export default function PickSummaryType(){
                 </div>
 
                 <div className="mt-6 text-white text-4xl grid grid-cols-4">
-                    <div className="w-full rounded-lg p-6 bg-[#ff8000] shadow-lg cursor-pointer hover:brightness-110"
+                    <div className="w-full rounded-lg p-6 bg-white shadow-lg text-black cursor-pointer hover:brightness-110"
                         onClick={() => navigate(location.pathname + '/overview?start=' + new Date(date.start).toLocaleDateString('en-US') + '&end=' + new Date(date.end).toLocaleDateString('en-US'))}
                     >
                         <div className='flex items-center justify-between'>
-                            <span>Overview</span>
+                            <span>Summary By Source</span>
                             <img src={overview} alt="overview" className="w-16 h-16 invert" />
                         </div>
                         <span className='text-2xl'>
-                            A brief overview of all documents and data for this company.
+                            A brief overview of all documents and data for this company, sorted by source
                         </span>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ import MyAccount from "./pages/Account/MyAccount/MyAccount";
 import Documents from "./pages/Documents/Documents";
 import Summary from "./pages/Summary/Summary";
 import PickSummaryType from "./pages/Summary/:id/PickSummaryType";
-import Overview from "./pages/Summary/:id/overview/Overview";
+import BySource from "./pages/Summary/:id/bySource/BySource";
 import Protected from "./components/Protected";
 import UnprotectedStrict from "./components/UnprotectedStrict";
 import { AnimatePresence } from 'framer-motion';
@@ -43,7 +43,7 @@ function App() {
           <Route path="/documents" element={<Protected redirect={<Documents />} />} />
           <Route path="/summary" element={<Protected redirect={<Summary />} />} />
           <Route path="/summary/:id" element={<Protected redirect={<PickSummaryType />} />} />
-          <Route path="/summary/:id/overview" element={<Protected redirect={<Overview />} />} />
+          <Route path="/summary/:id/overview" element={<Protected redirect={<BySource />} />} />
         </Routes>
       </AnimatePresence>
     </div>
