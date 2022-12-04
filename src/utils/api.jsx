@@ -202,6 +202,7 @@ export const addCompany = async (newCompany, setLoading, setError) => {
         company_zip: newCompany.company_zip ? newCompany.company_zip.replace(/[^0-9]/g, '').trim() : null,
         company_phone: newCompany.company_phone ? newCompany.company_phone.replace(/[^0-9]/g, '').trim() : null,
         company_carg_preference: newCompany.company_carg_preference,
+        company_working_days: newCompany?.company_working_days || ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     }
     try{
         const { data } = await axios.post(
@@ -265,6 +266,7 @@ export const updateCompany = async (newCompany, setLoading, setError) => {
         company_zip: newCompany.company_zip ? newCompany.company_zip.replace(/[^0-9]/g, '').trim() : null,
         company_phone: newCompany.company_phone ? newCompany.company_phone.replace(/[^0-9]/g, '').trim() : null,
         company_carg_preference: newCompany.company_carg_preference,
+        company_working_days: newCompany?.company_working_days || ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     }
     try{
         const { data } = await axios.post(

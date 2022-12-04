@@ -17,6 +17,7 @@ export default function MyAccount(){
         company_zip: '',
         company_phone: '',
         company_carg_preference: 'highPrice',
+        company_working_days: []
     });
     const [ usersIn, setUsersIn ] = useState({
         company_id: null,
@@ -165,6 +166,83 @@ export default function MyAccount(){
                                         >GreatPrice</Button>
                                     </ButtonGroup>
                                 </div>
+                            <div className='flex flex-col mt-4 ml-2' style={{zIndex: 9999}}>
+                                <div className='font-bold'>
+                                    Company Working Days
+                                </div>
+                                <ButtonGroup fullWidth>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('monday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('monday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'monday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'monday'] }
+                                            }
+                                        })}
+                                    >Monday</Button>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('tuesday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('tuesday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'tuesday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'tuesday'] }
+                                            }
+                                        })}
+                                    >Tuesday</Button>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('wednesday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('wednesday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'wednesday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'wednesday'] }
+                                            }
+                                        })}
+                                    >Wednesday</Button>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('thursday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('thursday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'thursday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'thursday'] }
+                                            }
+                                        })}
+                                    >Thursday</Button>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('friday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('friday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'friday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'friday'] }
+                                            }
+                                        })}
+                                    >Friday</Button>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('saturday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('saturday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'saturday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'saturday'] }
+                                            }
+                                        })}
+                                    >Saturday</Button>
+                                    <Button
+                                        variant={edittedCompany.company_working_days.includes('sunday') ? 'contained' : 'outlined'}
+                                        onClick={() => setEdittedCompany(was => {
+                                            if (was.company_working_days.includes('sunday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'sunday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'sunday'] }
+                                            }
+                                        })}
+                                    >Sunday</Button>
+                                </ButtonGroup>
+                            </div>
                         </div>
                         <Button
                             fullWidth
@@ -267,45 +345,122 @@ export default function MyAccount(){
                                     className='border border-stone-200 rounded p-2' />
                                 </div>
                             </div>
-                                <div className='flex flex-col mt-4 ml-2' style={{zIndex: 9999}}>
-                                    <div className='font-bold'>
-                                        Company Default CarGuru Number
-                                    </div>
-                                    <ButtonGroup
-                                        orientation='vertical'
-                                        >
-                                        <Button
-                                            variant={newCompany.company_carg_preference === 'overPrice' ? 'contained' : 'outlined'}
-                                            onClick={() => setNewCompany(was => {
-                                                return { ...was, company_carg_preference: 'overPrice' }
-                                            })}
-                                        >OverPrice</Button>
-                                        <Button
-                                            variant={newCompany.company_carg_preference === 'highPrice' ? 'contained' : 'outlined'}
-                                            onClick={() => setNewCompany(was => {
-                                                return { ...was, company_carg_preference: 'highPrice' }
-                                            })}
-                                        >HighPrice</Button>
-                                        <Button
-                                            variant={newCompany.company_carg_preference === 'fairPrice' ? 'contained' : 'outlined'}
-                                            onClick={() => setNewCompany(was => {
-                                                return { ...was, company_carg_preference: 'fairPrice' }
-                                            })}
-                                        >FairPrice</Button>
-                                        <Button
-                                            variant={newCompany.company_carg_preference === 'goodPrice' ? 'contained' : 'outlined'}
-                                            onClick={() => setNewCompany(was => {
-                                                return { ...was, company_carg_preference: 'goodPrice' }
-                                            })}
-                                        >GoodPrice</Button>
-                                        <Button
-                                            variant={newCompany.company_carg_preference === 'greatPrice' ? 'contained' : 'outlined'}
-                                            onClick={() => setNewCompany(was => {
-                                                return { ...was, company_carg_preference: 'greatPrice' }    
-                                            })}
-                                        >GreatPrice</Button>
-                                    </ButtonGroup>
+                            <div className='flex flex-col mt-4 ml-2' style={{zIndex: 9999}}>
+                                <div className='font-bold'>
+                                    Company Default CarGuru Number
                                 </div>
+                                <ButtonGroup
+                                    orientation='vertical'
+                                    >
+                                    <Button
+                                        variant={newCompany.company_carg_preference === 'overPrice' ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            return { ...was, company_carg_preference: 'overPrice' }
+                                        })}
+                                    >OverPrice</Button>
+                                    <Button
+                                        variant={newCompany.company_carg_preference === 'highPrice' ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            return { ...was, company_carg_preference: 'highPrice' }
+                                        })}
+                                    >HighPrice</Button>
+                                    <Button
+                                        variant={newCompany.company_carg_preference === 'fairPrice' ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            return { ...was, company_carg_preference: 'fairPrice' }
+                                        })}
+                                    >FairPrice</Button>
+                                    <Button
+                                        variant={newCompany.company_carg_preference === 'goodPrice' ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            return { ...was, company_carg_preference: 'goodPrice' }
+                                        })}
+                                    >GoodPrice</Button>
+                                    <Button
+                                        variant={newCompany.company_carg_preference === 'greatPrice' ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            return { ...was, company_carg_preference: 'greatPrice' }    
+                                        })}
+                                    >GreatPrice</Button>
+                                </ButtonGroup>
+                            </div>
+                            <div className='flex flex-col mt-4 ml-2' style={{zIndex: 9999}}>
+                                <div className='font-bold'>
+                                    Company Working Days
+                                </div>
+                                <ButtonGroup fullWidth>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('monday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('monday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'monday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'monday'] }
+                                            }
+                                        })}
+                                    >Monday</Button>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('tuesday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('tuesday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'tuesday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'tuesday'] }
+                                            }
+                                        })}
+                                    >Tuesday</Button>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('wednesday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('wednesday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'wednesday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'wednesday'] }
+                                            }
+                                        })}
+                                    >Wednesday</Button>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('thursday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('thursday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'thursday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'thursday'] }
+                                            }
+                                        })}
+                                    >Thursday</Button>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('friday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('friday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'friday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'friday'] }
+                                            }
+                                        })}
+                                    >Friday</Button>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('saturday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('saturday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'saturday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'saturday'] }
+                                            }
+                                        })}
+                                    >Saturday</Button>
+                                    <Button
+                                        variant={newCompany.company_working_days.includes('sunday') ? 'contained' : 'outlined'}
+                                        onClick={() => setNewCompany(was => {
+                                            if (was.company_working_days.includes('sunday')) {
+                                                return { ...was, company_working_days: was.company_working_days.filter(day => day !== 'sunday') }
+                                            } else {
+                                                return { ...was, company_working_days: [...was.company_working_days, 'sunday'] }
+                                            }
+                                        })}
+                                    >Sunday</Button>
+                                </ButtonGroup>
+                            </div>
                         </div>
                         <Button
                             fullWidth
@@ -375,7 +530,8 @@ export default function MyAccount(){
                                                 company_zip: company.company_zip,
                                                 company_phone: company.company_phone,
                                                 company_carg_preference: company.company_carg_preference,
-                                                company_id: company.company_id
+                                                company_id: company.company_id,
+                                                company_working_days: company?.company_working_days || []
                                             })
                                         }}
                                     >Edit</Button>
@@ -415,6 +571,11 @@ export default function MyAccount(){
                                                 }}>
                                                     Default CarGurus Number
                                                 </TableCell>
+                                                <TableCell sx={{
+                                                    fontWeight: 'bold',
+                                                }}>
+                                                    Working Days
+                                                </TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -436,6 +597,9 @@ export default function MyAccount(){
                                                 </TableCell>
                                                 <TableCell>
                                                     {company.company_carg_preference ? proper(company.company_carg_preference) : 'N/A'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {company.company_working_days ? proper(company.company_working_days.join(', ')) : 'N/A'}
                                                 </TableCell>
                                             </TableRow>
                                         </TableBody>
