@@ -56,7 +56,7 @@ export default function Header(){
                     onClick={() => navigate('/documents')}
                 >
                     <ArticleIcon style={{ color: 'white', width: 20, height: 20 }} />
-                    <span style={{ marginLeft: 10 }}>Documents</span>
+                    <span style={{ marginLeft: 10 }}>List</span>
                 </Button>
 
                 <Button

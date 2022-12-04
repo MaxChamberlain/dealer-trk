@@ -5,7 +5,7 @@ import { searchGurusByVin } from "../../../../utils/search"
 import { FormControl, OutlinedInput, InputLabel, Autocomplete, TextField, Button, Menu, CircularProgress, Snackbar } from "@mui/material"
 import React, { useEffect } from 'react';
 
-export default function DocumentItem({ companyDetails, setAdding, docs, setDocuments }){
+export default function DocumentItem({ companyDetails, setAdding, docs, setDocuments, selComp }){
     const [ newVehicle, setNewVehicle ] = useState({
         v_is_certified: false,
         v_is_trade: false,
@@ -81,6 +81,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                     style={{ width: '25rem' }}
                     renderInput={(params) => <TextField {...params} label="ZIP Code" variant="outlined" />}
                     freeSolo
+                    defaultValue={companyDetails?.find(e => e.company_zip === selComp?.company_zip)}
                 />
                 <TextField
                     id='VIN' 
@@ -124,7 +125,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                                 setNewVehicle(was => { 
                                     return { 
                                         ...was,
-                                        v_final_carg_h: e.highPrice?.replace(/[^0-9.]/g, '') || '',
+                                        v_final_carg_h: e[selComp.company_carg_preference]?.replace(/[^0-9.]/g, '') || '',
                                         v_imv: e.IMV?.replace(/[^0-9.]/g, '') || '',
                                         v_final_carg_h_options: {
                                             greatPrice: e.greatPrice?.replace(/[^0-9.]/g, '') || '',
@@ -146,7 +147,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
         </div>
         <div>
             {hasScraped &&
-                <Steps setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} loadingIn={loading} />
+                <Steps selComp={selComp} setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} loadingIn={loading} />
             }
         </div>
         </div>

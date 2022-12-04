@@ -14,7 +14,7 @@ import { CircularProgress } from '@mui/material';
 
 const steps = ['Basic Vehicle Information', 'Pricing Information', 'Trade Information'];
 
-export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, autoCompleteOptions, setDocuments, loadingIn, setAdding }) {
+export default function HorizontalLinearStepper({ activeStep, setActiveStep, newVehicle, setNewVehicle, setCompany, company, companyDetails, autoCompleteOptions, setDocuments, loadingIn, selComp }) {
     const [skipped, setSkipped] = React.useState(new Set());
     const [loading, setLoading] = React.useState(false);
 
@@ -110,7 +110,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
           })}
         </Stepper>
           {activeStep === 0 && <Step1 loading={loadingIn.vehicleDetails} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
-          {activeStep === 1 && <Step2 loading={loadingIn.cargurus} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
+          {activeStep === 1 && <Step2 selComp={selComp} loading={loadingIn.cargurus} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === steps.length ? (
           <>

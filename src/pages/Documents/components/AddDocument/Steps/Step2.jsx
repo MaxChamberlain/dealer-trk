@@ -1,6 +1,6 @@
 import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField, MenuItem, Select, CircularProgress } from "@mui/material"
 
-export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, loading }){
+export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, loading, selComp }){
     console.log(loading)
     const sourceOptions = [
         'APPRAISAL',
@@ -9,6 +9,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
         'BID2BUY', 
         'CAROFFER', 
         'COMMERCIAL APPRAISAL',
+        'ENTERPRISE',
         'KBB ICO REVIEW',
         'LEASE BUYOUT',
         'LEASE RETURN',
@@ -27,7 +28,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
         'LUXURY CAR',
         'LUXURY TRUCK',
         'G Unit',
-        'Employee / House',
+        'EMPLOYEE / HOUSE',
         ...companyDetails.map(e => e.company_name.toUpperCase())
     ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
     return(
@@ -120,7 +121,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                         </div>
                     :
                         <div className='flex'>
-                            {newVehicle?.v_final_carg_h_options?.greatPrice ? <Select
+                            {newVehicle?.v_final_carg_h_options[selComp.company_carg_preference] ? <Select
                                 fullWidth
                                 id="fincarg"
                                 value={newVehicle.v_final_carg_h}

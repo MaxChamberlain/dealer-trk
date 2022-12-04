@@ -19,7 +19,7 @@ export const useDocs = (setLoading, setError, company) => {
         getDocumentsByCompanyId(setLoading, setError, company.company_id, startDate, endDate).then((e) => {
             if(!e) return null;
             // get all dates in this month into an array
-            const dates = [];
+            let dates = [];
             for(let i = 1; i <= endDate.getDate(); i++){
                 dates.push(new Date(startDate.getFullYear(), startDate.getMonth(), i).toLocaleDateString('en-US'));
             }
@@ -42,9 +42,10 @@ export const useDocs = (setLoading, setError, company) => {
                 }
             })
 
-            const days = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            let days = (Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)) + 1) - 1;
+            if(new Date(startDate).getMonth() + 1 === 12) countOfDaysCovered--
 
-            let pace = Math.floor((e.length / days) * countOfDaysCovered);
+            let pace = Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date().getDate()).length / days) * countOfDaysCovered);
 
             setDocuments({
                 documents: e,

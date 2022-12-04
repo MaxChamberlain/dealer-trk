@@ -58,7 +58,7 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
                     </div>
                 </TableCell>
                 <TableCell>
-                    {doc.vehicle?.v_certified ? 'Yes' : 'No'}
+                    {doc.vehicle?.v_is_certified ? 'Yes' : 'No'}
                 </TableCell>    
                 <TableCell>
                     {doc.vehicle?.v_start_price ? '$' + properNumber(doc.vehicle.v_start_price) :

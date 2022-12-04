@@ -4,14 +4,14 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { proper } from '../../../utils/textDisplay';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import { OutlinedInput, Box, Button, TextField, Autocomplete } from '@mui/material';
+import { OutlinedInput, Box, Button, TextField, Autocomplete, Select } from '@mui/material';
 
-export default function FiltersAndAdd({ search, setSearch, documents, setAddDocument, setCreatedBy }){
+export default function FiltersAndAdd({ search, setSearch, documents, setAddDocument, setCreatedBy, onlyCert, setOnlyCert, companyDetails,setSourceFilter }) {
     const [ startDate, endDate, handleDateChange ] = useNavDates()
 
     return(
-        <div className='w-full p-6 flex align-center z=[9999]' id='filter-bar-docs'>
-            <div className='w-full bg-white justify-start p-4 rounded drop-shadow flex items-center'>
+        <div className='w-full p-6 flex flex-col align-center z=[9999]' id='filter-bar-docs'>
+            <div className='w-full bg-white justify-start p-4 rounded-t drop-shadow flex items-center'>
                 <div className='flex w-1/2'>
                     <OutlinedInput 
                         fullWidth={true}
@@ -86,6 +86,37 @@ export default function FiltersAndAdd({ search, setSearch, documents, setAddDocu
                 >
                     <AddIcon /> Add Document
                 </Button>
+            </div>
+            <div className='w-full bg-white justify-start p-4 rounded-b drop-shadow flex items-center'>
+                <Button
+                    color="primary"
+                    aria-label="add"
+                    variant='outlined' style={{
+                        color: 'black',
+                        borderColor: 'black',
+                        marginLeft: '5px',
+                        marginRight: '15px',
+                        width: '10%',
+                        height: '100%',
+                    }}
+                    onClick={() => setOnlyCert(was => was + 1)}
+                >
+                    {onlyCert % 3 === 0 ? 'Cert & Uncert' : onlyCert % 3 === 1 ? 'Cert only' : 'uncert only'}
+                </Button>
+                <Autocomplete
+                    fullWidth={true}
+                    id="combo-box-demo"
+                    options={documents ? ['Any', ...new Set(documents.data.filter(e => e.data.vehicle.v_source).map(e => e.data.vehicle.v_source).sort((a, b) => a.localeCompare(b)))] : []}
+                    sx={{ width: 300, zIndex: 9999, }}
+                    size='small'
+                    renderInput={(params) => <TextField style={{zIndex: 9999}} {...params} label="Source" />}
+                    onChange={(e, x) => setSourceFilter(x)}
+                    defaultValue='Any'
+                    disableClearable={true}
+                    getOptionLabel={(x) => {
+                        return x
+                    }}
+                />
             </div>
         </div>
     )

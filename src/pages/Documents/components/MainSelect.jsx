@@ -1,6 +1,6 @@
 import { Box, Tabs, Tab, Select, MenuItem, LinearProgress } from '@mui/material';
 
-export default function MainSelect({ filter, setFilter, tab, setTab, companyDetails, loading, documentTypes }){
+export default function MainSelect({ filter, setFilter, tab, setTab, companyDetails, loading, documentTypes, setSelComp }){
     return(
         <Box sx={{ width: '100%', bgcolor: '#fff'}}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between' }}>
@@ -17,7 +17,10 @@ export default function MainSelect({ filter, setFilter, tab, setTab, companyDeta
                     width: '50%',
                     height: 40
                 }} value={filter}
-                onChange={(e) => setFilter(e.target.value)}>
+                    onChange={(e) => {
+                        setSelComp(companyDetails.find(x => x.company_id === e.target.value))
+                        setFilter(e.target.value)
+                    }}>
                     {loading && <Box sx={{width: '100%', height: '100%', paddingTop: 1.2}}><LinearProgress /></Box>}
                     <MenuItem
                         value='All Companies'
