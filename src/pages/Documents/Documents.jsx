@@ -21,6 +21,7 @@ export default function Documents(){
     const [ open, setOpen ] = useState([]);
     const [ selComp, setSelComp ] = useState(null);
     const [ onlyCert, setOnlyCert ] = useState(0);
+    const [ modifiedFilter, setModifiedFilter ] = useState(0);
 
     const [ sourceFilter, setSourceFilter ] = useState('Any');
 
@@ -44,7 +45,7 @@ export default function Documents(){
                 <CircularProgress color="inherit" />
             </Backdrop>
             <MainSelect setSelComp={setSelComp} filter={filter} setFilter={setFilter} tab={tab} setTab={setTab} companyDetails={companyDetails} loading={loading} documentTypes={documentTypes} />
-            <FiltersAndAdd setSourceFilter={setSourceFilter} companyDetails={companyDetails} onlyCert={onlyCert} setOnlyCert={setOnlyCert} search={search} setSearch={setSearch} documents={documents} setAddDocument={setAddDocument} setCreatedBy={setCreatedBy} />
+            <FiltersAndAdd setSourceFilter={setSourceFilter} companyDetails={companyDetails} onlyCert={onlyCert} setOnlyCert={setOnlyCert} search={search} setSearch={setSearch} documents={documents} setAddDocument={setAddDocument} setCreatedBy={setCreatedBy} modifiedFilter={modifiedFilter} setModifiedFilter={setModifiedFilter} />
 
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
 
@@ -65,6 +66,7 @@ export default function Documents(){
                             .filter(e => search === '' ? e : `${e.data.vehicle.v_make}${e.data.vehicle.v_model}${e.data.vehicle.v_vin_no}${e.data.vehicle.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
                             .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
                             .filter(e => onlyCert % 3 === 0 ? e : onlyCert % 3 === 1 ? e.data.vehicle.v_is_certified : !e.data.vehicle.v_is_certified)
+                            .filter(e => modifiedFilter % 3 === 0 ? e : modifiedFilter % 3 === 1 ? e.metadata.created_at === e.metadata.updated_at : e.metadata.created_at !== e.metadata.updated_at)
                             .filter(e => sourceFilter === 'Any' ? e : (e?.data?.vehicle?.v_source?.toUpperCase() || '') === sourceFilter.toUpperCase())
                             .length} total documents
                     </div>
@@ -78,6 +80,7 @@ export default function Documents(){
                             .filter(e => search === '' ? e : `${e.data.vehicle.v_make}${e.data.vehicle.v_model}${e.data.vehicle.v_vin_no}${e.data.vehicle.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
                             .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
                             .filter(e => onlyCert % 3 === 0 ? e : onlyCert % 3 === 1 ? e.data.vehicle.v_is_certified : !e.data.vehicle.v_is_certified)
+                            .filter(e => modifiedFilter % 3 === 0 ? e : modifiedFilter % 3 === 1 ? e.metadata.created_at === e.metadata.updated_at : e.metadata.created_at !== e.metadata.updated_at)
                             .filter(e => sourceFilter === 'Any' ? e : (e?.data?.vehicle?.v_source?.toUpperCase() || '') === sourceFilter.toUpperCase())
                             .sort((a, b) => {
                                 if (a.metadata.created_at < b.metadata.created_at) {

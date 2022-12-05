@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { OutlinedInput, Box, Button, TextField, Autocomplete, Select } from '@mui/material';
 
-export default function FiltersAndAdd({ search, setSearch, documents, setAddDocument, setCreatedBy, onlyCert, setOnlyCert, companyDetails,setSourceFilter }) {
+export default function FiltersAndAdd({ search, setSearch, documents, setAddDocument, setCreatedBy, onlyCert, setOnlyCert, companyDetails, setSourceFilter, setModifiedFilter, modifiedFilter }) {
     const [ startDate, endDate, handleDateChange ] = useNavDates()
 
     return(
@@ -117,6 +117,21 @@ export default function FiltersAndAdd({ search, setSearch, documents, setAddDocu
                         return x
                     }}
                 />
+                <Button
+                    color="primary"
+                    aria-label="add"
+                    variant='outlined' style={{
+                        color: 'black',
+                        borderColor: 'black',
+                        marginLeft: '5px',
+                        marginRight: '15px',
+                        width: '10%',
+                        height: '100%',
+                    }}
+                    onClick={() => setModifiedFilter(was => was + 1)}
+                >
+                    {modifiedFilter % 3 === 0 ? 'Modified and New' : modifiedFilter % 3 === 1 ? 'Unmodified Only' : 'Modified Only'}
+                </Button>
             </div>
         </div>
     )

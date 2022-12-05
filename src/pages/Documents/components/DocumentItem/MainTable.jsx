@@ -1,7 +1,37 @@
 import { proper, properNumber } from '../../../../utils/textDisplay';
-import { Button, TableRow, TableCell } from '@mui/material';
+import { Button, TableRow, TableCell, Select } from '@mui/material';
 
-export default function MainTable({ doc, index, hovering, notes, doc_id, open, setOpen, setHovering }){
+export default function MainTable({ doc, index, hovering, notes, doc_id, open, setOpen, setHovering, editting, setChanges }){
+    const sourceOptions = [
+        'APPRAISAL',
+        'AUCTION',
+        'AUTO TRADER',
+        'BID2BUY', 
+        'CAROFFER', 
+        'COMMERCIAL APPRAISAL',
+        'ENTERPRISE',
+        'KBB ICO REVIEW',
+        'LEASE BUYOUT',
+        'LEASE RETURN',
+        'MANHEIM', 
+        'NEW CAR APPRAISAL',
+        'ORDER UNIT',
+        'RETIRED LOANER',
+        'SUBARU', 
+        'USED CAR APPRAISAL',
+        'CORE',
+        'DOMESTIC CAR',
+        'DOMESTIC TRUCK',
+        'IMPORT CAR',
+        'IMPORT TRUCK',
+        'LUXURY CAR',
+        'LUXURY TRUCK',
+        'G Unit',
+        'EMPLOYEE / HOUSE',
+        'NEW TRADE',
+        'USED TRADE',
+    ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
+
     return(
         <TableRow className={`
                 ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
@@ -22,7 +52,15 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
                     {doc.vehicle?.v_days ? properNumber(doc.vehicle.v_days) : 'N/A'}
                 </TableCell>
                 <TableCell>
-                    {doc.vehicle?.v_source ? proper(doc.vehicle.v_source) : 'N/A'}
+                    {editting === doc_id ? 
+                        <select className='border border-black rounded p-2' onChange={(e) => setChanges(was => {
+                            return {...was, v_source: e.target.value}
+                        })}>
+                            {sourceOptions.map((e, i) => <option key={i} value={e}>{e}</option>)}
+                        </select>
+                    : 
+                        (doc.vehicle?.v_source ? proper(doc.vehicle.v_source) : 'N/A')
+                    }
                 </TableCell>
                 <TableCell>
                     <div className='text-center'>

@@ -313,3 +313,20 @@ export const logout = async () => {
         console.log(e);
     }
 }
+
+export const changeSource = async (document_id, params) => {
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/document/change', 
+            {
+                document_id,
+                params
+            },
+            { withCredentials: true }
+        )
+        alert('Source changed successfully')
+        return data
+    }catch(e){
+        console.log(e);
+    }
+}

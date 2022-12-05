@@ -39,10 +39,6 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
         }
     }, [newVehicle, docs])
 
-    useEffect(() => {
-        setCompany(selComp)
-    })
-
     return(
         <div id='document-list-item' className={`z-[9990] w-full bg-white drop-shadow p-4 mb-4`}>
         <div className="flex justify-end items-center">
@@ -115,6 +111,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                             setLoading, 
                             (e) => {setError(e)}, 
                             (e) => {
+                                setCompany(selComp);
                                 setNewVehicle(was => { 
                                     return { 
                                         ...was,

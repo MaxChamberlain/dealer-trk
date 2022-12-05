@@ -10,13 +10,17 @@ export default function DocumentItem({ doc, index, doc_id, docNotes, setMousePos
         notes: null,
         trade: null,
     });
+    const [ editting, setEditting ] = useState(false);
+    const [ changes, setChanges ] = useState({
+        v_source: null,
+    })
 
     return(
         <>
-            <MainTable doc={doc} index={index} hovering={hovering} notes={notes} doc_id={doc_id} open={open} setOpen={setOpen} setHovering={setHovering} />
+            <MainTable setChanges={setChanges} doc={doc} index={index} hovering={hovering} notes={notes} doc_id={doc_id} open={open} setOpen={setOpen} setHovering={setHovering} editting={editting} />
             {open.includes(doc_id) &&
             <>
-                <Metadata index={index} docDates={docDates} />
+                <Metadata index={index} docDates={docDates} editting={editting} setEditting={setEditting} docId={doc_id} changes={changes} />
                 <Notes notes={notes} setNotes={setNotes} doc_id={doc_id} />
                 <CarGurusChart index={index} doc={doc} />
             </>

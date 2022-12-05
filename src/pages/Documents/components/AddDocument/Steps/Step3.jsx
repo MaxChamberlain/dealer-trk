@@ -101,10 +101,9 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                     type='number'
                     onChange={(e) => setCompany(e.target.value)}
                     required
-                    defaultValue={companyDetails.find(e => e.company_id === selComp.company_id)}
                 >
                     {companyDetails.map((e, i) => {
-                        return <MenuItem key={i} value={e}>{proper(e?.company_name || '')}</MenuItem>
+                        return <MenuItem key={i} value={e}>{e.company_name?.toUpperCase() || ''}</MenuItem>
                     })}
                 </Select>
                 <FormHelperText>This is required!</FormHelperText>
