@@ -12,14 +12,17 @@ export const useNavDates = () => {
     useEffect(() => {
         //get url params
         if(!startDate || !endDate){
-          urlParams.set('startDate', new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 1)).toISOString().split('T')[0]);
-          urlParams.set('endDate', new Date(new Date(new Date()).setDate(new Date().getDate() + 1)).toISOString().split('T')[0]);
-          navigate(`?${urlParams.toString()}`, { replace: true });
+            var d = new Date();
+            var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
+            let secondDay = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() + 1);
+            urlParams.set('startDate', secondDay.toISOString().split('T')[0]);
+            urlParams.set('endDate', new Date(new Date(new Date()).setDate(new Date().getDate() + 1)).toISOString().split('T')[0]);
+            navigate(`?${urlParams.toString()}`, { replace: true });
         }
         //if endDate is before startDate, set endDate to startDate
         if(new Date(startDate) > new Date(endDate)){
-          urlParams.set('endDate', startDate);
-          navigate(`?${urlParams.toString()}`, { replace: true });
+            urlParams.set('endDate', startDate);
+            navigate(`?${urlParams.toString()}`, { replace: true });
         }
     }, [])
 

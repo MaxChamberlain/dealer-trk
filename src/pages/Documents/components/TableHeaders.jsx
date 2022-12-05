@@ -28,7 +28,7 @@ export default function TableHeaders(){
                     </div>
                     <div className='w-full h-px bg-stone-500'></div>
                     <div>
-                        Static CarGurus
+                        Initial CarGurus
                     </div>
                 </TableCell>
                 <TableCell>
@@ -37,7 +37,7 @@ export default function TableHeaders(){
                     </div>
                     <div className='w-full h-px bg-stone-500'></div>
                     <div>
-                        Dynamic CarGurus
+                        Exit CarGurus
                     </div>
                 </TableCell>
                 <TableCell>

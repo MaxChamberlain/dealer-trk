@@ -87,7 +87,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                     />
                 </div>
                 <div className='p-2'>
-                    <InputLabel htmlFor="incarg">Static CarGurus</InputLabel>
+                    <InputLabel htmlFor="incarg">Initial CarGurus</InputLabel>
                     <OutlinedInput
                         id="incarg"
                         value={newVehicle.v_initial_carg_h}
@@ -115,7 +115,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                     />
                 </div>  
                 <div className='p-2'>
-                    <InputLabel htmlFor="fincarg">Dynamic CarGurus</InputLabel>
+                    <InputLabel htmlFor="fincarg">Exit CarGurus</InputLabel>
                     {loading ? 
                         <div className='border border-stone-400 rounded p-1'>
                             <CircularProgress />
