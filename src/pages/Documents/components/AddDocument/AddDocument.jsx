@@ -39,6 +39,10 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
         }
     }, [newVehicle, docs])
 
+    useEffect(() => {
+        setCompany(selComp)
+    })
+
     return(
         <div id='document-list-item' className={`z-[9990] w-full bg-white drop-shadow p-4 mb-4`}>
         <div className="flex justify-end items-center">
@@ -125,7 +129,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                                 setNewVehicle(was => { 
                                     return { 
                                         ...was,
-                                        v_final_carg_h: e[selComp.company_carg_preference]?.replace(/[^0-9.]/g, '') || '',
+                                        v_final_carg_h: (selComp?.company_carg_preference ? e[selComp.company_carg_preference]?.replace(/[^0-9.]/g, '') : e.highPrice?.replace(/[^0-9.]/g, '')) || '',
                                         v_imv: e.IMV?.replace(/[^0-9.]/g, '') || '',
                                         v_final_carg_h_options: {
                                             greatPrice: e.greatPrice?.replace(/[^0-9.]/g, '') || '',

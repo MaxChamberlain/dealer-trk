@@ -50,7 +50,7 @@ export default function Documents(){
 
                 {addDocument && <AddDocument selComp={selComp} setDocuments={setDocuments} companyDetails={companyDetails} setAdding={setAddDocument} docs={documents?.data} />}
 
-                <div className='w-full p-2 bg-white'>
+                <div className='w-full p-2 bg-white flex justify-between'>
                     <Button
                         color="primary"
                         aria-label="add"
@@ -59,6 +59,15 @@ export default function Documents(){
                     >
                         {documents && (documents.data.map(e => e.document_id).every(e => open.includes(e)) ? documents.data.map(e => e.document_id) && 'Close All' : 'Open All')}
                     </Button>
+                    <div className='h-full flex items-center justify-center pr-6 pt-2 text-[#333]'>
+                        {documents && documents.data && documents.data
+                            .filter(e => filter === 'All Companies' ? e : e.company_id === filter)
+                            .filter(e => search === '' ? e : `${e.data.vehicle.v_make}${e.data.vehicle.v_model}${e.data.vehicle.v_vin_no}${e.data.vehicle.company_name}`.toLowerCase().includes(search.toLowerCase().replace(/\s/g , '')))
+                            .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
+                            .filter(e => onlyCert % 3 === 0 ? e : onlyCert % 3 === 1 ? e.data.vehicle.v_is_certified : !e.data.vehicle.v_is_certified)
+                            .filter(e => sourceFilter === 'Any' ? e : (e?.data?.vehicle?.v_source?.toUpperCase() || '') === sourceFilter.toUpperCase())
+                            .length} total documents
+                    </div>
                 </div>
                 
                 <Table className='shadow-lg' size='small' padding='small'>

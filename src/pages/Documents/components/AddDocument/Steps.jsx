@@ -111,7 +111,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
         </Stepper>
           {activeStep === 0 && <Step1 loading={loadingIn.vehicleDetails} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === 1 && <Step2 selComp={selComp} loading={loadingIn.cargurus} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
-          {activeStep === 2 && <Step3 newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
+          {activeStep === 2 && <Step3 selComp={selComp} newVehicle={newVehicle} setNewVehicle={setNewVehicle} company={company} setCompany={setCompany} companyDetails={companyDetails} autoCompleteOptions={autoCompleteOptions} />}
           {activeStep === steps.length ? (
           <>
             <Typography sx={{ mt: 2, mb: 1 }}>

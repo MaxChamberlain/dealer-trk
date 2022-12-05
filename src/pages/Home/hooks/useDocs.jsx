@@ -6,7 +6,7 @@ export const useDocs = (setLoading, setError, company) => {
 
     // get the first day of this month
     const startDate = new Date();
-    startDate.setDate(1);
+    startDate.setDate(2);
     startDate.setHours(0, 0, 0, 0);
 
     // get the last day of this month
@@ -14,6 +14,8 @@ export const useDocs = (setLoading, setError, company) => {
     endDate.setMonth(endDate.getMonth() + 1);
     endDate.setDate(0);
     endDate.setHours(23, 59, 59, 999);
+
+    console.log(startDate, endDate)
 
     useEffect(() => {
         getDocumentsByCompanyId(setLoading, setError, company.company_id, startDate, endDate).then((e) => {

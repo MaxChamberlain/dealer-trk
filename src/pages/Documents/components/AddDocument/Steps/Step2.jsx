@@ -122,7 +122,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                         </div>
                     :
                         <div className='flex'>
-                            {newVehicle?.v_final_carg_h_options[selComp.company_carg_preference] ? <Select
+                            {(selComp?.company_carg_preference ? newVehicle?.v_final_carg_h_options[selComp.company_carg_preference] : newVehicle?.v_final_carg_h_options.highPrice) ? <Select
                                 fullWidth
                                 id="fincarg"
                                 value={newVehicle.v_final_carg_h}

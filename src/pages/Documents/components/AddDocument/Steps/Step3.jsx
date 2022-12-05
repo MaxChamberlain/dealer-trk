@@ -1,7 +1,8 @@
 import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material"
 import Checkbox from '@mui/material/Checkbox'
+import { proper } from "../../../../../utils/textDisplay"
 
-export default function Step3({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails }){
+export default function Step3({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, selComp }){
     return(
         <>
             <div className="my-4 grid grid-cols-6 justify-around">
@@ -100,10 +101,10 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                     type='number'
                     onChange={(e) => setCompany(e.target.value)}
                     required
-                    placeholder="Select a company"
+                    defaultValue={companyDetails.find(e => e.company_id === selComp.company_id)}
                 >
                     {companyDetails.map((e, i) => {
-                        return <MenuItem key={i} value={e}>{e.company_name}</MenuItem>
+                        return <MenuItem key={i} value={e}>{proper(e?.company_name || '')}</MenuItem>
                     })}
                 </Select>
                 <FormHelperText>This is required!</FormHelperText>
