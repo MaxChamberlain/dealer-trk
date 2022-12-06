@@ -1,7 +1,7 @@
 import { proper, properNumber } from '../../../../utils/textDisplay';
 import { Button, TableRow, TableCell, Select } from '@mui/material';
 
-export default function MainTable({ doc, index, hovering, notes, doc_id, open, setOpen, setHovering, editting, setChanges }){
+export default function MainTable({ doc, index, hovering, notes, doc_id, open, setOpen, setHovering, editting, setChanges, changes }){
     const sourceOptions = [
         'APPRAISAL',
         'AUCTION',
@@ -53,7 +53,7 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
                 </TableCell>
                 <TableCell>
                     {editting === doc_id ? 
-                        <select className='border border-black rounded p-2' onChange={(e) => setChanges(was => {
+                        <select className='border border-black rounded p-2' defaultValue={doc.vehicle?.v_source || ''} onChange={(e) => setChanges(was => {
                             return {...was, v_source: e.target.value}
                         })}>
                             {sourceOptions.map((e, i) => <option key={i} value={e}>{e}</option>)}

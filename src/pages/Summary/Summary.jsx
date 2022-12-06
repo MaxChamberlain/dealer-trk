@@ -34,8 +34,13 @@ export default function Summary(){
             >
                 {companies && companies.map((company) => {
                     return(
-                        <div className="w-full rounded-lg p-6 text-2xl bg-white shadow-lg grid grid-cols-3 cursor-pointer hover:bg-stone-200 mb-8"
-                            onClick={() => navigate(`/summary/${company.company_id}`)}
+                        <div className={`w-full rounded-lg p-6 text-2xl bg-white shadow-lg grid grid-cols-3 cursor-pointer hover:bg-stone-200 mb-8 
+                        ${document.cookie.includes('selected_company=' + company.company_id) ? 'border-2 border-[#4992DB]' : ''}`}
+                            key={company.company_id}
+                            onClick={() => {
+                                document.cookie='selected_company=' + company.company_id + '; path=/;'
+                                navigate(`/summary/${company.company_id}`)
+                            }}
                         >
                             <span>{proper(company?.company_name || 'No Company Name')}</span>
                             <span>{proper(company?.company_zip || 'No Company ZIP')}</span>

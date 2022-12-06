@@ -93,6 +93,7 @@ export default function Documents(){
                             })
                             .map((x, i) => {
                             return <DocumentItem
+                                    setDocuments={setDocuments}
                                     open={open}
                                     setOpen={setOpen}
                                     index={i}

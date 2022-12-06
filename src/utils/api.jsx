@@ -110,6 +110,8 @@ export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, 
 
 export const getDocumentsByCompanyId = async (setLoading, setError, company_id, startDate, endDate ) => {
     setLoading(true);
+    console.log(new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1)).toLocaleDateString('en-US'))
+
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/getbycompanyid', 
@@ -314,7 +316,9 @@ export const logout = async () => {
     }
 }
 
-export const changeSource = async (document_id, params) => {
+export const changeSource = async (document_id, params, setSnackbar, setDocuments) => {
+    const setLoading = () => {}
+    const setError = () => {}
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/change', 
@@ -324,8 +328,62 @@ export const changeSource = async (document_id, params) => {
             },
             { withCredentials: true }
         )
-        alert('Source changed successfully')
-        return data
+        setSnackbar({
+            open: true,
+            message: 'Source changed successfully',
+            severity: 'success'
+        })
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const init = async () => {
+            setTimeout(() => {
+                getCompanyDetails(setLoading, setError).then((res) => {
+                    getDocumentsByCompanyIds(setLoading, setError, urlParams.get('startDate'), urlParams.get('endDate')).then((e) => {
+                        setDocuments(e);
+                    })
+                })
+            }, 100)
+        }
+        init()
+        getDocumentsByCompanyIds(setLoading, setError, urlParams.get('startDate'), urlParams.get('endDate')).then((e) => {
+            setDocuments(e);
+        })
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const deleteDoc = async (document_id, setSnackbar, setDocuments) => {
+    const setLoading = () => {}
+    const setError = () => {}
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/document/delete', 
+            {
+                document_id,
+            },
+            { withCredentials: true }
+        )
+        setSnackbar({
+            open: true,
+            message: 'Doc deleted successfully',
+            severity: 'success'
+        })
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const init = async () => {
+            setTimeout(() => {
+                getCompanyDetails(setLoading, setError).then((res) => {
+                    getDocumentsByCompanyIds(setLoading, setError, urlParams.get('startDate'), urlParams.get('endDate')).then((e) => {
+                        setDocuments(e);
+                    })
+                })
+            }, 100)
+        }
+        init()
+        getDocumentsByCompanyIds(setLoading, setError, urlParams.get('startDate'), urlParams.get('endDate')).then((e) => {
+            setDocuments(e);
+        })
     }catch(e){
         console.log(e);
     }
