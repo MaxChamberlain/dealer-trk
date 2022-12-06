@@ -53,7 +53,13 @@ export default function Header(){
                         marginLeft: 8,
                         padding: '4px 6px'
                     }}
-                    onClick={() => navigate('/documents')}
+                    onClick={() => {
+                        // if there are url params, keep them
+                        if(window.location.search){
+                            navigate(`/documents${window.location.search}`)
+                        }else
+                        navigate('/documents')
+                    }}
                 >
                     <ArticleIcon style={{ color: 'white', width: 20, height: 20 }} />
                     <span style={{ marginLeft: 10 }}>List</span>

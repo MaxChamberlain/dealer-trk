@@ -110,7 +110,7 @@ export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, 
 
 export const getDocumentsByCompanyId = async (setLoading, setError, company_id, startDate, endDate ) => {
     setLoading(true);
-    console.log(new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1)).toLocaleDateString('en-US'))
+    startDate = (new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1)).toLocaleDateString('en-US'))
 
     try{
         const { data } = await axios.post(
