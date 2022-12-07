@@ -3,6 +3,8 @@ import Checkbox from '@mui/material/Checkbox'
 import { proper } from "../../../../../utils/textDisplay"
 
 export default function Step3({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, selComp }){
+    const storedCompany = document.cookie.split(';').filter((e) => e.includes('selected_company'))[0].split('=')[1];
+    
     return(
         <>
             <div className="my-4 grid grid-cols-6 justify-around">
@@ -97,7 +99,7 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                 <Select    
                     fullWidth
                     id="cmpn"
-                    value={company}
+                    value={company || companyDetails?.find(e => e.company_id === storedCompany) || '' }
                     type='number'
                     onChange={(e) => setCompany(e.target.value)}
                     required

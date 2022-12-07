@@ -14,11 +14,9 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
         'LEASE BUYOUT',
         'LEASE RETURN',
         'MANHEIM', 
-        'NEW CAR APPRAISAL',
         'ORDER UNIT',
         'RETIRED LOANER',
         'SUBARU', 
-        'USED CAR APPRAISAL',
         'CORE',
         'DOMESTIC CAR',
         'DOMESTIC TRUCK',
@@ -30,6 +28,8 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
         'EMPLOYEE / HOUSE',
         'NEW TRADE',
         'USED TRADE',
+        'TRAC',
+        'TCUV',
     ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
 
     return(

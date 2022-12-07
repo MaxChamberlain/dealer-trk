@@ -14,11 +14,9 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
         'LEASE BUYOUT',
         'LEASE RETURN',
         'MANHEIM', 
-        'NEW CAR APPRAISAL',
         'ORDER UNIT',
         'RETIRED LOANER',
         'SUBARU', 
-        'USED CAR APPRAISAL',
         'CORE',
         'DOMESTIC CAR',
         'DOMESTIC TRUCK',
@@ -30,6 +28,8 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
         'EMPLOYEE / HOUSE',
         'NEW TRADE',
         'USED TRADE',
+        'TRAC',
+        'TCUV',
         ...companyDetails.map(e => e.company_name.toUpperCase())
     ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
     return(

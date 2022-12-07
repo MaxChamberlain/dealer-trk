@@ -4,7 +4,7 @@ import Checkbox from '@mui/material/Checkbox'
 export default function Step1({ newVehicle, setNewVehicle, autoCompleteOptions, loading }){
 
     const years = []
-    for(let i = new Date().getFullYear(); i >= new Date().getFullYear() - 20; i--){
+    for(let i = new Date().getFullYear() + 2; i >= new Date().getFullYear() - 10; i--){
         years.push(i)
     }
 

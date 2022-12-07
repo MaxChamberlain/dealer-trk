@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCompanyDetails, getDocumentTypes, getDocumentsByCompanyId } from '../../../utils/api';
+import { properNumber } from '../../../utils/textDisplay';
 
 export const useDocs = (setLoading, setError, company) => {
     const [ documents, setDocuments ] = useState(null);
@@ -15,8 +16,6 @@ export const useDocs = (setLoading, setError, company) => {
     endDate.setDate(0);
     endDate.setHours(23, 59, 59, 999);
 
-    console.log(startDate, endDate)
-
     useEffect(() => {
         getDocumentsByCompanyId(setLoading, setError, company.company_id, startDate, endDate).then((e) => {
             if(!e) return null;
@@ -25,14 +24,6 @@ export const useDocs = (setLoading, setError, company) => {
             for(let i = 1; i <= endDate.getDate(); i++){
                 dates.push(new Date(startDate.getFullYear(), startDate.getMonth(), i).toLocaleDateString('en-US'));
             }
-            const count = dates.map((date) => {
-                return{
-                    date: date,
-                    Sales: e.filter((e) => {
-                        return new Date(e.metadata.created_at).toLocaleDateString('en-US') === date;
-                    }).length
-                }
-            })
             
             let countOfDaysCovered = 0
 
@@ -49,12 +40,38 @@ export const useDocs = (setLoading, setError, company) => {
 
             let pace = Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date().getDate()).length / days) * countOfDaysCovered);
 
+            let average = Math.floor(e.length / days);
+
+            const count = dates.map((date) => {
+                return{
+                    date: date,
+                    Sales: e.filter((e) => {
+                        return new Date(e.metadata.created_at).toLocaleDateString('en-US') === date;
+                    }).length,
+                    pace: Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date(date).getDate()).length / days) * countOfDaysCovered),
+                    "Average To Date": Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date(date).getDate()).length / days)),
+                }
+            })
+
+            const existingSources = [...new Set(e.map(e => e.data.vehicle.v_source))]
+            const salesBySource = existingSources.map((source, i) => {
+                return{
+                    name: source,
+                    Sales: e.filter(e => e.data.vehicle.v_source === source).length,
+                    Margin: properNumber(e?.filter(e => e.data.vehicle.v_source === source)?.reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) || 0),
+                    color: `hsl(${i * 360 / existingSources.length}, 70%, 50%)`,
+                }
+            })
+            console.log(salesBySource)
+
             setDocuments({
                 documents: e,
                 chart: {
-                    sales: count
+                    sales: count,
+                    salesBySource,
                 },
-                pace
+                pace,
+                average,
             });
         })
     }, [])

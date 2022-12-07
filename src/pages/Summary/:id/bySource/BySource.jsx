@@ -30,15 +30,13 @@ export default function BySource(){
 
     return(
         <div className='p-6'>
-            <motion.div className="rounded-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between" style={{
-                    background: 'linear-gradient(90deg, hsla(350, 100%, 53%, 1) 0%, hsla(33, 94%, 57%, 1) 100%)',
-                }}
+            <motion.div className="rounded-t-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between flex-col items-center bg-[#1976D2]"
                     initial={{ width: '0%', x: -100 }}
                     animate={{ width: '100%', x: 0 }}
                     exit={{ width: '0%', x: -100 }}
                 >
                     <span>Summary By Source {company ? 'for ' + proper(company?.company_name || 'No Company Name') : ''}</span>
-                    <span>{start === end ? start : start + ' - ' + end}</span>
+                    <span>{start === end ? new Date(start).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) : new Date(start).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) + ' - ' + new Date(end).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</span>
                 </motion.div>
                 <div className='w-full bg-white mt-4 p-4 shadow-md'>
                     <div className='w-full font-bold text-xl p-2 text-center'>

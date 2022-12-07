@@ -22,6 +22,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
     const startDate = urlParams.get('startDate');
     const endDate = urlParams.get('endDate');
 
+
   const isStepOptional = (step) => {
     return false;
   };

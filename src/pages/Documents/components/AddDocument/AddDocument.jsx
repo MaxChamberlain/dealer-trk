@@ -23,6 +23,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
         models: [],
         packages: []
     });
+    const storedCompany = document.cookie.split(';').filter((e) => e.includes('selected_company'))[0].split('=')[1];
 
     useEffect(() => {
         if(newVehicle.v_make){
@@ -81,7 +82,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                     style={{ width: '25rem' }}
                     renderInput={(params) => <TextField {...params} label="ZIP Code" variant="outlined" />}
                     freeSolo
-                    defaultValue={companyDetails?.find(e => e.company_zip === selComp?.company_zip)}
+                    defaultValue={storedCompany ? companyDetails?.find(e =>  e.company_id === storedCompany) : companyDetails?.find(e =>  e.company_zip === selComp?.company_zip)}
                 />
                 <TextField
                     id='VIN' 
