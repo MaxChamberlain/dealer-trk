@@ -1,7 +1,8 @@
-import { proper } from '../../../utils/textDisplay';
+import { proper, properNumber } from '../../../utils/textDisplay';
 import { useDocs } from '../hooks/useDocs';
 import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ComposedChart, Bar, PieChart, Pie, Cell, RadialBarChart, RadialBar } from 'recharts';
+import { CircularProgress } from '@mui/material';
 
 export default function Company({ company }) {
     const [loading, setLoading] = useState(true);
@@ -42,7 +43,7 @@ export default function Company({ company }) {
                 </div>
             </div>
             <div className='text-base font-normal mb-6 flex gap-4 mt-4 justify-around items-center w-full h-full'>
-                <div className='flex flex-col gap-4 w-1/3 h-full'>
+                <div className='flex flex-col gap-4 w-1/2 h-full'>
                     <div className='p-2 shadow-md bg-[#4992DB] text-white rounded h-full text-lg'>
                         <div className='font-bold text-center w-full'>Sales by Source</div>
                     </div>
@@ -68,7 +69,51 @@ export default function Company({ company }) {
                         </ResponsiveContainer>
                     </div>
                 </div>
-                <div className='w-2/3 p-6 shadow-md bg-white rounded'>
+                <div className='w-1/4 h-[460px] justify-start flex flex-col items-between'>
+                    <div className='p-2 shadow-md bg-[#4992DB] text-white rounded text-lg'>
+                        <div className='font-bold text-center w-full'>Margin</div>
+                    </div>
+                    <div>
+                        <div className='p-5 shadow-md bg-white rounded mt-4'>
+                            <div className='font-bold text-center w-full'>Total Margin <span className='text-gray-600 font-normal'>(sum of all margins)</span></div>
+                            <div className='font-bold text-center w-full text-2xl my-2'>${properNumber(documents?.totalMargin || 0)}</div>
+                        </div>
+                        <div className='p-5 shadow-md bg-white rounded mt-4'>
+                            <div className='font-bold text-center w-full'>Average Margin <span className='text-gray-600 font-normal'></span></div>
+                            <div className='font-bold text-center w-full text-2xl my-2'>${properNumber(documents?.averageMargin || 0)}</div>
+                        </div>
+                        <div className='p-5 shadow-md bg-white rounded mt-4'>
+                            <div className='font-bold text-center w-full'>You are on pace for <span className='text-gray-600 font-normal'></span></div>
+                            <div className='font-bold text-center w-full text-2xl my-2'>${properNumber(documents?.marginPace || 0)}</div>
+                            <div className='font-bold text-center w-full'>in margin this month <span className='text-gray-600 font-normal'></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div className='w-1/4 h-[460px] justify-start flex flex-col items-between'>
+                    <div className='p-2 shadow-md bg-[#4992DB] text-white rounded text-lg'>
+                        <div className='font-bold text-center w-full'>Certified vs Non-Certified</div>
+                    </div>
+                    <div>
+                        <div className='p-5 shadow-md bg-white rounded mt-4'>
+                            <div className='font-bold text-center w-full'>Out of {documents?.documents?.length} vehicles sold this month<span className='text-gray-600 font-normal'></span></div>
+                            <div className='font-bold text-center w-full text-2xl my-2 relative'>
+                                <CircularProgress
+                                    variant="determinate"
+                                    value={documents?.amtCertified / documents?.documents?.length * 100}
+                                    size={100}
+                                    thickness={3}
+                                    className='mx-auto'
+                                />
+                                <div className='font-bold text-center w-full text-2xl absolute top-1/2 -translate-y-1/2'>{documents?.amtCertified || 0}</div>
+                            </div>
+                            <div className='font-bold text-center w-full'>are certified<span className='text-gray-600 font-normal'></span></div>
+                        </div>
+                        <div className='p-9 shadow-md bg-white rounded mt-4'>
+                            <div className='font-bold text-center w-full'>Certified vehicles have averaged</div>
+                            <div className='font-bold text-center w-full text-2xl my-2'>${Math.floor((documents?.cert?.certified - documents?.cert?.uncertified))} {documents?.cert?.certified - documents?.cert?.uncertified > 0 ? 'More' : 'less'} <span className='text-gray-600 font-normal'>({Math.floor((documents?.cert?.certified / documents?.cert?.uncertified) * 100)}%) </span></div>
+                            <div className='font-bold text-center w-full'>per vehicle than Non-Certified vehicles</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

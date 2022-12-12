@@ -62,7 +62,28 @@ export const useDocs = (setLoading, setError, company) => {
                     color: `hsl(${i * 360 / existingSources.length}, 70%, 50%)`,
                 }
             })
-            console.log(salesBySource)
+            
+            let totalMargin = 0;
+            e.forEach(obj => {
+                totalMargin += parseInt(obj?.data?.vehicle?.v_margin || 0);
+            });
+
+            let averageMargin = Math.floor(totalMargin / e.length);
+
+            let marginPace = Math.floor(totalMargin/days) * countOfDaysCovered;
+
+            let amtCertified = e.filter(x => {
+                return x.data.vehicle.v_is_certified === true;
+            })?.length || 0
+
+            let cert = {
+                certified: e.filter(x => {
+                    return x.data.vehicle.v_is_certified === true;
+                }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) / amtCertified,
+                uncertified: e.filter(x => {
+                    return x.data.vehicle.v_is_certified === false;
+                }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) / (e.length - amtCertified),
+            }
 
             setDocuments({
                 documents: e,
@@ -72,6 +93,11 @@ export const useDocs = (setLoading, setError, company) => {
                 },
                 pace,
                 average,
+                totalMargin,
+                averageMargin,
+                marginPace,
+                amtCertified,
+                cert
             });
         })
     }, [])

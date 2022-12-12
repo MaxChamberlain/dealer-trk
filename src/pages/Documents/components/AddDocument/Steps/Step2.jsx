@@ -1,6 +1,7 @@
 import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField, MenuItem, Select, CircularProgress } from "@mui/material"
+import { cancelSearch } from "../../../../../utils/search"
 
-export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, loading, selComp }){
+export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, loading, selComp, setLoading }){
     console.log(loading)
     const sourceOptions = [
         'APPRAISAL',
@@ -117,12 +118,13 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                 <div className='p-2'>
                     <InputLabel htmlFor="fincarg">Exit CarGurus</InputLabel>
                     {loading ? 
-                        <div className='border border-stone-400 rounded p-1'>
+                        <div className='border border-stone-400 rounded p-1 flex justify-between'>
                             <CircularProgress />
+                            <button onClick={() => cancelSearch(setLoading)}>Cancel</button>
                         </div>
                     :
                         <div className='flex'>
-                            {(selComp?.company_carg_preference ? newVehicle?.v_final_carg_h_options[selComp.company_carg_preference] : newVehicle?.v_final_carg_h_options.highPrice) ? <Select
+                            {(selComp?.company_carg_preference ? newVehicle?.v_final_carg_h_options[selComp.company_carg_preference] : newVehicle?.v_final_carg_h_options?.highPrice) ? <Select
                                 fullWidth
                                 id="fincarg"
                                 value={newVehicle.v_final_carg_h}
@@ -200,8 +202,9 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                 <div className='p-2'>
                     <InputLabel htmlFor="imv">IMV</InputLabel>
                     {loading ? 
-                        <div className='border border-stone-400 rounded p-1'>
+                        <div className='border border-stone-400 rounded p-1 flex justify-between'>
                             <CircularProgress />
+                            <button onClick={() => cancelSearch(setLoading)}>Cancel</button>
                         </div>
                     :
                         <OutlinedInput

@@ -127,14 +127,14 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
                                 setNewVehicle(was => { 
                                     return { 
                                         ...was,
-                                        v_final_carg_h: (selComp?.company_carg_preference ? e[selComp.company_carg_preference]?.replace(/[^0-9.]/g, '') : e.highPrice?.replace(/[^0-9.]/g, '')) || '',
-                                        v_imv: e.IMV?.replace(/[^0-9.]/g, '') || '',
+                                        v_final_carg_h: (selComp?.company_carg_preference ? e[selComp.company_carg_preference]?.replace(/[^0-9.]/g, '') : e?.highPrice?.replace(/[^0-9.]/g, '')) || '',
+                                        v_imv: e?.IMV?.replace(/[^0-9.]/g, '') || '',
                                         v_final_carg_h_options: {
-                                            greatPrice: e.greatPrice?.replace(/[^0-9.]/g, '') || '',
-                                            goodPrice: e.goodPrice?.replace(/[^0-9.]/g, '') || '',
-                                            fairPrice: e.fairPrice?.replace(/[^0-9.]/g, '') || '',
-                                            highPrice: e.highPrice?.replace(/[^0-9.]/g, '') || '',
-                                            overPrice: e.overPrice?.replace(/[^0-9.]/g, '') || '',
+                                            greatPrice: e?.greatPrice?.replace(/[^0-9.]/g, '') || '',
+                                            goodPrice: e?.goodPrice?.replace(/[^0-9.]/g, '') || '',
+                                            fairPrice: e?.fairPrice?.replace(/[^0-9.]/g, '') || '',
+                                            highPrice: e?.highPrice?.replace(/[^0-9.]/g, '') || '',
+                                            overPrice: e?.overPrice?.replace(/[^0-9.]/g, '') || '',
                                         }
                                     }
                                 }); 
@@ -149,7 +149,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
         </div>
         <div>
             {hasScraped &&
-                <Steps selComp={selComp} setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} loadingIn={loading} />
+                <Steps setParentLoading={setLoading} selComp={selComp} setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} loadingIn={loading} />
             }
         </div>
         </div>

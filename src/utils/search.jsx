@@ -1,4 +1,5 @@
 import axios from 'axios';
+let controller = null
 
 export const searchGurusByVin = async (vin, zip, price, setLoading, setError, setVData, setCargData) => {
     try{
@@ -6,9 +7,12 @@ export const searchGurusByVin = async (vin, zip, price, setLoading, setError, se
             vehicleDetails: true,
             cargurus: true,
         });
+        controller = new AbortController();
+        const { signal } = controller;
         const data = {}
         axios.get(
             `${import.meta.env.VITE_API_URL}/search/gurusvin/?VIN=${vin}&ZIP=${zip}&PRICE=${price}`
+        , { signal }
         ).then((res) => {
             if(res.data.error){
                 setError(res.data.error);
@@ -42,5 +46,16 @@ export const searchGurusByVin = async (vin, zip, price, setLoading, setError, se
         setLoading(false);
         setError(e.response.data.message);
         console.log(e);
+    }
+}
+
+export const cancelSearch = (setLoading) => {
+    if(controller){
+        controller.abort();
+        controller = null;
+        setLoading({
+            vehicleDetails: false,
+            cargurus: false,
+        });
     }
 }
