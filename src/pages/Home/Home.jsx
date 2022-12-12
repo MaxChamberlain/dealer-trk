@@ -8,7 +8,7 @@ export default function Home(){
     const [companyDetails, setCompanyDetails] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const selectedCompany = document.cookie.split('; ').find((row) => row.startsWith('selected_company=')).split('=')[1];
+    const selectedCompany = document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1];
 
     useEffect(() => {
         if(selectedCompany){
@@ -26,13 +26,19 @@ export default function Home(){
             transition={{ duration: 0.1 }}
             className='pt-6'
         >
+            {selectedCompany ? <>
+                <div className='w-[98%] mx-auto p-2 bg-white rounded shadow-md text-2xl font-bold text-center'>
+                    Current Overview for {proper(companyDetails?.company_name || '')}
+                </div>
+                <Company
+                    key={companyDetails.company_id}
+                    company={companyDetails}
+                />
+            </> :
             <div className='w-[98%] mx-auto p-2 bg-white rounded shadow-md text-2xl font-bold text-center'>
-                Current Overview for {proper(companyDetails?.company_name || '')}
+            No Company Selected
             </div>
-            <Company
-                key={companyDetails.company_id}
-                company={companyDetails}
-            />
+            }
         </motion.div>
     )
 }

@@ -1,4 +1,6 @@
-import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material"
+import { OutlinedInput, InputLabel, Select, MenuItem, FormHelperText, Box, TextField } from "@mui/material"
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import Checkbox from '@mui/material/Checkbox'
 import { proper } from "../../../../../utils/textDisplay"
 
@@ -94,21 +96,36 @@ export default function Step3({ step, newVehicle, setNewVehicle, company, setCom
                     onChange={(e) => setNewVehicle({ ...newVehicle, v_notes: e.target.value })}
                 />
             </div>
-            <div className='p-2'>
-                <InputLabel htmlFor="cmpn" required>Which company is this for?</InputLabel>
-                <Select    
-                    fullWidth
-                    id="cmpn"
-                    value={company || companyDetails?.find(e => e.company_id === storedCompany) || '' }
-                    type='number'
-                    onChange={(e) => setCompany(e.target.value)}
-                    required
-                >
-                    {companyDetails.map((e, i) => {
-                        return <MenuItem key={i} value={e}>{e.company_name?.toUpperCase() || ''}</MenuItem>
-                    })}
-                </Select>
-                <FormHelperText>This is required!</FormHelperText>
+            <div className='flex justify-between'>
+                <div className='p-2'>
+                    <InputLabel htmlFor="cmpn" required>Created At Date</InputLabel>
+                    <Box sx={{ width: '200px', marginRight: '10px' }}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} >
+                            <DatePicker
+                                value={newVehicle.created_at}
+                                onChange={(newValue) => setNewVehicle({ ...newVehicle, created_at: newValue })}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </Box>
+                </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="cmpn" required>Which company is this for?</InputLabel>
+                    <Select    
+                        fullWidth
+                        id="cmpn"
+                        value={company}
+                        type='number'
+                        onChange={(e) => setCompany(e.target.value)}
+                        required
+                        defaultValue={companyDetails.filter((e) => e.company_id === storedCompany)[0]}
+                    >
+                        {companyDetails.map((e, i) => {
+                            return <MenuItem key={i} value={e}>{e.company_name?.toUpperCase() || ''}</MenuItem>
+                        })}
+                    </Select>
+                    <FormHelperText>This is required!</FormHelperText>
+                </div>
             </div>
         </>
     )

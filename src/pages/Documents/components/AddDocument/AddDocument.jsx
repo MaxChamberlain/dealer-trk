@@ -9,6 +9,7 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
     const [ newVehicle, setNewVehicle ] = useState({
         v_is_certified: false,
         v_is_trade: false,
+        created_at: new Date(),
     })
     const [ company, setCompany ] = useState('Select A Company');
     const [ activeStep, setActiveStep ] = useState(0);
@@ -39,6 +40,13 @@ export default function DocumentItem({ companyDetails, setAdding, docs, setDocum
             })
         }
     }, [newVehicle, docs])
+
+    useEffect(() => {
+        if(storedCompany){
+            let comp = companyDetails.filter(e => e.company_id === storedCompany)[0]
+            setCompany(comp)
+        }
+    })
 
     return(
         <div id='document-list-item' className={`z-[9990] w-full bg-white drop-shadow p-4 mb-4`}>

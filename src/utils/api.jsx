@@ -134,9 +134,10 @@ export const getDocumentsByCompanyId = async (setLoading, setError, company_id, 
 export const insertDocument = async (paramsinput, document_type_id, setLoading, setError) => {
     setLoading(true);
     try{
+        console.log('input', paramsinput)
         const params = {
             metadata: {
-                created_at: new Date().toISOString(),
+                created_at: paramsinput.body?.created_at || new Date().toISOString(),
                 updated_at: new Date().toISOString()
             },
             data: {
@@ -189,8 +190,8 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
         return true;
     }catch(e){
         setLoading(false);
-        setError(e.response.data);
         console.log(e);
+        setError(e.response.data);
     }
 }
 

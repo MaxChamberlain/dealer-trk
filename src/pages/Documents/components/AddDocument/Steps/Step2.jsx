@@ -2,7 +2,6 @@ import { OutlinedInput, InputLabel, InputAdornment, Autocomplete, TextField, Men
 import { cancelSearch } from "../../../../../utils/search"
 
 export default function Step2({ step, newVehicle, setNewVehicle, company, setCompany, companyDetails, loading, selComp, setLoading }){
-    console.log(loading)
     const sourceOptions = [
         'APPRAISAL',
         'AUCTION',
