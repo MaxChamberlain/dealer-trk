@@ -13,7 +13,7 @@ export default function PickSummaryType(){
     const [ company, setCompany ] = useState(null);
     const [ found, setFound ] = useState(true);
     const [ date, setDate ] = useState({
-        start: new Date(),
+        start: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         end: new Date()
     });
 
@@ -22,7 +22,6 @@ export default function PickSummaryType(){
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         if(urlParams.get('start') && urlParams.get('end')){
-            console.log('start and end', urlParams.get('start'), urlParams.get('end'))
             setDate({
                 start: new Date(urlParams.get('start')).setDate(new Date(urlParams.get('start')).getDate() + 1),
                 end: new Date(urlParams.get('end')).setDate(new Date(urlParams.get('end')).getDate() + 1)

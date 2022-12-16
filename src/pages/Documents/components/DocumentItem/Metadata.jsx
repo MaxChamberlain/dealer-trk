@@ -13,7 +13,7 @@ export default function Metadata({ index, docDates, setEditting, editting, docId
             <TableCell colSpan={1}>
                 Updated {docDates.updated_at ? new Date(docDates.updated_at).toLocaleDateString() : 'N/A'} <br /> {docDates.updated_at ? new Date(docDates.updated_at).toLocaleTimeString() : 'N/A'}
             </TableCell>
-            <TableCell colSpan={editting === docId ? 7 : 11}>
+            <TableCell colSpan={editting === docId ? 9 : 13}>
 
             </TableCell>
             {editting === docId &&

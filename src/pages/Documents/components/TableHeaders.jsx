@@ -50,6 +50,12 @@ export default function TableHeaders(){
                     </div>
                 </TableCell>
                 <TableCell>
+                    IMV 
+                </TableCell>
+                <TableCell>
+                    MSRP 
+                </TableCell>
+                <TableCell>
                     Certified? 
                 </TableCell>
                 <TableCell>

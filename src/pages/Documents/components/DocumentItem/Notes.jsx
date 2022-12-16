@@ -7,7 +7,7 @@ export default function Notes({ index, setNotes, notes, doc_id }){
             ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
         >
             <TableCell></TableCell>
-            <TableCell colSpan={13}>
+            <TableCell colSpan={15}>
                  <TextField
                     label='Notes'
                     variant='outlined'

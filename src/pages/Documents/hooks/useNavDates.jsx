@@ -14,9 +14,8 @@ export const useNavDates = () => {
         if(!startDate || !endDate){
             var d = new Date();
             var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
-            let secondDay = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate() + 1);
-            urlParams.set('startDate', secondDay.toISOString().split('T')[0]);
-            urlParams.set('endDate', new Date(new Date(new Date()).setDate(new Date().getDate() + 1)).toISOString().split('T')[0]);
+            urlParams.set('startDate', firstDay.toLocaleDateString('en-US'));
+            urlParams.set('endDate', new Date(new Date(new Date()).setDate(new Date().getDate() + 1)).toLocaleDateString('en-US'));
             navigate(`?${urlParams.toString()}`, { replace: true });
         }
         //if endDate is before startDate, set endDate to startDate
@@ -28,9 +27,9 @@ export const useNavDates = () => {
 
     const handleDateChange = (date, type) => {
         if(type === 'start'){
-            urlParams.set('startDate', new Date(date).toISOString().split('T')[0]);
+            urlParams.set('startDate', new Date(date).toLocaleDateString('en-US'));
         }else{
-            urlParams.set('endDate', new Date(date).toISOString().split('T')[0]);
+            urlParams.set('endDate', new Date(date).toLocaleDateString('en-US'));
         }
         window.location.search = urlParams.toString();
     }

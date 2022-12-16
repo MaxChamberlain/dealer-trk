@@ -5,215 +5,160 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import ShieldIcon from '@mui/icons-material/Shield';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { proper, properNumber } from '../../../../utils/textDisplay';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, LinearProgress} from '@mui/material';
 
 export default function Stats({docs}){
     return(
         <>
-        <div className='flex justify-around text-black px-6 py-6 bg-white rounded-lg drop-shadow pb-12'>
-            <div className='h-full relative flex flex-col items-center justify-start'>
-                <div className='flex gap-x-4 items-center font-bold'>
-                    <ShieldIcon style={{ height: 50, width: 35 }} />
-                    Total Certified
-                </div>
-                <div className='mt-16 text-center text-3xl relative mb-10'>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        {docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0}
-                    </div>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        <CircularProgress
-                            variant='determinate'
-                            value={((docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0) / (docs?.length || 1)) * 100}
-                            size={150}
-                            thickness={2}
-                            sx={{
-                                color: '#4992DB',
-                                position: 'absolute', 
-                                '& .MuiCircularProgress-circle': {
-                                    strokeLinecap: 'round',
-                                    background: '#3f51b5',
-                                },
-                            }}
-                        />
-                    </div>
-                </div>
-            </div>
-            
-            <div className='h-full relative flex flex-col items-center justify-start'>
-                <div className='flex gap-x-4 items-center font-bold'>
-                    <ShieldIcon style={{ height: 50, width: 35 }} />
-                    Trades % of Sales
-                </div>
-                <div className='mt-16 text-center text-3xl relative mb-10'>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        {((docs?.filter((doc) => doc.data.vehicle.v_is_trade).length / docs?.length) * 100).toFixed(0)}%
-                    </div>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        <CircularProgress
-                            variant='determinate'
-                            value={((docs?.filter((doc) => doc.data.vehicle.v_is_trade).length / docs?.length) * 100).toFixed(2)}
-                            size={150}
-                            thickness={2}
-                            sx={{
-                                color: '#4992DB',
-                                position: 'absolute', 
-                                '& .MuiCircularProgress-circle': {
-                                    strokeLinecap: 'round',
-                                    background: '#3f51b5',
-                                },
-                            }}
-                        />
-                    </div>
-                </div>
-            </div>
-            
-            <div className='h-full relative flex flex-col items-center justify-start'>
-                <div className='flex gap-x-4 items-center font-bold'>
-                    <ShieldIcon style={{ height: 50, width: 35 }} />
-                    Avg Margin
-                </div>
-                <div className='mt-16 text-center text-3xl relative mb-10'>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        ${properNumber((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_margin || 0), 0) / docs?.length).toFixed(0))}
-                    </div>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        <CircularProgress
-                            variant='determinate'
-                            value={
-                                (docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_margin || 0), 0) / docs?.length) 
-                                / 
-                                (docs?.sort((a, b) => parseInt(b.data.vehicle?.v_margin || 0) - parseInt(a.data.vehicle?.v_margin || 0))[0]?.data.vehicle?.v_margin || 1)
-                            * 100}
-                            size={150}
-                            thickness={2}
-                            sx={{
-                                color: '#4992DB',
-                                position: 'absolute', 
-                                '& .MuiCircularProgress-circle': {
-                                    strokeLinecap: 'round',
-                                    background: '#3f51b5',
-                                },
-                            }}
-                        />
-                    </div>
-                </div>
-            </div>
-                                                    
-            <div className='h-full relative flex flex-col items-center justify-start'>
-                <div className='flex gap-x-4 items-center font-bold'>
-                    <AttachMoneyIcon style={{ height: 50, width: 35 }} />
-                    Avg Market %
-                </div>
-                <div className='mt-16 text-center text-3xl relative mb-10'>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        {properNumber((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_market_percent || 0), 0) / docs?.length).toFixed(2))}%
-                    </div>
-                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        <CircularProgress
-                            variant='determinate'
-                            value={100 * (docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_market_percent || 0), 0) / docs?.length) / (docs?.sort((a, b) => parseInt(b.data.vehicle?.v_market_percent || 0) - parseInt(a.data.vehicle?.v_market_percent || 0))[0]?.data.vehicle?.v_market_percent || 0)}
-                            size={150}
-                            thickness={2}
-                            sx={{
-                                color: '#4992DB',
-                                position: 'absolute', 
-                                '& .MuiCircularProgress-circle': {
-                                    strokeLinecap: 'round',
-                                    background: '#3f51b5',
-                                },
-                            }}
-                        />
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-            <div className='grid grid-cols-5 mt-4 h-full w-full text-lg gap-2 text-black font-bold'>
-                                                    
-                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-start'>
-                    <div className='flex gap-x-4 items-center font-bold'>
-                        <AttachMoneyIcon style={{ height: 50, width: 35 }} />
-                        Total Margin
-                    </div>
-                    <div className='mt-10 text-center text-3xl'>
-                        ${properNumber(docs?.reduce((acc, doc) => acc + parseInt(doc?.data?.vehicle?.v_margin || 0), 0) || 0)}
-                    </div>
-                </div>
-                                                    
-                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-start'>
-                    <div className='flex gap-x-4 items-center font-bold'>
-                        <AttachMoneyIcon style={{ height: 50, width: 35 }} />
-                        Amount of Trades
-                    </div>
-                    <div className='mt-10 text-center text-3xl'>
-                    {docs?.filter((doc) => doc.data.vehicle.v_is_trade).length}
-                    </div>
-                </div>
-                                                    
-                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-start'>
-                    <div className='flex gap-x-4 items-center font-bold'>
-                        <AttachMoneyIcon style={{ height: 50, width: 35 }} />
-                        Avg Days
-                    </div>
-                    <div className='mt-10 text-center text-3xl'>
-                        {(docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_days || 0), 0) / docs?.length).toFixed(2)}
-                    </div>
-                </div>
-        
-                <div className='flex flex-col gap-y-2'>
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow'>
-                        <div className='flex gap-x-4 items-center font-bold'>
-                            <EventIcon style={{ height: 50, width: 35 }} />
-                            Top Vehicle Year
-                        </div>
-                        <div className='mt-4'>
-                            {[...new Set(docs?.map((doc) => doc.data.vehicle.v_year))].sort((a, b) => b - a).slice(0,1).map((year) => {
-                                return(
-                                    <div className='flex justify-between text-3xl'>
-                                        <div>{year}</div>
-                                        <div className='ml-4'>{docs?.filter((doc) => doc.data.vehicle.v_year === year).length}</div>
-                                    </div>
-                                )  
-                            })}
-                        </div>
-                    </div>
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow'>
-                        <div className='flex gap-x-4 items-center font-bold'>
-                            <DirectionsBusIcon style={{ height: 50, width: 35 }} />
-                            Top Vehicle Make
-                        </div>
-                        <div className='mt-4'>
-                            {[...new Set(docs?.map((doc) => doc.data.vehicle.v_make))].sort((a, b) => b - a).slice(0,1).map((make) => {
-                                return(
-                                    <div className='flex justify-between text-3xl'>
-                                        <div>{make}</div>
-                                        <div className='ml-4'>{docs?.filter((doc) => doc.data.vehicle.v_make === make).length}</div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </div>
-                </div>
-
-                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow'>
-                    <div className='flex gap-x-4 items-center w-full justify-center'>
-                        <DirectionsCarIcon style={{ height: 35, width: 35 }} />
-                        Top 5 Vehicles
-                    </div>
-                    <div className='mt-4'>
-                        {[...new Set(docs?.map((doc) => `${doc.data.vehicle.v_make} ${doc.data.vehicle.v_model}`))].sort((a, b) => b - a).slice(0,5).map((make, i) => {
-                            return(
-                                <div className='flex justify-between'>
-                                    <div className='text-3xl'>{i + 1}</div>
-                                    <div className='ml-4 text-left w-full mt-1'>{make}</div>
-                                    <div className='ml-4'>{docs?.filter((doc) => `${doc.data.vehicle.v_make} ${doc.data.vehicle.v_model}` === make).length}</div>
+            <div className='flex justify-center flex-wrap mt-4 h-full w-full text-lg gap-4 text-black font-bold'>
+                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-start' style={{ minWidth: '20rem' }}>
+                    <div className='w-full flex items-center justify-between mb-4'>
+                        <div className='flex gap-x-4 items-center font-bold justify-between w-full'>
+                            <div className='flex items-center'>
+                                <div className='flex items-center justify-center'>
+                                    <LinearProgress
+                                        variant='determinate'
+                                        value={((docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0) / (docs?.length || 1)) * 100}
+                                        sx={{
+                                            color: '#4992DB',
+                                            height: 80,
+                                            width: 8,
+                                            '& .MuiLinearProgress-bar': {
+                                                background: '#3f51b5',
+                                            },
+                                            "& span.MuiLinearProgress-bar": {
+                                            transform: `translateY(${100-((docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0) / (docs?.length || 1)) * 100}%) !important` //has to have !important
+                                            }
+                                        }}
+                                        className='mr-6'
+                                        />
                                 </div>
-                            )
-                        }
-                        )}
+                                <div className='flex items-center justify-center'>
+                                    {docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0}
+                                </div>
+                            </div>
+                        </div>
+                        Total Certified
+                    </div>
+                    
+                    <div className='flex w-full items-center justify-between mb-4'>
+                        <div className='flex items-center'>
+                            <div className='flex items-center justify-center'>
+                                <LinearProgress
+                                    variant='determinate'
+                                    value={((docs?.filter((doc) => doc.data.vehicle.v_is_trade)?.length || 0) / (docs?.length || 1)) * 100}
+                                    sx={{
+                                        color: '#4992DB',
+                                        height: 80,
+                                        width: 8,
+                                        '& .MuiLinearProgress-bar': {
+                                            background: '#3f51b5',
+                                        },
+                                        "& span.MuiLinearProgress-bar": {
+                                        transform: `translateY(${100-((docs?.filter((doc) => doc.data.vehicle.v_is_trade)?.length || 0) / (docs?.length || 1)) * 100}%) !important` //has to have !important
+                                        }
+                                    }}
+                                    className='mr-6'
+                                />
+                            </div>
+                            <div>
+                                {(((docs?.filter((doc) => doc.data.vehicle.v_is_trade)?.length || 0) / docs?.length) * 100).toFixed(0)}%
+                            </div>
+                        </div>
+                        Took a Trade
+                    </div>
+                    
+                    <div className='flex items-center justify-between w-full mb-4'>
+                        <div className='flex items-center'>
+                            <div className='flex items-center'>
+                                <LinearProgress
+                                    variant='determinate'
+                                    value={
+                                        ((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_margin || 0), 0) / docs?.length) 
+                                        / 
+                                        (docs?.sort((a, b) => parseInt(b.data.vehicle?.v_margin || 0) - parseInt(a.data.vehicle?.v_margin || 0))[0]?.data.vehicle?.v_margin || 1)) || 0
+                                    }
+                                    sx={{
+                                        color: '#4992DB',
+                                        height: 80,
+                                        width: 8,
+                                        '& .MuiLinearProgress-bar': {
+                                            background: '#3f51b5',
+                                        },
+                                        "& span.MuiLinearProgress-bar": {
+                                        transform: `translateY(${
+                                            100 - (((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_margin || 0), 0) / docs?.length) 
+                                            / 
+                                            (docs?.sort((a, b) => parseInt(b.data.vehicle?.v_margin || 0) - parseInt(a.data.vehicle?.v_margin || 0))[0]?.data.vehicle?.v_margin || 1)) * 100)
+                                        }%) !important` //has to have !important
+                                        }
+                                    }}
+                                    className='mr-6'
+                                />
+                            </div>
+                            <div>
+                                ${properNumber((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_margin || 0), 0) / docs?.length).toFixed(0))}
+                            </div>
+                        </div>
+                        Avg Margin
+                    </div>
+                                                            
+                    <div className='w-full flex justify-between items-center'>
+                        <div className='flex items-center'>
+                            <div>
+                                <LinearProgress
+                                    variant='determinate'
+                                    value={100 - (((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_market_percent || 0), 0) / docs?.length)))}
+                                    sx={{
+                                        color: '#4992DB',
+                                        height: 80,
+                                        width: 8,
+                                        '& .MuiLinearProgress-bar': {
+                                            background: '#3f51b5',
+                                        },
+                                        "& span.MuiLinearProgress-bar": {
+                                        transform: `translateY(${(docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_market_percent || 0), 0) / docs?.length) > 100 ? 0 : (100 - (docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_market_percent || 0), 0) / docs?.length))}%) !important` //has to have !important
+                                        }
+                                    }}
+                                    className='mr-6'
+                                />
+                            </div>
+                            <span>
+                                {properNumber((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_market_percent || 0), 0) / docs?.length).toFixed(2))}%
+                            </span>
+                        </div>
+                        Avg Market %
                     </div>
                 </div>
+
+                <div className='flex flex-col items-center justify-between' style={{ minWidth: '20rem' }}>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Total Margin
+                        </div>
+                        <div className='text-centertext-xl'>
+                            ${properNumber(docs?.reduce((acc, doc) => acc + parseInt(doc?.data?.vehicle?.v_margin || 0), 0) || 0)}
+                        </div>
+                    </div>
+                                                        
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Amount of Trades
+                        </div>
+                        <div className='text-centertext-xl'>
+                        {docs?.filter((doc) => doc.data.vehicle.v_is_trade).length}
+                        </div>
+                    </div>
+                                                        
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Avg Days
+                        </div>
+                        <div className='text-centertext-xl'>
+                            {(docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_days || 0), 0) / docs?.length).toFixed(2)}
+                        </div>
+                    </div>
+                </div>                                                    
             </div>
         </>
     )

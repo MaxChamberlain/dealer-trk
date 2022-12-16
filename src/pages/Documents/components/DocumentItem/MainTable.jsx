@@ -25,7 +25,7 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
         'LUXURY CAR',
         'LUXURY TRUCK',
         'G Unit',
-        'EMPLOYEE / HOUSE',
+        'HOUSE',
         'NEW TRADE',
         'USED TRADE',
         'TRAC',
@@ -95,6 +95,12 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
                         <span className='italic text-stone-500'>N/A</span>}
                     </div>
                 </TableCell>
+                <TableCell>
+                    ${properNumber(doc.vehicle?.v_imv || 'N/A')}
+                </TableCell>  
+                <TableCell>
+                    ${properNumber(doc.vehicle?.v_msrp || 'N/A')}
+                </TableCell>  
                 <TableCell>
                     {doc.vehicle?.v_is_certified ? 'Yes' : 'No'}
                 </TableCell>    

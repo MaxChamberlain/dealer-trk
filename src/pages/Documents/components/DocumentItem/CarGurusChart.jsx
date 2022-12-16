@@ -6,7 +6,7 @@ export default function CarGurusChart({ index, doc }){
             ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
         >
             <TableCell></TableCell>
-            <TableCell colSpan={15}>
+            <TableCell colSpan={17}>
                 {doc?.vehicle?.v_final_carg_h_options ? <>
                     <div className='flex flex-col w-full p-4'>
                         <div className='flex flex-row w-full justify-between text-md font-bold text-center'>

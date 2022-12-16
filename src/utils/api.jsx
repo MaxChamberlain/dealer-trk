@@ -110,8 +110,6 @@ export const getDocumentsByCompanyIds = async (setLoading, setError, startDate, 
 
 export const getDocumentsByCompanyId = async (setLoading, setError, company_id, startDate, endDate ) => {
     setLoading(true);
-    startDate = (new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1)).toLocaleDateString('en-US'))
-
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/document/getbycompanyid', 
@@ -164,6 +162,7 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
                     v_final_carg_h_options: paramsinput.body?.v_final_carg_h_options,
                     v_acv: paramsinput.body?.v_acv,
                     v_final_acv: paramsinput.body?.v_final_acv,
+                    v_msrp: paramsinput.body?.v_msrp,
                 },
                 trade: {
                     v_trade_acv: paramsinput.body?.v_trade_acv,

@@ -25,7 +25,7 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
         'LUXURY CAR',
         'LUXURY TRUCK',
         'G Unit',
-        'EMPLOYEE / HOUSE',
+        'HOUSE',
         'NEW TRADE',
         'USED TRADE',
         'TRAC',
@@ -234,6 +234,15 @@ export default function Step2({ step, newVehicle, setNewVehicle, company, setCom
                         id="endacv"    
                         value={newVehicle.v_final_acv}
                         onChange={(e) => setNewVehicle({ ...newVehicle, v_final_acv: e.target.value })}
+                        startAdornment="$"
+                    /> 
+                </div>
+                <div className='p-2'>
+                    <InputLabel htmlFor="v_msrp">MSRP</InputLabel>   
+                    <OutlinedInput
+                        id="v_msrp"    
+                        value={newVehicle.v_msrp}
+                        onChange={(e) => setNewVehicle({ ...newVehicle, v_msrp: e.target.value })}
                         startAdornment="$"
                     /> 
                 </div>

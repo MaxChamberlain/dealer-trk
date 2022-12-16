@@ -7,7 +7,7 @@ export const useDocs = (setLoading, setError, company) => {
 
     // get the first day of this month
     const startDate = new Date();
-    startDate.setDate(2);
+    startDate.setDate(1);
     startDate.setHours(0, 0, 0, 0);
 
     // get the last day of this month
