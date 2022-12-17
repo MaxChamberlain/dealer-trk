@@ -4,7 +4,6 @@ import { Tabs, Tab } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { getCompanyDetails, getDocumentsByCompanyId } from '../../utils/api';
-import "@silevis/reactgrid/styles.css";
 import io from 'socket.io-client';
 
 export default function TripPad() {
