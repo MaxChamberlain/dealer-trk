@@ -15,6 +15,7 @@ export default function TripPad() {
     const [highlights, setHighlights] = useState([])
     const [socket, setSocket] = useState(null);
     const [cellsBeingEdited, setCellsBeingEdited] = useState([]);
+    const [color, setColor] = useState('#ff7000');
 
     const fetchCompanies = async () => {
         const selected_company = document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1];
@@ -65,24 +66,24 @@ export default function TripPad() {
     }, [])
 
     useEffect(() => {
-        const newSocket = io(import.meta.env.VITE_API_URL + '?company_id=' + document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]);
-        setSocket(newSocket);
-        if(socket){
-            socket.emit('init', 'init')
-            socket.on('init', (data) => {
-                console.log('init', data);
-            })
-        }
+        const newSocket = io(import.meta.env.VITE_API_URL + '?company_id=' + document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1])
+        setSocket(newSocket); 
         return () => newSocket.close();
     }, [setSocket, document.cookie]);
 
     useEffect(() => {
         if (socket) {
-            socket.on('startEditing', (data) => {
-                setCellsBeingEdited(was => [...was, data]);
+            socket.on('init', (data) => {
+                setCellsBeingEdited(data)
+                if(socket.id){
+                    setColor(randomHSL(socket.id))
+                }
+            })
+            socket.on('startEditing', (data, color) => {
+                setCellsBeingEdited(data);
             });
             socket.on('stopEditing', (data) => {
-                setCellsBeingEdited(was => was.filter(el => el.document_id !== data.document_id));
+                setCellsBeingEdited(data);
             });
             socket.on('cellChangeCommit', (data) => {
                 setDocs(was => was.map(el => el.document_id === data.document_id ? data : el));
@@ -163,7 +164,7 @@ export default function TripPad() {
                     return parseInt(params.indexRelativeToCurrentPage) % 2 === 0 ? 'bg-stone-100' : 'bg-white'
                 }}
                 getCellClassName={(params) => {
-                    return cellsBeingEdited?.find(cell => cell.id === params.id && cell.field === params.field) ? 'outline outline-[#ffbb00]' : ''
+                    return cellsBeingEdited?.find(cell => cell.id === params.id && cell.field === params.field) ? 'outline outline-[#ffb800]' : ''
                 }}
                 onCellEditStart={handleStartEdit}
                 onCellEditStop={handleStopEdit}
@@ -174,14 +175,26 @@ export default function TripPad() {
     </>);
 
     function handleStartEdit(params) {
-        socket.emit('startEditing', params);
+        console.log(color)
+        socket.emit('startEditing', params, color);
     }
     function handleStopEdit(params) {
         socket.emit('stopEditing', params);
     }
     function handleCellUpdate(params, old) {
-        console.log('cellChangeCommit', params, old)
         socket.emit('cellChangeCommit', {params, old});
         return params;
     }
 }
+
+function randomHSL(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = hash % 360;
+    const s = 50 + Math.abs(hash % 20);
+    const l = 50 + Math.abs(hash % 20);
+    console.log(`hsl(${h}, ${s}%, ${l}%)`)
+    return `hsl(${h}, ${s}%, ${l}%)`;
+  }

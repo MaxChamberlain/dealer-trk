@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Home from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import { logout } from '../../utils/api';
 
 export default function Header(){
@@ -79,6 +80,25 @@ export default function Header(){
                 >
                     <AlignVerticalBottomIcon style={{ color: 'white', width: 20, height: 20 }} />
                     <span style={{ marginLeft: 5 }}>Summary</span>
+                </Button>
+
+                <Button
+                    variant='contained'
+                    color='primary'
+                    style={{ 
+                        color: 'white', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        marginLeft: 8,
+                        padding: '4px 6px'
+                    }}
+                    onClick={() => {
+                        // if there are url params, keep them
+                        navigate('/triptest')
+                    }}
+                >
+                    <ListAltIcon style={{ color: 'white', width: 20, height: 20 }} />
+                    <span style={{ marginLeft: 10 }}>Trip Pad</span>
                 </Button>
             </div>
 
