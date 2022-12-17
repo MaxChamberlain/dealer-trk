@@ -12,7 +12,7 @@ export const searchGurusByVin = async (vin, zip, price, setLoading, setError, se
         const data = {}
         axios.get(
             `${import.meta.env.VITE_API_URL}/search/gurusvin/?VIN=${vin}&ZIP=${zip}&PRICE=${price}`
-        , { signal }
+        , { signal, timeout: 20000 }
         ).then((res) => {
             if(res.data.error){
                 setError(res.data.error);
@@ -29,7 +29,6 @@ export const searchGurusByVin = async (vin, zip, price, setLoading, setError, se
         axios.get(
             `${import.meta.env.VITE_API_URL}/search/nhtsa/?VIN=${vin}&ZIP=${zip}&PRICE=${price}`
         ).then((res) => {
-            console.log('res', res.data)
             if(res.data.error){
                 setError(res.data.error);
             }else{
@@ -57,5 +56,27 @@ export const cancelSearch = (setLoading) => {
             vehicleDetails: false,
             cargurus: false,
         });
+    }
+}
+
+export const customUpdateVehicle = async (data) => {
+    try{
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/document/customupdatevehicle`, data,
+            { withCredentials: true }
+        );
+        return res.data;
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const customUpdateCargurus = async (data) => {
+    try{
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/document/customupdatecargurus`, data,
+            { withCredentials: true }
+        );
+        return res.data;
+    }catch(e){
+        console.log(e);
     }
 }
