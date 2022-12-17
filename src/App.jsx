@@ -9,6 +9,7 @@ import PickSummaryType from "./pages/Summary/:id/PickSummaryType";
 import BySource from "./pages/Summary/:id/bySource/BySource";
 import Protected from "./components/Protected";
 import UnprotectedStrict from "./components/UnprotectedStrict";
+import TripPad from "./pages/TripPad/TripPad";
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/summary" element={<Protected redirect={<Summary />} />} />
           <Route path="/summary/:id" element={<Protected redirect={<PickSummaryType />} />} />
           <Route path="/summary/:id/overview" element={<Protected redirect={<BySource />} />} />
+          <Route path='/triptest' element={<Protected redirect={<TripPad />} />} />
         </Routes>
       </AnimatePresence>
     </div>
