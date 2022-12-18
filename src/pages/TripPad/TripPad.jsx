@@ -1,11 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Tabs, Tab, Button, Snackbar, Alert } from '@mui/material';
+import { Tabs, Tab, Button, Snackbar, Alert, Menu, MenuItem } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getCompanyDetails, getDocumentsByCompanyId } from '../../utils/api';
 import io from 'socket.io-client';
 import { searchGurusByVin, customUpdateCargurus, customUpdateVehicle, cancelSearch } from '../../utils/search';
+import { UserContext } from '../../contexts/UserContext'
 
 export default function TripPad() {
     const [companies, setCompanies] = useState([])
@@ -18,14 +19,17 @@ export default function TripPad() {
     const [cellsBeingEdited, setCellsBeingEdited] = useState([]);
     const [color, setColor] = useState('#ff7000');
     const [blank, setBlank] = useState([]);
+    const [contextMenu, setContextMenu] = useState(null)
+    const [selectedRow, setSelectedRow] = useState();
+    const { user } = useContext(UserContext)
 
     const fetchCompanies = async () => {
         const selected_company = document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1];
+        const response = await getCompanyDetails(setLoading, setError)
+        setCompanies(response)
         if(!selected_company){
             document.cookie = `selected_company=${response[0].company_id}`
         }
-        const response = await getCompanyDetails(setLoading, setError)
-        setCompanies(response)
 
         let firstDayOfMonth = new Date();
         firstDayOfMonth.setDate(1);
@@ -40,7 +44,7 @@ export default function TripPad() {
                     ...data.data?.vehicle,
                     ...data.data?.trade,
                     v_is_certified: data.data?.vehicle?.v_is_certified ? 'Y' : 'N',
-                    t_vehicle: data.data?.trade?.t_vehicle || '',
+                    t_vehicle: data.data?.trade?.t_vehicle || (data.data?.trade?.v_trade_year ? ((data.data?.trade?.v_trade_year.length === 4 ? data.data?.trade?.v_trade_year : '20' + data.data?.trade?.v_trade_year) || '') + ' ' + (data.data?.trade?.v_trade_make || '') + ' ' + (data.data?.trade?.v_trade_model || '') : ''),
                     v_vehicle: data.data?.vehicle?.v_vehicle || '',
                     v_market_percent: data.data?.vehicle?.v_market_percent || '',
                     v_sell_price: data.data?.vehicle?.v_sell_price || '',
@@ -90,20 +94,20 @@ export default function TripPad() {
         }
         setBlank(arrOfBlankObjects)
     }, [])
-
+    
     useEffect(() => {
         const newSocket = io(import.meta.env.VITE_API_URL + '?company_id=' + document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1])
         setSocket(newSocket); 
-        return () => newSocket.close();
+        return () => {
+            newSocket.emit('stopEditing', null, user);
+            newSocket.close();
+        };
     }, [setSocket, document.cookie]);
 
     useEffect(() => {
         if (socket) {
             socket.on('init', (data) => {
                 setCellsBeingEdited(data)
-                if(socket.id){
-                    setColor(randomHSL(socket.id))
-                }
             })
             socket.on('startEditing', (data, color) => {
                 setCellsBeingEdited(data);
@@ -120,6 +124,7 @@ export default function TripPad() {
             })
         }
         }, [socket]);
+
       const getColumns = () => [
         { field: 'col1', headerName: "Stock NO.", width: 100, editable: true },
         { field: 'col2', headerName: "Vehicle", width: 300, editable: true },
@@ -146,6 +151,7 @@ export default function TripPad() {
             renderCell: (params) => {
                 const setData = (data) => {
                     if(data){
+                        setDocs(was => was.map(el => el.document_id === params.id ? {...el, v_vehicle: `${data?.year} ${data?.make} ${data?.model} ${data?.trim_level}`} : el));
                         customUpdateVehicle({v_vehicle: `${data?.year} ${data?.make} ${data?.model} ${data?.trim_level}`, document_id: params.id})
                     }
                 }
@@ -207,11 +213,25 @@ export default function TripPad() {
         }))
       ];
       const rows = getRows(docs);
+      
+      const handleContextMenu = (event) => {
+        event.preventDefault();
+        setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
+        setContextMenu(
+          contextMenu === null
+            ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+            : null,
+        );
+      };
 
     return (<>
-        <Snackbar open={loading} autoHideDuration={6000} onClose={() => {cancelSearch(); setLoading(false)}}>
-            <Alert onClose={() => {cancelSearch(); setLoading(false)}} severity="info">
-                Searching CarGurus...
+        <Snackbar open={loading ? true : false} autoHideDuration={6000} onClose={() => {cancelSearch(setLoading); setLoading(false)}}>
+            <Alert onClose={() => {cancelSearch(setLoading); setLoading(false)}} severity="info" style={{
+                filter: 'drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5))',
+                backgroundColor: 'hsl(220, 100%, 60%)',
+                color: 'white',
+            }}>
+                Loading...
             </Alert>
         </Snackbar>
         <Box sx={{ height: '3rem', width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -234,22 +254,75 @@ export default function TripPad() {
                     return parseInt(params.indexRelativeToCurrentPage) % 2 === 0 ? 'bg-stone-100' : 'bg-white'
                 }}
                 getCellClassName={(params) => {
-                    return cellsBeingEdited?.find(cell => cell.id === params.id && cell.field === params.field) ? 'outline outline-[#ffb800]' : ''
+                    let cell = cellsBeingEdited?.find(cell => cell.id === params.id && cell.field === params.field)
+                    if(cell){
+                        let color = cell.color
+                        return `z-[99] outline outline-${color}`
+                    }
+                    return ''
                 }}
-                onCellEditStart={handleStartEdit}
-                onCellEditStop={handleStopEdit}
+                onCellClick={handleStartEdit}
+                onCellFocusOut={handleStopEdit}
+                showCellRightBorder
+                // onCellEditStart={handleStartEdit}
+                // onCellEditStop={handleStopEdit}
                 processRowUpdate={handleCellUpdate}
                 onProcessRowUpdateError={(error) => console.log('onProcessRowUpdateError', error)}
+                componentsProps={{
+                    row: {
+                      onContextMenu: handleContextMenu,
+                    },
+                  }}
+                editMode="cell"
+                disableIgnoreModificationsIfProcessingProps
+                // isRowSelectable={() => false}
+                density="compact"
+                onCellKeyDown={(params, event) => {
+                    if (event.key === 'c' && (event.ctrlKey || event.metaKey)) {
+                        navigator.clipboard.writeText(params.value);
+                        event.stopPropagation();
+                    }
+                    if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
+                        event.key = 'Enter'
+                    }
+                }}
             />
+            <Menu
+            open={contextMenu !== null}
+            onClose={() => setContextMenu(null)}
+            anchorReference="anchorPosition"
+            anchorPosition={
+              contextMenu !== null
+                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                : undefined
+            }
+            componentsProps={{
+              root: {
+                onContextMenu: (e) => {
+                  e.preventDefault();
+                  setContextMenu(null);
+                },
+              },
+            }}
+          >
+            <MenuItem
+                onClick={() => {
+                    setContextMenu(null);
+                    navigator.clipboard.writeText(rows[selectedRow]?.col3);
+                }}
+            >
+                Copy
+            </MenuItem>
+            <MenuItem>lowercase</MenuItem>
+          </Menu>
         </Box>
     </>);
 
     function handleStartEdit(params) {
-        console.log(color)
-        socket.emit('startEditing', params, color);
+        socket.emit('startEditing', params, user);
     }
     function handleStopEdit(params) {
-        socket.emit('stopEditing', params);
+        socket.emit('stopEditing', params, user);
     }
     function handleCellUpdate(params, old) {
         delete params.col18
@@ -259,14 +332,3 @@ export default function TripPad() {
     }
 }
 
-function randomHSL(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const h = hash % 360;
-    const s = 50 + Math.abs(hash % 20);
-    const l = 50 + Math.abs(hash % 20);
-    console.log(`hsl(${h}, ${s}%, ${l}%)`)
-    return `hsl(${h}, ${s}%, ${l}%)`;
-  }
