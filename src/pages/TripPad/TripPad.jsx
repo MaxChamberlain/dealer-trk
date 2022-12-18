@@ -159,8 +159,14 @@ export default function TripPad() {
             <MenuItem
                 onClick={() => {
                     setContextMenu(null);
-                    navigator.clipboard.readText().then(text => {
-                    })
+                    selectedRow.dispatchEvent(new Event('dblclick', { bubbles: true }))
+                    setTimeout(() => {
+                        document.execCommand('selectAll', false, null);
+                        navigator.clipboard.readText().then(text =>
+                            document.execCommand('insertText', false, text)
+                        )
+                    }, 100)
+                    
                 }}
             >
                 Paste

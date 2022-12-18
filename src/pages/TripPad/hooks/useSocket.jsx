@@ -12,6 +12,7 @@ export function useSocket(setDocs, setCellsBeingEdited){
         setSocket(newSocket); 
         return () => {
             newSocket.emit('stopEditing', null, user);
+            newSocket.disconnect();
             newSocket.close();
         };
     }, [setSocket, document.cookie]);
