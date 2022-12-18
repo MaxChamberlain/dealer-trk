@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Tabs, Tab, Button, Snackbar, Alert, Menu, MenuItem } from '@mui/material';
+import { Tabs, Tab, Snackbar, Alert, Menu, MenuItem } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect, useContext } from 'react';
-import { getCompanyDetails, getDocumentsByCompanyId } from '../../utils/api';
-import io from 'socket.io-client';
-import { searchGurusByVin, customUpdateCargurus, customUpdateVehicle, cancelSearch } from '../../utils/search';
+import { cancelSearch } from '../../utils/search';
 import { UserContext } from '../../contexts/UserContext'
+import { getColumns, getRows } from './utils/parseData'
+import { fetchCompanies } from './utils/api';
+import { useSocket } from './hooks/useSocket';
 
 export default function TripPad() {
     const [companies, setCompanies] = useState([])
@@ -15,60 +16,19 @@ export default function TripPad() {
     const [docs, setDocs] = useState([])
     const [columns, setColumns] = useState([])
     const [highlights, setHighlights] = useState([])
-    const [socket, setSocket] = useState(null);
     const [cellsBeingEdited, setCellsBeingEdited] = useState([]);
     const [color, setColor] = useState('#ff7000');
     const [blank, setBlank] = useState([]);
     const [contextMenu, setContextMenu] = useState(null)
-    const [selectedRow, setSelectedRow] = useState();
+    const [selectedRow, setSelectedRow] = useState(null);
+
     const { user } = useContext(UserContext)
+    const [socket, setSocket] = useSocket(setDocs, setCellsBeingEdited)
 
-    const fetchCompanies = async () => {
-        const selected_company = document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1];
-        const response = await getCompanyDetails(setLoading, setError)
-        setCompanies(response)
-        if(!selected_company){
-            document.cookie = `selected_company=${response[0].company_id}`
-        }
-
-        let firstDayOfMonth = new Date();
-        firstDayOfMonth.setDate(1);
-        firstDayOfMonth.setHours(0, 0, 0, 0);
-        let lastDayOfMonth = new Date();
-        lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() + 1);
-        lastDayOfMonth.setDate(0);
-        lastDayOfMonth.setHours(23, 59, 59, 999);
-        getDocumentsByCompanyId(setLoading, setError, selected_company, firstDayOfMonth, lastDayOfMonth).then((response) => {
-            setDocs(() => response.map(data => {
-                return {
-                    ...data.data?.vehicle,
-                    ...data.data?.trade,
-                    v_is_certified: data.data?.vehicle?.v_is_certified ? 'Y' : 'N',
-                    t_vehicle: data.data?.trade?.t_vehicle || (data.data?.trade?.v_trade_year ? ((data.data?.trade?.v_trade_year.length === 4 ? data.data?.trade?.v_trade_year : '20' + data.data?.trade?.v_trade_year) || '') + ' ' + (data.data?.trade?.v_trade_make || '') + ' ' + (data.data?.trade?.v_trade_model || '') : ''),
-                    v_vehicle: data.data?.vehicle?.v_vehicle || '',
-                    v_market_percent: data.data?.vehicle?.v_market_percent || '',
-                    v_sell_price: data.data?.vehicle?.v_sell_price || '',
-                    v_start_price: data.data?.vehicle?.v_start_price || '',
-                    v_final_carg_h: data.data?.vehicle?.v_final_carg_h || '',
-                    v_initial_carg_h: data.data?.vehicle?.v_initial_carg_h || '',
-                    v_final_mmr: data.data?.vehicle?.v_final_mmr || '',
-                    v_initial_mmr: data.data?.vehicle?.v_initial_mmr || '',
-                    v_source: data.data?.vehicle?.v_source || '',
-                    v_days: data.data?.vehicle?.v_days || '',
-                    v_margin: data.data?.vehicle?.v_margin || '',
-                    v_vin_no: data.data?.vehicle?.v_vin_no || '',
-                    v_stock_no: data.data?.vehicle?.v_stock_no || '',
-                    created_at: new Date(data.metadata.created_at).toLocaleDateString('en-US'),
-                    document_id: data.document_id,
-                    notes: data.notes || '',
-                }
-            }))
-        })
-    }
 
     useEffect(() => {
-        fetchCompanies()
-        setColumns(getColumns())
+        fetchCompanies(setDocs, setCompanies, setLoading, setError)
+        setColumns(getColumns(companies, setLoading, setError, setDocs))
 
         let blankObject = {
             v_is_certified: '',
@@ -94,129 +54,12 @@ export default function TripPad() {
         }
         setBlank(arrOfBlankObjects)
     }, [])
-    
-    useEffect(() => {
-        const newSocket = io(import.meta.env.VITE_API_URL + '?company_id=' + document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1])
-        setSocket(newSocket); 
-        return () => {
-            newSocket.emit('stopEditing', null, user);
-            newSocket.close();
-        };
-    }, [setSocket, document.cookie]);
 
-    useEffect(() => {
-        if (socket) {
-            socket.on('init', (data) => {
-                setCellsBeingEdited(data)
-            })
-            socket.on('startEditing', (data, color) => {
-                setCellsBeingEdited(data);
-            });
-            socket.on('stopEditing', (data) => {
-                setCellsBeingEdited(data);
-            });
-            socket.on('cellChangeCommit', (data, isNew) => {
-                if(isNew){
-                    setDocs(was => [...was, data])
-                } else {
-                    setDocs(was => was.map(el => el.document_id === data.document_id ? data : el));
-                }
-            })
-        }
-        }, [socket]);
-
-      const getColumns = () => [
-        { field: 'col1', headerName: "Stock NO.", width: 100, editable: true },
-        { field: 'col2', headerName: "Vehicle", width: 300, editable: true },
-        { field: 'col3', headerName: "VIN", width: 200, editable: true },
-        { field: 'col4', headerName: "CERT", width: 60, editable: true },
-        { field: 'col5', headerName: "Margin", width: 80, editable: true },
-        { field: 'col6', headerName: "Days", width: 60, editable: true },
-        { field: 'col7', headerName: "Source", width: 200, editable: true },
-        { field: 'col8', headerName: "In MMR", width: 100, editable: true },
-        { field: 'col9', headerName: "Out MMR", width: 100, editable: true },
-        { field: 'col10', headerName: "In CarGurus", width: 100, editable: true },
-        { field: 'col11', headerName: "Out CarGurus", width: 120, editable: true },
-        { field: 'col12', headerName: "Start Price", width: 100, editable: true },
-        { field: 'col13', headerName: "Sell Price", width: 100, editable: true },
-        { field: 'col14', headerName: "Market %", width: 90, editable: true },
-        { field: 'col15', headerName: "Trade", width: 300, editable: true },
-        { field: 'col16', headerName: "Created At", width: 100, editable: true },
-        { field: 'col17', headerName: "Notes", width: 600, editable: true },
-        {
-            field: "action",
-            headerName: "Update Dynamic Values",
-            sortable: false,
-            width: 200,
-            renderCell: (params) => {
-                const setData = (data) => {
-                    if(data){
-                        setDocs(was => was.map(el => el.document_id === params.id ? {...el, v_vehicle: `${data?.year} ${data?.make} ${data?.model} ${data?.trim_level}`} : el));
-                        customUpdateVehicle({v_vehicle: `${data?.year} ${data?.make} ${data?.model} ${data?.trim_level}`, document_id: params.id})
-                    }
-                }
-
-                const setCargurus = (data) => {
-                    setDocs(was => was.map(el => el.document_id === params.id ? {...el,
-                        v_final_carg_h: (data[companies?.find(e => {
-                            return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
-                        })?.company_carg_preference || 'highPrice'] || '').replace(/[^0-9]/g, ''),
-                        v_imv: data?.IMV || '',
-                    } : el));
-                    customUpdateCargurus({
-                        v_final_carg_h: (data[companies?.find(e => {
-                            return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
-                        })?.company_carg_preference || 'highPrice'] || '').replace(/[^0-9]/g, ''),
-                        v_imv: data?.IMV || '',
-                        v_final_carg_h_options: {
-                            greatPrice: data?.greatPrice || '',
-                            goodPrice: data?.goodPrice || '',
-                            fairPrice: data?.fairPrice || '',
-                            highPrice: data?.highPrice || '',
-                            overpriced: data?.overPrice || '',
-                        }, 
-                        document_id: params.id
-                    })
-                }
-
-              const onClick = async (e) => {
-                searchGurusByVin(params.row.col3, companies?.find(e => {
-                    return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
-                })?.company_zip || '80525', 0, setLoading, setError, setData, setCargurus)
-              };
-        
-              return <Button variant='contained' disabled={!params.row.col3} onClick={onClick}>Update dynamics</Button>;
-            }
-          },
-      ];
-
-      const getRows = (vehicles) => [
-        ...vehicles.map((vehicle, idx) => ({
-                id: vehicle.document_id, 
-                col1: vehicle.v_stock_no, 
-                col2: vehicle.v_vehicle,
-                col3: vehicle.v_vin_no,
-                col4: vehicle.v_is_certified,
-                col5: vehicle.v_margin,
-                col6: vehicle.v_days,
-                col7: vehicle.v_source,
-                col8: vehicle.v_initial_mmr,
-                col9: vehicle.v_final_mmr,
-                col10: vehicle.v_initial_carg_h,
-                col11: vehicle.v_final_carg_h,
-                col12: vehicle.v_start_price,
-                col13: vehicle.v_sell_price,
-                col14: vehicle.v_market_percent,
-                col15: vehicle.t_vehicle,
-                col16: vehicle.created_at,
-                col17: vehicle.notes,
-        }))
-      ];
       const rows = getRows(docs);
       
       const handleContextMenu = (event) => {
         event.preventDefault();
-        setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
+        setSelectedRow(event.target);
         setContextMenu(
           contextMenu === null
             ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
@@ -239,7 +82,7 @@ export default function TripPad() {
                 value={companies?.findIndex(company => company?.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1])}
                 onChange={(event, newValue) => {
                     document.cookie = `selected_company=${companies[newValue].company_id}`
-                    fetchCompanies()
+                        fetchCompanies(setDocs, setCompanies, setLoading, setError)
                 }}
             >
                 {companies?.map(company => <Tab label={company?.company_name} key={company.company_id} />)}
@@ -264,18 +107,17 @@ export default function TripPad() {
                 onCellClick={handleStartEdit}
                 onCellFocusOut={handleStopEdit}
                 showCellRightBorder
-                // onCellEditStart={handleStartEdit}
-                // onCellEditStop={handleStopEdit}
+                onCellEditStart={handleStartEdit}
+                onCellEditStop={handleStopEdit}
                 processRowUpdate={handleCellUpdate}
                 onProcessRowUpdateError={(error) => console.log('onProcessRowUpdateError', error)}
                 componentsProps={{
-                    row: {
+                    cell: {
                       onContextMenu: handleContextMenu,
                     },
-                  }}
+                }}
                 editMode="cell"
                 disableIgnoreModificationsIfProcessingProps
-                // isRowSelectable={() => false}
                 density="compact"
                 onCellKeyDown={(params, event) => {
                     if (event.key === 'c' && (event.ctrlKey || event.metaKey)) {
@@ -283,7 +125,6 @@ export default function TripPad() {
                         event.stopPropagation();
                     }
                     if (event.key === 'v' && (event.ctrlKey || event.metaKey)) {
-                        event.key = 'Enter'
                     }
                 }}
             />
@@ -308,12 +149,22 @@ export default function TripPad() {
             <MenuItem
                 onClick={() => {
                     setContextMenu(null);
-                    navigator.clipboard.writeText(rows[selectedRow]?.col3);
+                    if(selectedRow?.innerText){
+                        navigator.clipboard.writeText(selectedRow.innerText);
+                    }
                 }}
             >
                 Copy
             </MenuItem>
-            <MenuItem>lowercase</MenuItem>
+            <MenuItem
+                onClick={() => {
+                    setContextMenu(null);
+                    navigator.clipboard.readText().then(text => {
+                    })
+                }}
+            >
+                Paste
+            </MenuItem>
           </Menu>
         </Box>
     </>);
