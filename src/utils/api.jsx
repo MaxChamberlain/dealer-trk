@@ -388,3 +388,43 @@ export const deleteDoc = async (document_id, setSnackbar, setDocuments) => {
         console.log(e);
     }
 }
+
+export const searchForRollbackVehicle = async (v_stock_no, company_id, setLoading) => {
+    setLoading(true);
+    try{
+        const { data } = await axios.post(
+            import.meta.env.VITE_API_URL + '/document/search', 
+            {
+                v_stock_no,
+                company_id
+            },
+            { withCredentials: true }
+        )
+        setLoading(false);
+        console.log(data)
+        return data
+    }catch(e){
+        setLoading(false);
+        console.log(e);
+    }
+}
+
+export const insertRollback = async (paramsinput) => {
+    try{
+        let params = paramsinput
+        params.rollback = true
+        params.notes = 'rollback'
+        params.metadata.created_at = new Date().toISOString()
+        params.metadata.updated_at = new Date().toISOString()
+        await axios.post(
+            import.meta.env.VITE_API_URL + '/document/insert', 
+            {
+                params,
+            },
+            { withCredentials: true }
+        )
+        return true;
+    }catch(e){
+        console.log(e);
+    }
+}

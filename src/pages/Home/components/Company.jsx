@@ -1,13 +1,15 @@
 import { proper, properNumber } from '../../../utils/textDisplay';
 import { useDocs } from '../hooks/useDocs';
 import { useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ComposedChart, Bar, PieChart, Pie, Cell, RadialBarChart, RadialBar } from 'recharts';
+import { BarChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ComposedChart, Bar, PieChart, Pie, Cell, RadialBarChart, RadialBar } from 'recharts';
 import { CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function Company({ company }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [ documents, setDocuments ] = useDocs(setLoading, setError, company);
+    const navigate = useNavigate();
     return (
         <div className='w-[98%] mx-auto'>
             <div className='text-base font-normal mb-6 flex gap-4 mt-4 justify-around items-center w-full h-full'>
@@ -49,23 +51,23 @@ export default function Company({ company }) {
                     </div>
                     <div className='p-6 shadow-md bg-white rounded'>
                         <ResponsiveContainer width='100%' height={350}>
-                            <RadialBarChart 
-                                width={730} 
-                                height={250} 
-                                innerRadius="10%" 
-                                outerRadius="120%" 
-                                data={documents?.chart?.salesBySource} 
-                                startAngle={180} 
-                                endAngle={0}
+                            <BarChart
+                                width={730}
+                                height={250}
+                                data={documents?.chart?.salesBySource}
+                                margin={{
+                                    top: 5,
+                                    right: 60,
+                                    left: 20,
+                                    bottom: 35,
+                                }}
                             >
-                                <RadialBar minAngle={15} label={{ fill: '#fff', position: 'insideStart' }} background clockWise={true} dataKey='Sales' nameKey='name' name='name'>
-                                    {
-                                        documents?.chart?.salesBySource?.sort((a, b) => b.Sales - a.Sales).map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color}/>)
-                                    }
-                                </RadialBar>
-                                <Legend iconSize={10} />
-                                <Tooltip content={CustomToolTip} />
-                            </RadialBarChart>
+                                <XAxis dataKey="name" style={{ fontSize: 12 }} interval={0} angle={45} textAnchor='start'  />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="Sales" fill="#4992DB" onClick={e => navigate(`/documents?source=${e.name}&`)} />
+                            </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
@@ -118,39 +120,4 @@ export default function Company({ company }) {
             </div>
         </div>
     )
-}
-
-function renderCustomPieLabel({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, color, value }){
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    const linex = cx + (radius * 1.65) * Math.cos(-midAngle * RADIAN);
-    const liney = cy + (radius * 1.65) * Math.sin(-midAngle * RADIAN);
-  
-    return (
-        <>
-            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-                {`${(percent * 100).toFixed(0)}%`}
-            </text>
-            
-            <text x={linex} y={liney} fill={color} textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-                {name} - {value}
-            </text>
-        </>
-    );
-  };
-
-function CustomToolTip({ active, payload, label }) {
-    if (active) {
-        return (
-            <div className="p-2 bg-white rounded-sm border border-[#ccc]">
-                <p className="label">{`${payload[0].payload.name}`}</p>
-                <p className="label">{`${payload[0].payload.Sales}`} Sales</p>
-                <p className="label">${`${payload[0].payload.Margin}`} Total Margin</p>
-            </div>
-        );
-    }
-
-    return null;
 }

@@ -32,6 +32,11 @@ export default function Documents(){
         window.addEventListener('resize', () => {
             document.getElementById('document-container-scrollable').style.height = `calc(100vh - ${document.getElementById('filter-bar-docs').offsetTop + document.getElementById('filter-bar-docs').offsetHeight}px)`
         })
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialSourceFilter = urlParams.get('source');
+        if (initialSourceFilter) {
+            setSourceFilter(initialSourceFilter);
+        }
     }, [])
 
     return(
@@ -45,7 +50,7 @@ export default function Documents(){
                 <CircularProgress color="inherit" />
             </Backdrop>
             <MainSelect setSelComp={setSelComp} filter={filter} setFilter={setFilter} tab={tab} setTab={setTab} companyDetails={companyDetails} loading={loading} documentTypes={documentTypes} />
-            <FiltersAndAdd setSourceFilter={setSourceFilter} companyDetails={companyDetails} onlyCert={onlyCert} setOnlyCert={setOnlyCert} search={search} setSearch={setSearch} documents={documents} setAddDocument={setAddDocument} setCreatedBy={setCreatedBy} modifiedFilter={modifiedFilter} setModifiedFilter={setModifiedFilter} />
+            <FiltersAndAdd sourceFilter={sourceFilter} setSourceFilter={setSourceFilter} companyDetails={companyDetails} onlyCert={onlyCert} setOnlyCert={setOnlyCert} search={search} setSearch={setSearch} documents={documents} setAddDocument={setAddDocument} setCreatedBy={setCreatedBy} modifiedFilter={modifiedFilter} setModifiedFilter={setModifiedFilter} />
 
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
 
@@ -67,7 +72,7 @@ export default function Documents(){
                             .filter(e => createdBy === 'Any' ? e : e.metadata.created_by_user_id === createdBy)
                             .filter(e => onlyCert % 3 === 0 ? e : onlyCert % 3 === 1 ? e.data.vehicle.v_is_certified : !e.data.vehicle.v_is_certified)
                             .filter(e => modifiedFilter % 3 === 0 ? e : modifiedFilter % 3 === 1 ? e.metadata.created_at === e.metadata.updated_at : e.metadata.created_at !== e.metadata.updated_at)
-                            .filter(e => sourceFilter === 'Any' ? e : (e?.data?.vehicle?.v_source?.toUpperCase() || '') === sourceFilter.toUpperCase())
+                            .filter(e => (sourceFilter === 'Any' ? e : (e?.data?.vehicle?.v_source?.toUpperCase() || '') === sourceFilter.toUpperCase()))
                             .length} total documents
                     </div>
                 </div>
@@ -103,6 +108,7 @@ export default function Documents(){
                                     docNotes={x.notes}
                                     company={companyDetails ? companyDetails.find(e => e.company_id === x.company_id).company_name : {}}
                                     docDates={x.metadata}
+                                    rollback={x.rollback}
                                 />
                         })}
                     </TableBody>

@@ -5,7 +5,7 @@ import Notes from './Notes';
 import CarGurusChart from './CarGurusChart';
 import { Snackbar, Alert } from '@mui/material';
 
-export default function DocumentItem({ doc, index, doc_id, docNotes, open, setOpen, docDates, setDocuments }){
+export default function DocumentItem({ doc, index, doc_id, docNotes, open, setOpen, docDates, setDocuments, rollback }){
     const [ notes, setNotes ] = useState(docNotes);
     const [ hovering, setHovering ] = useState({
         notes: null,
@@ -32,7 +32,7 @@ export default function DocumentItem({ doc, index, doc_id, docNotes, open, setOp
                     {snackbar.message}
                 </Alert>
             </Snackbar>
-            <MainTable setChanges={setChanges} changes={changes} doc={doc} index={index} hovering={hovering} notes={notes} doc_id={doc_id} open={open} setOpen={setOpen} setHovering={setHovering} editting={editting} />
+            <MainTable setChanges={setChanges} changes={changes} doc={doc} index={index} hovering={hovering} notes={notes} doc_id={doc_id} open={open} setOpen={setOpen} setHovering={setHovering} editting={editting} rollback={rollback} />
             {open.includes(doc_id) &&
             <>
                 <Metadata index={index} docDates={docDates} editting={editting} setEditting={setEditting} docId={doc_id} changes={changes} setChanges={setChanges} setSnackbar={setSnackbar} setDocuments={setDocuments} />

@@ -1,7 +1,7 @@
 import { proper, properNumber } from '../../../../utils/textDisplay';
 import { Button, TableRow, TableCell, Select } from '@mui/material';
 
-export default function MainTable({ doc, index, hovering, notes, doc_id, open, setOpen, setHovering, editting, setChanges, changes }){
+export default function MainTable({ doc, index, hovering, notes, doc_id, open, setOpen, setHovering, editting, setChanges, changes, rollback }){
     const sourceOptions = [
         'APPRAISAL',
         'AUCTION',
@@ -34,13 +34,13 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
 
     return(
         <TableRow className={`
-                ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
+                ${rollback ? 'bg-red-300' : index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
             >
                 <TableCell>
                     {doc.vehicle?.v_stock_no ? doc.vehicle.v_stock_no : 'N/A'}
                 </TableCell>
                 <TableCell>
-                    {doc.vehicle?.v_year} {doc.vehicle?.v_make?.toUpperCase() || ''} {doc.vehicle?.v_model?.toUpperCase() || ''} {doc.vehicle?.v_package?.toUpperCase() || ''}
+                    {doc.vehicle?.v_year} {doc.vehicle?.v_make?.toUpperCase() || ''} {doc.vehicle?.v_model?.toUpperCase() || ''} {doc.vehicle?.v_package?.toUpperCase() || ''} {rollback ? '(ROLLBACK)' : ''}
                 </TableCell>
                 <TableCell>
                     {doc.vehicle?.v_vin_no ? doc.vehicle.v_vin_no : 'N/A'}
