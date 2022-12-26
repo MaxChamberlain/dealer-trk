@@ -18,7 +18,7 @@ export default function Stats({docs}){
                                 <div className='flex items-center justify-center'>
                                     <LinearProgress
                                         variant='determinate'
-                                        value={((docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0) / (docs?.length || 1)) * 100}
+                                        value={(((docs?.filter((doc) => doc.data.vehicle.v_is_certified && !doc.rollback)?.length || 0) - (docs?.filter(doc => doc.data.vehicle.v_is_certified && doc.rollback).length || 0)) / (docs?.length || 1)) * 100}
                                         sx={{
                                             color: '#4992DB',
                                             height: 80,
@@ -27,14 +27,14 @@ export default function Stats({docs}){
                                                 background: '#3f51b5',
                                             },
                                             "& span.MuiLinearProgress-bar": {
-                                            transform: `translateY(${100-((docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0) / (docs?.length || 1)) * 100}%) !important` //has to have !important
+                                            transform: `translateY(${100-(((docs?.filter((doc) => doc.data.vehicle.v_is_certified && !doc.rollback)?.length || 0) - (docs?.filter((doc) => doc.data.vehicle.v_is_certified && doc.rollback)?.length || 0)) / (docs?.length || 1)) * 100}%) !important` //has to have !important
                                             }
                                         }}
                                         className='mr-6'
                                         />
                                 </div>
                                 <div className='flex items-center justify-center'>
-                                    {docs?.filter((doc) => doc.data.vehicle.v_is_certified)?.length || 0}
+                                    {(docs?.filter((doc) => doc.data.vehicle.v_is_certified && !doc.rollback)?.length || 0) - (docs?.filter((doc) => doc.data.vehicle.v_is_certified && doc.rollback)?.length || 0)}
                                 </div>
                             </div>
                         </div>
@@ -46,7 +46,7 @@ export default function Stats({docs}){
                             <div className='flex items-center justify-center'>
                                 <LinearProgress
                                     variant='determinate'
-                                    value={((docs?.filter((doc) => doc.data.vehicle.v_is_trade)?.length || 0) / (docs?.length || 1)) * 100}
+                                    value={((docs?.filter((doc) => doc.data.vehicle.v_is_trade && !doc.rollback)?.length || 0) - (docs?.filter((doc) => doc.data.vehicle.v_is_trade && doc.rollback)?.length || 0)) / (docs?.length || 1)}
                                     sx={{
                                         color: '#4992DB',
                                         height: 80,

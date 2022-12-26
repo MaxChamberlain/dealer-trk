@@ -87,7 +87,8 @@ export default function BySource(){
                                 }}>
                                     <div className='text-2xl'>TOTAL - ALL SOURCES</div>
                                     <div className='text-2xl'>{
-                                        sources.length > 0 ? docs.filter(e => e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')).length : docs?.length
+                                        (sources.length > 0 ? docs.filter(e => (e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) && !e.rollback).length : docs?.filter(e => !e.rollback)?.length) -
+                                        (sources.length > 0 ? docs.filter(e => (e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) && e.rollback).length : docs?.filter(e => e.rollback)?.length)
                                     } Total Sales</div>
                                 </div>
                                 <Stats docs={sources.length > 0 ? docs.filter(e => e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) : docs} />
@@ -98,7 +99,7 @@ export default function BySource(){
                                     background: '#4992DB',
                                 }}>
                                     <div className='text-2xl'>{page}</div>
-                                    <div className='text-2xl'>{docs.filter((doc) => doc.data.vehicle.v_source === page).length} Total Sales <span className='text-[#eee]'>({Math.floor((docs.filter((doc) => doc.data.vehicle.v_source === page).length / docs.length) * 100)}% of total)</span></div>
+                                    <div className='text-2xl'>{docs.filter((doc) => doc.data.vehicle.v_source === page && !doc.rollback).length - docs.filter((doc) => doc.data.vehicle.v_source === page && doc.rollback).length} Total Sales <span className='text-[#eee]'>({Math.floor((docs.filter((doc) => doc.data.vehicle.v_source === page).length / docs.length) * 100)}% of total)</span></div>
                                 </div>
                                 <Stats docs={docs.filter((doc) => doc.data.vehicle.v_source === page)} />
                             </div>

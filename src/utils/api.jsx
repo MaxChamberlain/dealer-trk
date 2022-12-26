@@ -416,6 +416,12 @@ export const insertRollback = async (paramsinput) => {
         params.notes = 'rollback'
         params.metadata.created_at = new Date().toISOString()
         params.metadata.updated_at = new Date().toISOString()
+        Object.keys(params.data.vehicle).forEach((key) => {
+            if(!isNaN(params.data.vehicle[key]) && key !== 'v_year'){
+                params.data.vehicle[key] = params.data.vehicle[key] * -1
+            }
+        })
+        delete params.data.trade
         await axios.post(
             import.meta.env.VITE_API_URL + '/document/insert', 
             {

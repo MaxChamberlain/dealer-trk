@@ -25,6 +25,14 @@ export const useDocs = (setLoading, setError, company) => {
                 for(let i = 1; i <= endDate.getDate(); i++){
                     dates.push(new Date(startDate.getFullYear(), startDate.getMonth(), i).toLocaleDateString('en-US'));
                 }
+
+                let rollbacks = dates.map(x => {
+                    let rollbacksOnDate = e.filter(e => new Date(e.metadata.created_at).toLocaleDateString('en-US') === x && e.rollback);
+                    return {
+                        date: x,
+                        count: rollbacksOnDate.length,
+                    }
+                })
                 
                 let countOfDaysCovered = 0
     
@@ -39,26 +47,27 @@ export const useDocs = (setLoading, setError, company) => {
                 let days = (Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)) + 1) - 1;
                 if(new Date(startDate).getMonth() + 1 === 12) countOfDaysCovered--
     
-                let pace = Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date().getDate()).length / days) * countOfDaysCovered);
+                let pace = Math.floor(((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date().getDate()).length - rollbacks.reduce((a, b) => a + b.count, 0)) / days) * countOfDaysCovered);
     
-                let average = Math.floor(e.length / days);
+                let average = Math.floor(e.length - rollbacks.reduce((a, b) => a + b.count, 0) / days);
     
                 const count = dates.map((date) => {
                     return{
                         date: date,
                         Sales: e.filter((e) => {
                             return new Date(e.metadata.created_at).toLocaleDateString('en-US') === date;
-                        }).length,
-                        pace: Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date(date).getDate()).length / days) * countOfDaysCovered),
-                        "Average To Date": Math.floor((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date(date).getDate()).length / days)),
+                        }).length - rollbacks.find(x => x.date === date)?.count || 0,
+                        pace: Math.floor(((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date().getDate()).length - rollbacks.reduce((a, b) => a + b.count, 0)) / days) * countOfDaysCovered),
+                        "Average To Date": Math.floor(((e.filter(e => new Date(e.metadata.created_at).getDate() < new Date(date).getDate()).length - rollbacks.filter(e => new Date(e.date).getDate() < new Date(date).getDate()).reduce((a, b) => a + b.count, 0)) / days)),
                     }
                 })
     
                 const existingSources = [...new Set(e.map(e => e.data.vehicle.v_source))]
+                let rollbackObjs = e.filter(e => e.rollback);
                 const salesBySource = existingSources.map((source, i) => {
                     return{
                         name: source,
-                        Sales: e.filter(e => e.data.vehicle.v_source === source).length,
+                        Sales: e.filter(e => e.data.vehicle.v_source === source).length - rollbackObjs.filter(e => e.data.vehicle.v_source === source).length,
                         Margin: properNumber(e?.filter(e => e.data.vehicle.v_source === source)?.reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) || 0),
                         color: `hsl(${i * 360 / existingSources.length}, 70%, 50%)`,
                     }
@@ -73,17 +82,27 @@ export const useDocs = (setLoading, setError, company) => {
     
                 let marginPace = Math.floor(totalMargin/days) * countOfDaysCovered;
     
-                let amtCertified = e.filter(x => {
+                let amtCertified = (e.filter(x => {
                     return x.data.vehicle.v_is_certified === true;
-                })?.length || 0
+                })?.length || 0) - (rollbackObjs.filter(x => {
+                    return x.data.vehicle.v_is_certified === true;
+                })?.length || 0);
     
                 let cert = {
                     certified: e.filter(x => {
                         return x.data.vehicle.v_is_certified === true;
-                    }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) / amtCertified,
+                    }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) - (rollbackObjs.filter(x => {
+                        return x.data.vehicle.v_is_certified === true;
+                        }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) || 0
+                    )
+                    / amtCertified,
                     uncertified: e.filter(x => {
                         return x.data.vehicle.v_is_certified === false;
-                    }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) / (e.length - amtCertified),
+                    }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) - (rollbackObjs.filter(x => {
+                        return x.data.vehicle.v_is_certified === false;
+                        }).reduce((a, b) => a + parseInt(b?.data?.vehicle?.v_margin || 0), 0) || 0
+                    )
+                    / (e.length - amtCertified),
                 }
     
                 setDocuments({
