@@ -246,7 +246,7 @@ export default function TripPad() {
                     }
                 }}
             >
-                Change Rollback Status
+                <input type='checkbox' checked={docs.find(doc => doc.document_id === selectedRow.parentNode.parentNode.getAttribute('data-id'))?.rollback} /> Rollback?
             </MenuItem>
           </Menu>
         </Box>
