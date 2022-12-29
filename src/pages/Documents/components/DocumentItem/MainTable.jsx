@@ -40,7 +40,7 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
                     {doc.vehicle?.v_stock_no ? doc.vehicle.v_stock_no : 'N/A'}
                 </TableCell>
                 <TableCell>
-                    {doc.vehicle?.v_year} {doc.vehicle?.v_make?.toUpperCase() || ''} {doc.vehicle?.v_model?.toUpperCase() || ''} {doc.vehicle?.v_package?.toUpperCase() || ''} {rollback ? '(ROLLBACK)' : ''}
+                    {doc.vehicle?.v_year} {doc.vehicle?.v_make?.toUpperCase() || ''} {doc.vehicle?.v_model?.toUpperCase() || ''} {doc.vehicle?.v_package ? doc.vehicle?.v_package?.toUpperCase() : ''} {rollback ? '(ROLLBACK)' : ''}
                 </TableCell>
                 <TableCell>
                     {doc.vehicle?.v_vin_no ? doc.vehicle.v_vin_no : 'N/A'}

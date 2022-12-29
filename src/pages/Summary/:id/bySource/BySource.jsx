@@ -81,29 +81,28 @@ export default function BySource(){
                     </ButtonGroup>
                 </div>}
                     <div>
-                            {page === 'All' ? <div className='p-3 mt-6'>
-                                <div className="rounded-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between" style={{
-                                    background: '#4992DB',
-                                }}>
-                                    <div className='text-2xl'>TOTAL - ALL SOURCES</div>
-                                    <div className='text-2xl'>{
-                                        (sources.length > 0 ? docs.filter(e => (e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) && !e.rollback).length : docs?.filter(e => !e.rollback)?.length) -
-                                        (sources.length > 0 ? docs.filter(e => (e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) && e.rollback).length : docs?.filter(e => e.rollback)?.length)
-                                    } Total Sales</div>
-                                </div>
-                                <Stats docs={sources.length > 0 ? docs.filter(e => e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) : docs} />
+                        {page === 'All' ? <div className='p-3 mt-6'>
+                            <div className="rounded-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between" style={{
+                                background: '#4992DB',
+                            }}>
+                                <div className='text-2xl'>TOTAL - ALL SOURCES</div>
+                                <div className='text-2xl'>{
+                                    (sources.length > 0 ? docs.filter(e => (e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) && !e.rollback).length : docs?.filter(e => !e.rollback)?.length) -
+                                    (sources.length > 0 ? docs.filter(e => (e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) && e.rollback).length : docs?.filter(e => e.rollback)?.length)
+                                } Total Sales</div>
                             </div>
-                            :
-                            <div className='rounded-lg mt-6'>
-                                <div className="rounded-t-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between" style={{
-                                    background: '#4992DB',
-                                }}>
-                                    <div className='text-2xl'>{page}</div>
-                                    <div className='text-2xl'>{docs.filter((doc) => doc.data.vehicle.v_source === page && !doc.rollback).length - docs.filter((doc) => doc.data.vehicle.v_source === page && doc.rollback).length} Total Sales <span className='text-[#eee]'>({Math.floor((docs.filter((doc) => doc.data.vehicle.v_source === page).length / docs.length) * 100)}% of total)</span></div>
-                                </div>
-                                <Stats docs={docs.filter((doc) => doc.data.vehicle.v_source === page)} />
+                            <Stats docs={sources.length > 0 ? docs.filter(e => e.data.vehicle.v_source ? sources.includes(e.data.vehicle.v_source) : sources.includes('Other')) : docs} />
+                        </div>
+                        :
+                        <div className='rounded-lg mt-6'>
+                            <div className="rounded-t-lg p-4 text-white text-2xl whitespace-nowrap overflow-hidden flex justify-between" style={{
+                                background: '#4992DB',
+                            }}>
+                                <div className='text-2xl'>{page}</div>
+                                <div className='text-2xl'>{docs.filter((doc) => doc.data.vehicle.v_source === page && !doc.rollback).length - docs.filter((doc) => doc.data.vehicle.v_source === page && doc.rollback).length} Total Sales <span className='text-[#eee]'>({Math.floor((docs.filter((doc) => doc.data.vehicle.v_source === page).length / docs.length) * 100)}% of total)</span></div>
                             </div>
-                            }
+                            <Stats docs={docs.filter((doc) => doc.data.vehicle.v_source === page)} />
+                        </div>}
                 </div>
         </div>
     )
