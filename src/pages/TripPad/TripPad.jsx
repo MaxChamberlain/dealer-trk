@@ -225,8 +225,8 @@ export default function TripPad() {
             </MenuItem>
             <MenuItem
                 onClick={() => {
-                    let row = (selectedRow.parentNode.parentNode.getAttribute('data-id'))
-                    let doc = docs.find(doc => doc.document_id === row)
+                    let row = (selectedRow?.parentNode?.parentNode?.getAttribute('data-id'))
+                    let doc = docs?.find(doc => doc.document_id === row)
                     console.log(doc)
                     if(doc){
                         handleCellUpdate(
@@ -246,7 +246,7 @@ export default function TripPad() {
                     }
                 }}
             >
-                <input type='checkbox' checked={docs.find(doc => doc.document_id === selectedRow.parentNode.parentNode.getAttribute('data-id'))?.rollback} /> Rollback?
+                <input type='checkbox' checked={docs?.find(doc => doc.document_id === selectedRow?.parentNode?.parentNode?.getAttribute('data-id'))?.rollback} /> Rollback?
             </MenuItem>
           </Menu>
         </Box>
