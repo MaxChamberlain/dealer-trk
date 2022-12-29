@@ -8,6 +8,7 @@ import { UserContext } from '../../contexts/UserContext'
 import { getColumns, getRows } from './utils/parseData'
 import { fetchCompanies } from './utils/api';
 import { useSocket } from './hooks/useSocket';
+import { searchGurusByVin, customUpdateCargurus, customUpdateVehicle } from '../../utils/search';
 
 export default function TripPad() {
     const [companies, setCompanies] = useState([])
@@ -21,6 +22,7 @@ export default function TripPad() {
     const [blank, setBlank] = useState([]);
     const [contextMenu, setContextMenu] = useState(null)
     const [selectedRow, setSelectedRow] = useState(null);
+    const [openMenu, setOpenMenu] = useState(null)
 
     const { user } = useContext(UserContext)
     const [socket, setSocket] = useSocket(setDocs, setCellsBeingEdited)
@@ -28,7 +30,7 @@ export default function TripPad() {
 
     useEffect(() => {
         fetchCompanies(setDocs, setCompanies, setLoading, setError)
-        setColumns(getColumns(companies, setLoading, setError, setDocs))
+        setColumns(getColumns(companies, setLoading, setError, setDocs, openMenu, setOpenMenu))
 
         let blankObject = {
             v_is_certified: '',
@@ -94,13 +96,19 @@ export default function TripPad() {
                 rows={[...rows, ...blank]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowClassName={(params) => {
-                    return parseInt(params.indexRelativeToCurrentPage) % 2 === 0 ? 'bg-stone-100' : 'bg-white'
+                    return params.row.rollback ? 'bg-orange-200' : parseInt(params.indexRelativeToCurrentPage) % 2 === 0 ? 'bg-stone-100' : 'bg-white'
                 }}
                 getCellClassName={(params) => {
                     let cell = cellsBeingEdited?.find(cell => cell.id === params.id && cell.field === params.field)
                     if(cell){
                         let color = cell.color
                         return `z-[99] outline outline-${color}`
+                    }
+                    if(params.field === 'v_trade' || params.field === 't_vin_no'){
+                        let cell = docs?.find(doc => doc.document_id === params.id)
+                        if(cell && !cell.v_is_trade){
+                            return 'bg-zinc-200'
+                        }
                     }
                     return ''
                 }}
@@ -171,6 +179,75 @@ export default function TripPad() {
             >
                 Paste
             </MenuItem>
+            <MenuItem
+                onClick={(e) => {
+                    setContextMenu(null);
+                    let row = (selectedRow.parentNode.parentNode.getAttribute('data-id'))
+                    let doc = docs.find(doc => doc.document_id === row)
+
+                    const setData = (data) => {
+                        if(data){
+                            setDocs(was => was.map(el => el.document_id === doc.document_id ? {...el, v_vehicle: `${data?.year} ${data?.make} ${data?.model} ${data?.trim_level}`} : el));
+                            customUpdateVehicle({v_vehicle: `${data?.year} ${data?.make} ${data?.model} ${data?.trim_level}`, document_id: doc.document_id})
+                        }
+                    }
+    
+                    const setCargurus = (data) => {
+                        setDocs(was => was.map(el => el.document_id === doc.document_id ? {...el,
+                            v_final_carg_h: (data[companies?.find(e => {
+                                return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
+                            })?.company_carg_preference || 'highPrice'] || '').replace(/[^0-9]/g, ''),
+                            v_imv: data?.IMV || '',
+                        } : el));
+                        customUpdateCargurus({
+                            v_final_carg_h: (data[companies?.find(e => {
+                                return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
+                            })?.company_carg_preference || 'highPrice'] || '').replace(/[^0-9]/g, ''),
+                            v_imv: data?.IMV || '',
+                            v_final_carg_h_options: {
+                                greatPrice: data?.greatPrice || '',
+                                goodPrice: data?.goodPrice || '',
+                                fairPrice: data?.fairPrice || '',
+                                highPrice: data?.highPrice || '',
+                                overpriced: data?.overPrice || '',
+                            }, 
+                            document_id: doc.document_id
+                        })
+                    }
+                    console.log(doc)
+                    searchGurusByVin(doc.v_vin_no, companies?.find(e => {
+                        return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
+                    })?.company_zip || '80525', 0, setLoading, setError, setData, setCargurus)
+                    }
+                }
+            >
+                Update Dynamics
+            </MenuItem>
+            <MenuItem
+                onClick={() => {
+                    let row = (selectedRow.parentNode.parentNode.getAttribute('data-id'))
+                    let doc = docs.find(doc => doc.document_id === row)
+                    console.log(doc)
+                    if(doc){
+                        handleCellUpdate(
+                            {
+                                ...doc,
+                                date: doc.created_at,
+                                id: doc.document_id,
+                                rollback: !doc.rollback
+                            },
+                            {
+                                ...doc,
+                                date: doc.created_at,
+                                id: doc.document_id,
+                                rollback: doc.rollback
+                            },
+                        )
+                    }
+                }}
+            >
+                Change Rollback Status
+            </MenuItem>
           </Menu>
         </Box>
     </>);
@@ -182,8 +259,6 @@ export default function TripPad() {
         socket.emit('stopEditing', params, user);
     }
     function handleCellUpdate(params, old) {
-        delete params.col18
-        delete old.col18
         socket.emit('cellChangeCommit', {params, old});
         return params;
     }

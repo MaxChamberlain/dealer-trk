@@ -30,6 +30,8 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
         'USED TRADE',
         'TRAC',
         'TCUV',
+        'STREET PURCHASE',
+        'MIDWAY'
     ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
 
     return(
