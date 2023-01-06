@@ -14,7 +14,7 @@ export default function PickSummaryType(){
     const [ found, setFound ] = useState(true);
     const [ date, setDate ] = useState({
         start: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-        end: new Date()
+        end: new Date(new Date().setDate(new Date().getDate() - 1))
     });
 
     const location = useLocation();

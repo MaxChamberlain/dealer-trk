@@ -6,13 +6,15 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { proper, properNumber } from '../../../../utils/textDisplay';
 import { CircularProgress, LinearProgress} from '@mui/material';
+import { getPace } from './utils/companyParser'
 
-export default function Stats({docs}){
+export default function Stats({docs, company, dateRange}){
+    const pace = getPace(company, dateRange, docs)
     return(
         <>
             <div className='flex justify-center flex-wrap mt-4 h-full w-full text-lg gap-4 text-black font-bold'>
-                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-start' style={{ minWidth: '20rem' }}>
-                    <div className='w-full flex items-center justify-between mb-4'>
+                <div className='h-full text-black px-6 py-6 gap-y-4 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-start' style={{ minWidth: '20rem' }}>
+                    <div className='w-full grid grid-cols-2 justify-between items-center text-center'>
                         <div className='flex gap-x-4 items-center font-bold justify-between w-full'>
                             <div className='flex items-center'>
                                 <div className='flex items-center justify-center'>
@@ -41,7 +43,7 @@ export default function Stats({docs}){
                         Total Certified
                     </div>
                     
-                    <div className='flex w-full items-center justify-between mb-4'>
+                    <div className='w-full grid grid-cols-2 justify-between items-center text-center'>
                         <div className='flex items-center'>
                             <div className='flex items-center justify-center'>
                                 <LinearProgress
@@ -68,7 +70,7 @@ export default function Stats({docs}){
                         Took a Trade
                     </div>
                     
-                    <div className='flex items-center justify-between w-full mb-4'>
+                    <div className='w-full grid grid-cols-2 justify-between items-center text-center'>
                         <div className='flex items-center'>
                             <div className='flex items-center'>
                                 <LinearProgress
@@ -100,10 +102,10 @@ export default function Stats({docs}){
                                 ${properNumber((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_margin || 0), 0) / docs?.length).toFixed(0))}
                             </div>
                         </div>
-                        Avg Margin
+                        Avg PVR
                     </div>
                                                             
-                    <div className='w-full flex justify-between items-center'>
+                    <div className='w-full grid grid-cols-2 justify-between items-center text-center'>
                         <div className='flex items-center'>
                             <div>
                                 <LinearProgress
@@ -134,9 +136,9 @@ export default function Stats({docs}){
                 <div className='flex flex-col items-center justify-between' style={{ minWidth: '20rem' }}>
                     <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
                         <div className='flex gap-x-4 items-center font-bold'>
-                            Total Margin
+                            Total Gross
                         </div>
-                        <div className='text-centertext-xl'>
+                        <div className='text-center text-xl'>
                             ${properNumber(docs?.reduce((acc, doc) => acc + parseInt(doc?.data?.vehicle?.v_margin || 0), 0) || 0)}
                         </div>
                     </div>
@@ -145,20 +147,49 @@ export default function Stats({docs}){
                         <div className='flex gap-x-4 items-center font-bold'>
                             Amount of Trades
                         </div>
-                        <div className='text-centertext-xl'>
+                        <div className='text-center text-xl'>
                         {docs?.filter((doc) => doc.data.vehicle.v_is_trade).length}
                         </div>
                     </div>
                                                         
                     <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
                         <div className='flex gap-x-4 items-center font-bold'>
-                            Avg Days
+                            Avg Days In Stock
                         </div>
-                        <div className='text-centertext-xl'>
+                        <div className='text-center text-xl'>
                             {(docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_days || 0), 0) / docs?.length).toFixed(2)}
                         </div>
                     </div>
-                </div>                                                    
+                </div>
+
+                <div className='flex flex-col items-center justify-between' style={{ minWidth: '20rem' }}>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Pace
+                        </div>
+                        <div className='text-center text-xl'>
+                            {pace} sales
+                        </div>
+                    </div>
+                                                        
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Avg Recon
+                        </div>
+                        <div className={'text-center text-xl'}>
+                        ${properNumber((docs?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_sell_price || 0) - parseInt(b.data.vehicle.v_acv || 0)), 0) / docs?.length)?.toFixed(2) || 0)}
+                        </div>
+                    </div>
+                                                        
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Avg CarGurus Price Diff (Out - In)
+                        </div>
+                        <div className='text-center text-xl'>
+                            ${properNumber(((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_initial_carg_h || 0), 0) - docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_final_carg_h || 0), 0)) / docs?.length)?.toFixed(2) || 0)}
+                        </div>
+                    </div>
+                </div>                                                                 
             </div>
         </>
     )

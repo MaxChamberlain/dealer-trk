@@ -50,7 +50,7 @@ export default function PickSetRange(){
                 variant="outlined"
                 onClick={() => {
                     const firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-                    const lastDay = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+                    const lastDay = new Date(new Date().setDate(new Date().getDate() - 1));
                     urlParams.set('start', firstDay.toISOString().split('T')[0]);
                     urlParams.set('end', lastDay.toISOString().split('T')[0]);
                     navigate(`?${urlParams.toString()}`, { replace: true });
