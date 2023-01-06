@@ -14,7 +14,7 @@ export default function AddDocument({ companyDetails, setAdding, docs, setDocume
         v_is_trade: false,
         created_at: new Date(),
     })
-    const [ rollbackVehicle, setRollbackVehicle ] = useState({})
+    const [ rollbackVehicle, setRollbackVehicle ] = useState([])
     const [ company, setCompany ] = useState('Select A Company');
     const [ activeStep, setActiveStep ] = useState(0);
     const [ hasScraped, setHasScraped ] = useState(false);
@@ -23,35 +23,16 @@ export default function AddDocument({ companyDetails, setAdding, docs, setDocume
         vehicleDetails: false,
         cargurus: false,
     })
-    const [ autoCompleteOptions, setAutoCompleteOptions ] = useState({
-        makes : [],
-        models: [],
-        packages: []
-    });
     const [ rollback, setRollback ] = useState(false);
+    const [ toRollback, setToRollback ] = useState({});
     const storedCompany = document.cookie.split(';').filter((e) => e.includes('selected_company'))[0].split('=')[1];
-
-    useEffect(() => {
-        if(newVehicle.v_make){
-            setAutoCompleteOptions({
-                ...autoCompleteOptions,
-                models: [...new Set(docs?.filter(e => e.v_make?.toUpperCase() === newVehicle.v_make).map(doc => doc.v_model ? doc.v_model.toUpperCase() : ''))]
-            })
-        }
-        if(newVehicle.v_model){
-            setAutoCompleteOptions({
-                ...autoCompleteOptions,
-                packages: [...new Set(docs?.filter(e => e.v_make?.toUpperCase() === newVehicle.v_make && e.v_model.toUpperCase() === newVehicle.v_model).map(doc => doc.v_package ? doc.v_package.toUpperCase() : ''))]
-            })
-        }
-    }, [newVehicle, docs])
 
     useEffect(() => {
         if(storedCompany){
             let comp = companyDetails.filter(e => e.company_id === storedCompany)[0]
             setCompany(comp)
         }
-    })
+    }, [])
 
     return(
         <div id='document-list-item' className={`z-[9990] w-full bg-white drop-shadow p-4 mb-4`}>
@@ -160,10 +141,7 @@ export default function AddDocument({ companyDetails, setAdding, docs, setDocume
                                     setNewVehicle(was => { 
                                         return { 
                                             ...was,
-                                            v_make: e?.make?.toUpperCase() || '',
-                                            v_model: e?.model?.toUpperCase() || '',
-                                            v_year: e?.year || '',
-                                            v_package: e?.trim_level?.toUpperCase() || '',
+                                            v_vehicle: `${e?.year || ''} ${e?.make?.toUpperCase() || ''} ${e?.model?.toUpperCase() || ''} ${e?.trim_level?.toUpperCase() || ''}`
                                         }
                                     }); 
                                 },
@@ -191,39 +169,41 @@ export default function AddDocument({ companyDetails, setAdding, docs, setDocume
                 </div>
             </> :
             <>
-                {rollbackVehicle?.data?.vehicle?.v_margin ? <>
+                {rollbackVehicle.length > 0 ? <>
                     <div className='text-2xl font-bold text-center mb-4 text-stone-600'>This is what we found</div>
-                    <div className='w-full flex flex-col justify-center items-center gap-4'>
-                        <DocumentItem
-                            setDocuments={setDocuments}
-                            open={[]}
-                            setOpen={() => {}}
-                            index={1}
-                            key={rollbackVehicle.document_id}
-                            doc={rollbackVehicle.data}
-                            doc_id={rollbackVehicle.document_id}
-                            docNotes={rollbackVehicle.notes}
-                            company={null}
-                            docDates={rollbackVehicle.metadata}
-                        />
-                    </div>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        fullWidth
-                        style={{
-                            margin: '2rem auto'
-                        }}
-                        onClick={() => {
-                            insertRollback(rollbackVehicle).then(() => {
-                                
-                            })
-                            setRollbackVehicle({})
-                            setAdding(false)
-                        }}
-                    >
-                        Finish
-                    </Button>
+                    {rollbackVehicle.map((e, i) => {return <>
+                        <div className='w-full flex flex-col justify-center items-center gap-4'>
+                            <DocumentItem
+                                setDocuments={setDocuments}
+                                open={[]}
+                                setOpen={() => {}}
+                                index={1}
+                                key={e.document_id}
+                                doc={e.data}
+                                doc_id={e.document_id}
+                                docNotes={e.notes}
+                                company={null}
+                                docDates={e.metadata}
+                            />
+                        </div>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                            style={{
+                                margin: '2rem auto'
+                            }}
+                            onClick={() => {
+                                insertRollback(e).then(() => {
+                                    
+                                })
+                                setRollbackVehicle({})
+                                setAdding(false)
+                            }}
+                        >
+                            Choose
+                        </Button>
+                    </>})}
                     </>:<>
                     <div className='text-2xl font-bold text-center mb-4 text-stone-600'>Let's find the vehicle to rollback</div>
                     <div className='w-full flex flex-col justify-center items-center gap-4'>
@@ -263,7 +243,7 @@ export default function AddDocument({ companyDetails, setAdding, docs, setDocume
         </div>
         <div>
             {hasScraped &&
-                <Steps setParentLoading={setLoading} selComp={selComp} setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} autoCompleteOptions={autoCompleteOptions} loadingIn={loading} />
+                <Steps setParentLoading={setLoading} selComp={selComp} setDocuments={setDocuments} setAdding={setAdding} activeStep={activeStep} setActiveStep={setActiveStep} newVehicle={newVehicle} setNewVehicle={setNewVehicle} companyDetails={companyDetails} company={company} setCompany={setCompany} loadingIn={loading} />
             }
         </div>
         </div>

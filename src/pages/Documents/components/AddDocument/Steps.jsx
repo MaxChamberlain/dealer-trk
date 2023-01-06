@@ -142,7 +142,7 @@ export default function HorizontalLinearStepper({ activeStep, setActiveStep, new
                 onClick={handleNext} 
                 variant='contained'
                 disabled={
-                  (activeStep === 0 && newVehicle.v_stock_no && newVehicle.v_make && newVehicle.v_model && newVehicle.v_vin_no) ?
+                  (activeStep === 0 && newVehicle.v_vehicle && newVehicle.v_vehicle.split(' ').length > 1 && newVehicle.v_vehicle.split(' ')[0].length === 4) ?
                   false : 
                   (activeStep === 1) ?
                   false :
