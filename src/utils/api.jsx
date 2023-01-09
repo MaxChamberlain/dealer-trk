@@ -223,13 +223,14 @@ export const addCompany = async (newCompany, setLoading, setError) => {
     }
 }
 
-export const addCompanyPermission = async (company_id, user_email) => {
+export const addCompanyPermission = async (company_id, user_email, permLevel) => {
     try{
         const { data } = await axios.post(
             import.meta.env.VITE_API_URL + '/company/addpermission', 
             {
                 company_id,
                 user_email: user_email.toLowerCase().trim(),
+                permLevel
             },
             { withCredentials: true }
         )

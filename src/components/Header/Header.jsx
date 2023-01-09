@@ -1,16 +1,25 @@
 import { Button, Menu, MenuItem } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Home from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { logout } from '../../utils/api';
+import { getCompanyDetails } from '../../utils/api';
+import { UserContext } from '../../contexts/UserContext';
 
 export default function Header(){
     const [ anchorEl, setAnchorEl ] = useState(null);
+    const [ companyDetails, setCompanyDetails ] = useState(null);
+    const { user } = useContext(UserContext);
 
     const navigate = useNavigate();
+    useEffect(() => {
+        getCompanyDetails(() => {}, () => {}).then((data) => {
+            setCompanyDetails(data);
+        });
+    }, []);
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -24,7 +33,8 @@ export default function Header(){
         }
         setAnchorEl(null);
     };
-
+    const storedCompany = document.cookie.split(';').filter((e) => e.includes('selected_company'))[0].split('=')[1];
+    const userCanEdit = companyDetails?.find(e => e.company_id === storedCompany)?.authorized_users?.find(e => e.user_id === user?.user_id)?.permLevel === 'admin' || companyDetails?.find(e => e.company_id === storedCompany)?.authorized_users?.find(e => e.user_id === user?.user_id)?.permLevel === 'edit';
     return(
         <div className='absolute top-0 left-0 right-0 p-2 bg-slate-700 flex justify-between' style={{
             height: 48,
@@ -82,7 +92,7 @@ export default function Header(){
                     <span style={{ marginLeft: 5 }}>Summary</span>
                 </Button>
 
-                <Button
+                {userCanEdit && <Button
                     variant='contained'
                     color='primary'
                     style={{ 
@@ -99,7 +109,7 @@ export default function Header(){
                 >
                     <ListAltIcon style={{ color: 'white', width: 20, height: 20 }} />
                     <span style={{ marginLeft: 10 }}>Trip Pad</span>
-                </Button>
+                </Button>}
             </div>
 
             <Button

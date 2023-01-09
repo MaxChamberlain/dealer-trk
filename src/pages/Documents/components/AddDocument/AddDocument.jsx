@@ -12,7 +12,7 @@ export default function AddDocument({ companyDetails, setAdding, docs, setDocume
     const [ newVehicle, setNewVehicle ] = useState({
         v_is_certified: false,
         v_is_trade: false,
-        created_at: new Date(),
+        created_at: new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString(),
     })
     const [ rollbackVehicle, setRollbackVehicle ] = useState([])
     const [ company, setCompany ] = useState('Select A Company');

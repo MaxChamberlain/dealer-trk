@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../../contexts/UserContext';
 import { proper, parsePhone } from '../../../utils/textDisplay';
-import { getCompanyDetails, addCompany, addCompanyPermission, updateCompany, getUsersInCompany } from '../../../utils/api';
-import { Divider, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Button, OutlinedInput, TextField, FormHelperText, Select, MenuItem, ButtonGroup } from '@mui/material';
+import { getCompanyDetails, addCompany, updateCompany, getUsersInCompany } from '../../../utils/api';
+import { Divider, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Button, ButtonGroup } from '@mui/material';
+import NewUser from './components/NewUser';
 
 export default function MyAccount(){
     const [ loading, setLoading ] = useState(true);
@@ -23,8 +24,10 @@ export default function MyAccount(){
         company_id: null,
         users: [],
     });
+    const [ addingUser, setAddingUser ] = useState(false);
 
     const [ edittedCompany, setEdittedCompany ] = useState(null)
+    const [ selectedCompany, setSelectedCompany ] = useState(null);
 
     const { user } = useContext(UserContext);
 
@@ -48,6 +51,7 @@ export default function MyAccount(){
 
     return(
         <div className='flex w-full justify-around md:items-start md:flex-row flex-col p-4'>
+            {addingUser && <NewUser company={selectedCompany} setAdding={setAddingUser} />}
             {edittedCompany && 
                 <div className='fixed top-0 left-0 right-0 bottom-0 z-[9997] flex justify-center align-start pt-16'>
                     <div className='fixed top-0 left-0 z-[9998] right-0 bottom-0 bg-black bg-opacity-30' onClick={() => {setEdittedCompany(null)}}></div>  
@@ -519,7 +523,7 @@ export default function MyAccount(){
                             <div className='border bg-white drop-shadow-sm border-stone-300 rounded flex flex-col p-4 mb-4'>
                                 <div className='font-bold text-xl mb-2 flex justify-between'>
                                     {proper(company.company_name)}
-                                    <Button 
+                                    {(company.authorized_users.find(e => e.user_id === user.user_id)?.permLevel === 'edit' || company.authorized_users.find(e => e.user_id === user.user_id)?.permLevel === 'admin') && <Button 
                                         variant='contained'
                                         onClick={() => {
                                             setEdittedCompany({
@@ -534,7 +538,7 @@ export default function MyAccount(){
                                                 company_working_days: company?.company_working_days || []
                                             })
                                         }}
-                                    >Edit</Button>
+                                    >Edit</Button>}
                                 </div>
                                 <Divider />
                                 <TableContainer>
@@ -605,58 +609,24 @@ export default function MyAccount(){
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
-                                {/* <div className='flex items-around w-full bg-stone-100 mt-2 p-2 shadow-inner'>
-                                    <div className='mr-2 border-r-2 border-stone-300 w-1/4'>
-                                        Your Roles:
+                                <div className='flex justify-around items-center'>
+                                    <div className='flex h-full items-around w-full bg-stone-100 p-2 shadow-inner'>
+                                        <div className='border-r-2 border-stone-300 w-1/4'>
+                                            Your Permission Level
+                                        </div>
+                                        <div className='flex justify-center w-1/4'>
+                                            {company.authorized_users.find(e => e.user_id === user.user_id)?.permLevel || ''}
+                                        </div>
                                     </div>
-                                    <div className='flex border-r-2 border-stone-300 justify-center w-1/4'>
-                                        View:
-                                        <span className='mx-1'></span>
-                                        <span>{company.permission_level.toString().split('')[0] === '0' ? 
-                                            'None' : company.permission_level.toString().split('')[0] === '1' ? 
-                                            'Basic' : company.permission_level.toString().split('')[0] === '3' ? 'Basic + Dollar Amounts' : 
-                                            company.permission_level.toString().split('')[0] === '7' ? 'All' : 'N/A'
-                                        }</span>
-                                    </div>
-                                    <div className='flex border-r-2 border-stone-300 justify-center w-1/4'>
-                                        Edit: 
-                                        <span className='mx-1'></span>
-                                        <span>{company.permission_level.toString().split('')[1] === '0' ?
-                                            'None' : company.permission_level.toString().split('')[1] === '1' ?
-                                            'Basic' : company.permission_level.toString().split('')[1] === '3' ? 'Basic + Dollar Amounts' :
-                                            company.permission_level.toString().split('')[1] === '7' ? 'All' : 'N/A'
-                                        }</span>
-                                    </div>
-                                    <div className='flex justify-center w-1/4'>
-                                        Delete:
-                                        <span className='mx-1'></span>
-                                        <span>{company.permission_level.toString().split('')[2] === '0' ?
-                                            'None' : company.permission_level.toString().split('')[2] === '1' ?
-                                            'Basic' : company.permission_level.toString().split('')[2] === '3' ? 'Basic + Dollar Amounts' :
-                                            company.permission_level.toString().split('')[2] === '7' ? 'All' : 'N/A'
-                                        }</span>
-                                    </div>
-                                    </div> */}
-                                <br />
-                                <div className='flex justify-around'>
-                                    <div className='w-full'>
-                                        <TextField 
-                                            fullWidth
-                                            label='Add New User'
-                                            id={'newEmail' + i}
-                                        ></TextField>
-                                        <FormHelperText>
-                                            Enter the email of the new user
-                                        </FormHelperText>
-                                    </div>
-                                    <Button variant='contained' color='primary' style={{ height: 55 }}
+                                    {(company.authorized_users.find(e => e.user_id === user.user_id)?.permLevel === 'edit' || company.authorized_users.find(e => e.user_id === user.user_id)?.permLevel === 'admin') && <Button variant='contained' color='primary' style={{ height: '2.5rem', fontSize: 12 }}
                                         onClick={() => {
-                                            addCompanyPermission(company.company_id, document.getElementById('newEmail' + i).value)
+                                            setAddingUser(true)
+                                            setSelectedCompany(company)
                                         }}
                                     >
                                         Add User
-                                    </Button>
-                                    <Button style={{ height: 55, backgroundColor: '#888' }}
+                                    </Button>}
+                                    <Button style={{ height: '2.5rem', backgroundColor: '#888', fontSize: 12 }}
                                         variant='contained'
                                         onClick={() => getUsers(company.company_id, company.company_name)}
                                     >View Users In This Company</Button>

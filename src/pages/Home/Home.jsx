@@ -31,7 +31,7 @@ export default function Home(){
                     Current Overview for {proper(companyDetails?.company_name || '')}
                 </div>
                 <Company
-                    key={companyDetails.company_id}
+                    key={companyDetails?.company_id}
                     company={companyDetails}
                 />
             </> :

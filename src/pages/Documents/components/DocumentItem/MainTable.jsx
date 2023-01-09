@@ -33,7 +33,6 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
         'STREET PURCHASE',
         'MIDWAY'
     ].sort((a, b) => (a && b) ? a.localeCompare(b) : 0)
-
     return(
         <TableRow className={`
                 ${rollback ? 'bg-red-300' : index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
@@ -42,7 +41,7 @@ export default function MainTable({ doc, index, hovering, notes, doc_id, open, s
                     {doc.vehicle?.v_stock_no ? doc.vehicle.v_stock_no : 'N/A'}
                 </TableCell>
                 <TableCell>
-                    {doc.vehicle?.v_year} {doc.vehicle?.v_make?.toUpperCase() || ''} {doc.vehicle?.v_model?.toUpperCase() || ''} {doc.vehicle?.v_package ? doc.vehicle?.v_package?.toUpperCase() : ''} {rollback ? '(ROLLBACK)' : ''}
+                    {doc?.vehicle?.v_vehicle ? doc?.vehicle?.v_vehicle : `${doc.vehicle?.v_year} ${doc.vehicle?.v_make?.toUpperCase() || ''} ${doc.vehicle?.v_model?.toUpperCase() || ''} ${doc.vehicle?.v_package ? doc.vehicle?.v_package?.toUpperCase() : ''} ${rollback ? '(ROLLBACK)' : ''}`}
                 </TableCell>
                 <TableCell>
                     {doc.vehicle?.v_vin_no ? doc.vehicle.v_vin_no : 'N/A'}

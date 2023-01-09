@@ -2,13 +2,14 @@ import { Button, Backdrop, CircularProgress, TableBody, Table } from '@mui/mater
 import TableHeaders from './components/TableHeaders';
 import MainSelect from './components/MainSelect';
 import FiltersAndAdd from './components/FiltersAndAdd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion'
 import DocumentItem from './components/DocumentItem/DocumentItem';
 import AddDocument from './components/AddDocument/AddDocument';
 import './style.css'
 import { useNavDates } from './hooks/useNavDates'
 import { useDocs } from './hooks/useDocs'
+import { UserContext } from '../../contexts/UserContext';
 
 export default function Documents(){
     const [ loading, setLoading ] = useState(true);
@@ -23,10 +24,13 @@ export default function Documents(){
     const [ onlyCert, setOnlyCert ] = useState(0);
     const [ modifiedFilter, setModifiedFilter ] = useState(0);
 
+    const { user } = useContext(UserContext);
+
     const [ sourceFilter, setSourceFilter ] = useState('Any');
 
     const [ startDate, endDate ] = useNavDates()
     const [companyDetails, documentTypes, documents, setDocuments] = useDocs(startDate, endDate, setLoading, setError)
+    const storedCompany = document.cookie.split(';').filter((e) => e.includes('selected_company'))[0].split('=')[1];
 
     useEffect(() => {
         window.addEventListener('resize', () => {
@@ -38,7 +42,7 @@ export default function Documents(){
             setSourceFilter(initialSourceFilter);
         }
     }, [])
-
+    
     return(
         <motion.div
             initial={{ opacity: 0, x: 100 }}
@@ -50,12 +54,10 @@ export default function Documents(){
                 <CircularProgress color="inherit" />
             </Backdrop>
             <MainSelect setSelComp={setSelComp} filter={filter} setFilter={setFilter} tab={tab} setTab={setTab} companyDetails={companyDetails} loading={loading} documentTypes={documentTypes} />
-            <FiltersAndAdd sourceFilter={sourceFilter} setSourceFilter={setSourceFilter} companyDetails={companyDetails} onlyCert={onlyCert} setOnlyCert={setOnlyCert} search={search} setSearch={setSearch} documents={documents} setAddDocument={setAddDocument} setCreatedBy={setCreatedBy} modifiedFilter={modifiedFilter} setModifiedFilter={setModifiedFilter} />
+            <FiltersAndAdd userPermLevel={companyDetails?.find(e => e.company_id === storedCompany)?.authorized_users?.find(e => e.user_id === user?.user_id)?.permLevel} sourceFilter={sourceFilter} setSourceFilter={setSourceFilter} companyDetails={companyDetails} onlyCert={onlyCert} setOnlyCert={setOnlyCert} search={search} setSearch={setSearch} documents={documents} setAddDocument={setAddDocument} setCreatedBy={setCreatedBy} modifiedFilter={modifiedFilter} setModifiedFilter={setModifiedFilter} />
 
             <div id='document-container-scrollable' className='py-6 overflow-scroll z-[9990]' style={{ top: 302 }}>
-
                 {addDocument && <AddDocument selComp={selComp} setDocuments={setDocuments} companyDetails={companyDetails} setAdding={setAddDocument} docs={documents?.data} />}
-
                 <div className='w-full p-2 bg-white flex justify-between'>
                     <Button
                         color="primary"
@@ -98,6 +100,7 @@ export default function Documents(){
                             })
                             .map((x, i) => {
                             return <DocumentItem
+                                    userPermLevel={companyDetails?.find(e => e.company_id === storedCompany)?.authorized_users?.find(e => e.user_id === user?.user_id)?.permLevel}
                                     setDocuments={setDocuments}
                                     open={open}
                                     setOpen={setOpen}

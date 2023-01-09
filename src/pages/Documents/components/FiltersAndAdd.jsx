@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { OutlinedInput, Box, Button, TextField, Autocomplete, Select } from '@mui/material';
 
-export default function FiltersAndAdd({ search, setSearch, documents, setAddDocument, setCreatedBy, onlyCert, setOnlyCert, companyDetails, setSourceFilter, sourceFilter }) {
+export default function FiltersAndAdd({ search, setSearch, documents, setAddDocument, setCreatedBy, onlyCert, setOnlyCert, companyDetails, setSourceFilter, sourceFilter, userPermLevel }) {
     const [ startDate, endDate, handleDateChange ] = useNavDates()
 
     return(
@@ -74,7 +74,7 @@ export default function FiltersAndAdd({ search, setSearch, documents, setAddDocu
                         return `${proper(item?.user_fname || x)} ${proper(item?.user_lname || '')}`
                     }}
                 />
-                <Button
+                {(userPermLevel === 'edit' || userPermLevel === 'admin') && <Button
                     color="primary"
                     aria-label="add"
                     variant='contained' style={{
@@ -85,7 +85,7 @@ export default function FiltersAndAdd({ search, setSearch, documents, setAddDocu
                     onClick={() => setAddDocument(was => !was)}
                 >
                     <AddIcon /> Add Document
-                </Button>
+                </Button>}
             </div>
             <div className='w-full bg-white justify-start p-4 rounded-b drop-shadow flex items-center'>
                 <Button

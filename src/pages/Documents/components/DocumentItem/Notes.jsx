@@ -1,13 +1,13 @@
 import { addDocumentNotes } from '../../../../utils/api';
 import { TableRow, TableCell, Button, TextField } from '@mui/material';
 
-export default function Notes({ index, setNotes, notes, doc_id }){
+export default function Notes({ index, setNotes, notes, doc_id, userPermLevel }){
     return(
         <TableRow className={`
             ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}`}
         >
             <TableCell></TableCell>
-            <TableCell colSpan={15}>
+            {(userPermLevel === 'admin' || userPermLevel === 'edit') ? <><TableCell colSpan={15}>
                  <TextField
                     label='Notes'
                     variant='outlined'
@@ -29,7 +29,11 @@ export default function Notes({ index, setNotes, notes, doc_id }){
                 >
                     Submit Notes
                 </Button>
+            </TableCell></> :
+            <TableCell colSpan={17}>
+                {notes}
             </TableCell>
+            }
         </TableRow>        
     )
 }

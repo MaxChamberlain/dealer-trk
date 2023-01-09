@@ -1,7 +1,7 @@
 import { TableRow, TableCell, Button } from '@mui/material';
 import { changeSource, deleteDoc } from '../../../../utils/api';
 
-export default function Metadata({ index, docDates, setEditting, editting, docId, changes, setChanges, setSnackbar, setDocuments}){
+export default function Metadata({ index, docDates, setEditting, editting, docId, changes, setChanges, setSnackbar, setDocuments, userPermLevel }){
     return(
         <TableRow className={`
             ${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} h-16`}
@@ -16,7 +16,7 @@ export default function Metadata({ index, docDates, setEditting, editting, docId
             <TableCell colSpan={editting === docId ? 9 : 13}>
 
             </TableCell>
-            {editting === docId &&
+            {editting === docId && (userPermLevel === 'admin' || userPermLevel === 'edit') &&
                 <TableCell colSpan={2}>
                     <Button
                         variant={"outlined"}
@@ -34,7 +34,7 @@ export default function Metadata({ index, docDates, setEditting, editting, docId
                     </Button>
                 </TableCell>
             }
-            {editting === docId &&
+            {editting === docId && (userPermLevel === 'admin' || userPermLevel === 'edit') &&
                 <TableCell colSpan={2}>
                     <Button
                         variant={"outlined"}
@@ -54,7 +54,7 @@ export default function Metadata({ index, docDates, setEditting, editting, docId
                 </TableCell>
             }
             <TableCell colSpan={2}>
-                <Button
+                {(userPermLevel === 'admin' || userPermLevel === 'edit') && <Button
                     variant={editting === docId ? 'contained' : "outlined"}
                     size="small"
                     fullWidth
@@ -69,7 +69,7 @@ export default function Metadata({ index, docDates, setEditting, editting, docId
                     }}
                 >
                     {editting === docId ? 'Save' : "Edit"}
-                </Button>
+                </Button>}
             </TableCell>
         </TableRow>
     )
