@@ -1,6 +1,5 @@
 export const getPace = (company, dateRange, docs) => {
     if( company && docs ) {
-        console.log(docs)
         let countOfDocs = docs.length
         let workingDays = company?.company_working_days.map(e => {
             return e.charAt(0).toUpperCase() + e.slice(1)
