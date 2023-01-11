@@ -163,6 +163,7 @@ export const insertDocument = async (paramsinput, document_type_id, setLoading, 
                     v_acv: paramsinput.body?.v_acv,
                     v_final_acv: paramsinput.body?.v_final_acv,
                     v_msrp: paramsinput.body?.v_msrp,
+                    v_vehicle: paramsinput.body?.v_vehicle,
                 },
                 trade: {
                     v_trade_acv: paramsinput.body?.v_trade_acv,

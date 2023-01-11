@@ -182,7 +182,7 @@ export default function TripPad() {
             <MenuItem
                 onClick={(e) => {
                     setContextMenu(null);
-                    let row = (selectedRow.parentNode.parentNode.getAttribute('data-id'))
+                    let row = (selectedRow.parentNode.getAttribute('data-id'))
                     let doc = docs.find(doc => doc.document_id === row)
 
                     const setData = (data) => {
@@ -214,7 +214,6 @@ export default function TripPad() {
                             document_id: doc.document_id
                         })
                     }
-                    console.log(doc)
                     searchGurusByVin(doc.v_vin_no, companies?.find(e => {
                         return e.company_id === document.cookie.split('; ')?.find((row) => row.startsWith('selected_company='))?.split('=')[1]
                     })?.company_zip || '80525', 0, setLoading, setError, setData, setCargurus)

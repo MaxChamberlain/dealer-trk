@@ -297,9 +297,61 @@ export default function Stats({docs, company, dateRange}){
                                 </TableCell>
                             </TableRow>
                         </TableBody>
-                    </Table>                                             
+                    </Table>
                 </div>     
             </div>     
+
+<div className='flex flex-col items-center justify-between gap-4 w-full mt-4' style={{ minWidth: '20rem' }}>
+    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
+        {console.log(docs?.filter(e => !e.data.vehicle.v_year))}
+        <Table>
+            <TableHead>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Year</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Amount of Vehicles</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Avg MSRP vs Sell Price</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{new Date().getFullYear()}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear())?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{new Date().getFullYear() - 1}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 1)?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 1 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 1 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{new Date().getFullYear() - 2}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 2)?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 2 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 2 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{new Date().getFullYear() - 3}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 3)?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 3 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 3 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{new Date().getFullYear() - 4}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 4)?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 4 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 4 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{new Date().getFullYear() - 5}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 5)?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 5 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) == new Date().getFullYear() - 5 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ fontSize: '1.125rem'}}>Before {new Date().getFullYear() - 5}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) < new Date().getFullYear() - 5)?.length}</TableCell>
+                    <TableCell style={{ fontSize: '1.125rem'}}>${(docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) < new Date().getFullYear() - 5 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_msrp - b.data.vehicle.v_sell_price)) , 0) / docs?.filter(e => (e?.data?.vehicle?.v_year || e?.data?.vehicle?.v_vehicle?.split(' ')[0]) < new Date().getFullYear() - 5 && e.data.vehicle.v_msrp && e.data.vehicle.v_sell_price)?.length).toFixed(2)}</TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+    </div>     
+</div>     
         </>
     )
 }
