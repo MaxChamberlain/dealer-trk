@@ -5,7 +5,7 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import ShieldIcon from '@mui/icons-material/Shield';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { proper, properNumber } from '../../../../utils/textDisplay';
-import { CircularProgress, LinearProgress} from '@mui/material';
+import { CircularProgress, LinearProgress, Table, TableCell, TableRow, TableHead, TableBody} from '@mui/material';
 import { getPace } from './utils/companyParser'
 
 export default function Stats({docs, company, dateRange}){
@@ -133,8 +133,8 @@ export default function Stats({docs, company, dateRange}){
                     </div>
                 </div>
 
-                <div className='flex flex-col items-center justify-between' style={{ minWidth: '20rem' }}>
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                <div className='flex flex-col items-center justify-between gap-4' style={{ minWidth: '20rem' }}>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
                         <div className='flex gap-x-4 items-center font-bold'>
                             Total Gross
                         </div>
@@ -143,7 +143,7 @@ export default function Stats({docs, company, dateRange}){
                         </div>
                     </div>
                                                         
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
                         <div className='flex gap-x-4 items-center font-bold'>
                             Amount of Trades
                         </div>
@@ -162,8 +162,8 @@ export default function Stats({docs, company, dateRange}){
                     </div>
                 </div>
 
-                <div className='flex flex-col items-center justify-between' style={{ minWidth: '20rem' }}>
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                <div className='flex flex-col items-between h-full justify-between gap-4' style={{ minWidth: '20rem' }}>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
                         <div className='flex gap-x-4 items-center font-bold'>
                             Pace
                         </div>
@@ -172,54 +172,134 @@ export default function Stats({docs, company, dateRange}){
                         </div>
                     </div>
                                                         
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
                         <div className='flex gap-x-4 items-center font-bold'>
                             Avg Recon
                         </div>
                         <div className={'text-center'}>
-                        ${properNumber((docs?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_final_acv || 0) - parseInt(b.data.vehicle.v_acv || 0)), 0) / docs?.length)?.toFixed(2) || 0)}
+                            ${properNumber((docs?.reduce((a, b) => a + (parseInt(b.data.vehicle.v_final_acv || 0) - parseInt(b.data.vehicle.v_acv || 0)), 0) / docs?.length)?.toFixed(2) || 0)}
+                        </div>
+                    </div>
+                </div>     
+
+                <div className='flex flex-col items-center justify-between gap-4' style={{ minWidth: '20rem' }}>
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Avg MMR Change  (Out - In)
+                        </div>
+                        <div className='text-center'>
+                            ${properNumber(((docs?.filter(e => e.data.vehicle?.v_final_mmr > 0 && e.data.vehicle?.v_initial_mmr > 0)?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_final_mmr || 0) - parseInt(doc.data.vehicle?.v_initial_mmr || 0), 0)) / docs?.filter(e => e.data.vehicle?.v_final_mmr && e.data.vehicle?.v_initial_mmr)?.length)?.toFixed(2) || 0)}
                         </div>
                     </div>
                                                         
                     <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
                         <div className='flex gap-x-4 items-center font-bold'>
-                            Average Price {Math.sign((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_sell_price || 0), 0) - docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_start_price || 0), 0)) / docs?.length) === -1 ? 'Drop' : 'Gain'} from Start to Sale
+                            Avg CarGurus Change (Out - In)
+                        </div>
+                        <div className={'text-center'}>
+                            ${properNumber(((docs?.filter(e => e.data.vehicle?.v_final_carg_h > 0 && e.data.vehicle?.v_initial_carg_h > 0)?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_final_carg_h || 0) - parseInt(doc.data.vehicle?.v_initial_carg_h || 0), 0)) / docs?.filter(e => e.data.vehicle?.v_final_carg_h && e.data.vehicle?.v_initial_carg_h)?.length)?.toFixed(2) || 0)}
+                        </div>
+                    </div>
+                                                        
+                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
+                        <div className='flex gap-x-4 items-center font-bold'>
+                            Avg Price Change from Start to Sale
                         </div>
                         <div className='text-center'>
                             ${properNumber(((docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_sell_price || 0), 0) - docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_start_price || 0), 0)) / docs?.length)?.toFixed(2) || 0)}
                         </div>
                     </div>
-                </div>     
-
-                <div className='flex flex-col items-center justify-between' style={{ minWidth: '20rem' }}>
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
-                        <div className='flex gap-x-4 items-center font-bold'>
-                            Avg MMR Diff  (Out - In)
-                        </div>
-                        <div className='text-center'>
-                            ${properNumber(((docs?.reduce((acc, doc) => acc + (doc.data.vehicle?.v_final_mmr && doc.data.vehicle?.v_initial_mmr) ?  parseInt(doc.data.vehicle?.v_final_mmr || 0) - parseInt(doc.data.vehicle?.v_initial_mmr || 0) : 0, 0)) / docs?.filter(e => e.data.vehicle?.v_final_mmr && e.data.vehicle?.v_initial_mmr)?.length)?.toFixed(2) || 0)}
-                        </div>
-                    </div>
-                                                        
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full mb-4'>
-                        <div className='flex gap-x-4 items-center font-bold'>
-                            Avg CarGurus Diff (Out - In)
-                        </div>
-                        <div className={'text-center'}>
-                            ${properNumber(((docs?.reduce((acc, doc) => acc + (doc.data.vehicle?.v_final_carg_h && doc.data.vehicle?.v_initial_carg_h) ?  parseInt(doc.data.vehicle?.v_final_carg_h || 0) - parseInt(doc.data.vehicle?.v_initial_carg_h || 0) : 0, 0)) / docs?.filter(e => e.data.vehicle?.v_final_carg_h && e.data.vehicle?.v_initial_carg_h)?.length)?.toFixed(2) || 0)}
-                        </div>
-                    </div>
-                                                        
-                    <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
-                        <div className='flex gap-x-4 items-center font-bold'>
-                            Average Price Diff Per Day In Stock
-                        </div>
-                        <div className='text-center'>
-                            {docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_days || 0), 0) > 0 ? `$${properNumber(((docs?.reduce((acc, doc) => acc + (parseInt(doc.data.vehicle?.v_sell_price || 0) - parseInt(doc.data.vehicle?.v_start_price || 0)), 0) / docs?.reduce((acc, doc) => acc + parseInt(doc.data.vehicle?.v_days || 0), 0))).toFixed(2) || 0)}` : 'N/A'}
-                        </div>
-                    </div>
-                </div>                                                                 
+                </div>                                                       
             </div>
+
+            <div className='flex flex-col items-center justify-between gap-4 w-full mt-4' style={{ minWidth: '20rem' }}>
+                <div className='h-full text-black px-6 py-6 bg-white rounded-lg drop-shadow relative flex flex-col items-center justify-between w-full'>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Age</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Amount of Vehicles</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Avg Price Change from Start to Sale</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>Avg Market %</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell style={{ fontSize: '1.125rem'}}>&lt; 10 Days</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => e?.data?.vehicle?.v_days < 10).length}</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>${
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days < 10)?.reduce((a, b) => a + parseInt(b.data.vehicle.v_sell_price - b.data.vehicle.v_start_price) ,0) 
+                                        / 
+                                        docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days < 10)?.length) || 0
+                                    ).toFixed(2)
+                                }
+                                </TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days < 10)?.reduce((a, b) => a + parseInt(b.data.vehicle.v_market_percent) , 0)) / docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days < 10).length
+                                    ).toFixed(0)
+                                }%
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell style={{ fontSize: '1.125rem'}}>10-20 Days</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => e?.data?.vehicle?.v_days < 20 && e?.data?.vehicle?.v_days >= 10).length}</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>${
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days >= 10 && e?.data?.vehicle?.v_days < 20)?.reduce((a, b) => a + parseInt(b.data.vehicle.v_sell_price - b.data.vehicle.v_start_price) ,0) 
+                                        / 
+                                        docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days >= 10 && e?.data?.vehicle?.v_days < 20)?.length) || 0
+                                    ).toFixed(2)
+                                }
+                                </TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days >= 10 && e?.data?.vehicle?.v_days < 20)?.reduce((a, b) => a + parseInt(b.data.vehicle.v_market_percent) , 0)) / docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days >= 10 && e?.data?.vehicle?.v_days < 20).length
+                                    ).toFixed(0)
+                                }%
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell style={{ fontSize: '1.125rem'}}>20-30 Days</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => e?.data?.vehicle?.v_days >= 20 && e?.data?.vehicle?.v_days < 30).length}</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>${
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days >= 20 && e?.data?.vehicle?.v_days < 30)?.reduce((a, b) => a + parseInt(b.data.vehicle.v_sell_price - b.data.vehicle.v_start_price) ,0) 
+                                        / 
+                                        docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days >= 20 && e?.data?.vehicle?.v_days < 30)?.length) || 0
+                                    ).toFixed(2)
+                                }
+                                </TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days >= 20 && e?.data?.vehicle?.v_days < 30))?.reduce((a, b) => a + parseInt(b.data.vehicle.v_market_percent) , 0) / docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days >= 20 && e?.data?.vehicle?.v_days < 30).length
+                                    ).toFixed(0)
+                                }%
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell style={{ fontSize: '1.125rem'}}>30+ Days</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{docs?.filter(e => e?.data?.vehicle?.v_days >= 30).length}</TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>${
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days >= 30)?.reduce((a, b) => a + parseInt(b.data.vehicle.v_sell_price - b.data.vehicle.v_start_price) ,0) 
+                                        / 
+                                        docs?.filter(e => e?.data?.vehicle?.v_sell_price && e?.data?.vehicle?.v_start_price)?.filter(e => e?.data?.vehicle?.v_days >= 30)?.length) || 0
+                                    ).toFixed(2)
+                                }
+                                </TableCell>
+                                <TableCell style={{ fontSize: '1.125rem'}}>{
+                                    (
+                                        (docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days >= 30))?.reduce((a, b) => a + parseInt(b.data.vehicle.v_market_percent) , 0) / docs?.filter(e => e?.data?.vehicle?.v_market_percent > 0)?.filter(e => e?.data?.vehicle?.v_days >= 30).length
+                                    ).toFixed(0)
+                                }%
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>                                             
+                </div>     
+            </div>     
         </>
     )
 }
